@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+        <title>Game</title>
+        <style>
+            #Container{
+                position: relative;
+                margin: 20px;
+                height: 900px;
+                width: 1600px;
+            }
+            .choice{
+                position: absolute; 
+                top: 100px; 
+                font-size: 20px; 
+                width: 300px; 
+                height: 450px;
+                border: 1px solid black; 
+                margin: 0px; 
+                padding: 0px;
+                text-align: center;
+            }
+        </style>
+    </head>
+    <script src="common.js"></script>
+    <script src="draw.js"></script>
+    <script src="action.js"></script>
+    <script src="battle.js"></script>
+    <script src="main.js"></script>
+    <script src="cheat.js"></script>
+    <script>
+        window.onload=function(){
+            info=document.getElementById("extra");
+            canvas=document.getElementById("mainCanvas");
+            context=canvas.getContext("2d");
+            canvas.addEventListener("keypress",e=>{ 
+                
+                    console.log(e.key);
+                    if(e.key=="w"||e.key=="a"||e.key=="s"||e.key=="d"||e.key=="W"||e.key=="A"||e.key=="S"||e.key=="D"||e.key==" "){
+                        e.preventDefault();
+                        skillReady=0;
+                        playerMove(e.key);
+                    }
+                    if(e.key>="1"&&e.key<="9"){
+                        playerSkill(+e.key);
+                    }
+                
+            })
+            canvas.addEventListener("click",e=>{
+                console.log(e.offsetX+','+e.offsetY);
+            })
+            info.appendChild(document.createTextNode(seed));
+            preset();
+            frontPage();
+        }
+    </script>
+    <body style="padding: 0px; margin: 0px; margin-top:  2px;">
+        <h1>A simple turn-based game</h1>
+        <p>This game works best on screen no smaller than 1600x900.</p>
+        <p>A keyboard is needed.</p>
+        <div id="Container">
+            <canvas id="mainCanvas" width="1600" height="900" style="display: block; margin: 0px; padding: 0px; outline:none; border: 3px solid palegreen;" tabindex="999" onclick="Click(event)">
+                
+            </canvas>
+
+            <div class="choice" id="choice1" style="left: 40px; display: none;">
+               position: absolute; top: 100px; left: 680px; font-size: 20px; width: 300px; border: 1px solid black; margin: 0px; padding: 0px; 
+            </div>
+
+            <div class="choice" id="choice2" style="left: 360px; display: none;">
+
+            </div>
+
+            <div class="choice" id="choice3" style="left: 680px; display: none;">
+                
+            </div>
+
+        </div>
+        
+        <div id="extra"></div>
+
+        <div>
+            <p>&lt;v0.1.0&gt;玩法：wasd移动，近距离自动近战攻击（敌人也会），数字键1 + 鼠标左键单击选择方向可施放火球</p>
+            <p>&lt;v0.2.0&gt;修改敌人生成逻辑；添加无限回合；调整火球：增大触发和爆炸半径，略微降低伤害；修改局内mp恢复阈值至20%；改进伤害算法（暂无用处）</p>
+            <p>&lt;v0.2.1&gt;改进在敌人索敌范围内时，敌人的行动方式；增加技能冷却时间，火球冷却时间由0上升至1；新增初始技能：闪现（数字键2），消耗5mp，冷却3t，移动至鼠标左键单击指定的任意合法位置；优化技能释放逻辑；提高局内mp恢复阈值至30%</p>
+        </div>
+    </body>
+    
+</html>
