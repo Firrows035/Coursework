@@ -304,44 +304,32 @@ function isPosLegal(x,y){
 var viewangle=15;
 function isPathBlocked(x1,y1,x2,y2){
     let sign=0;
-    let dx=x2-x1;
-    let dy=y2-y1;
-    let side1=0;
-    let side2=0;
-    let online=0;
-    let a,b,c;
-    if(dx!=0){
-        a=dy/dx;
-        b=1;
-        c=b*y1-a*x1;
-    }
-    else{
-        a=1;
-        b=0;
-        c=x1;
-    }
     if(isPosLegal(x1,y1)&&isPosLegal(x2,y2)){
         block.forEach(bloc=>{
-            side1=0;
-            side2=0;
-            online=0;
-            let bx=[bloc.X-0.5,bloc.X+0.5];
-            let by=[bloc.Y-0.5,bloc.Y+0.5];
-            if(!bloc.isPassable){
-                if(bloc.Y>=min(y1,y2)&&bloc.Y<=max(y1,y2)&&bloc.X>=min(x1,x2)&&bloc.X<=max(x1,x2)){
-                    if(dx==0){
-                        if(bloc.X==x1){
-                            sign=1;
-                        }
+            if(sign) return;
+            let bx1=bloc.X-0.5,bx2=bloc.X+0.5;
+            let by1=bloc.Y-0.5,by2=bloc.Y+0.5;
+
+            if(!bloc.isPassable&&(x1-bloc.X)*(x2-bloc.X)<=0&&(y1-bloc.Y)*(y2-bloc.Y)<=0){
+                let j1=lineRelation(x1,y1,x2,y2,bx1,by1,bx2,by2);
+                if(j1[0]=="overlap"){
+                    sign=1;
+                }
+                else if(j1[0]=="intersect"){
+                    if(j1[1]){
+                        sign=2;
                     }
                 }
-
-                else{
-                    
+                let j2=lineRelation(x1,y1,x2,y2,bx1,by2,bx2,by1);
+                if(j2[0]=="overlap"){
+                    sign=3;
                 }
-            }
-            
-
+                else if(j2[0]=="intersect"){
+                    if(j2[1]){
+                        sign=4;
+                    }
+                }
+            }            
         })
     }
     return sign;
@@ -352,11 +340,12 @@ function lineRelation(x1,y1,x2,y2,x3,y3,x4,y4){
     if(D0!=0){
         let D1=(y3-y1)*(x3-x4)-(x3-x1)*(y3-y4);
         let D2=(y2-y1)*(x3-x1)-(x2-x1)*(y3-y1);
-        let t=D1/D0;
-        return ["intersect",(x2-x1)*t+x1,(y2-y1)*t+y1];
+        let t1=D1/D0;
+        let t2=D2/D0;
+        return ["intersect",t1>=0&&t1<=1&&t2>=0&&t2<=1,[(x2-x1)*t1+x1,(y2-y1)*t1+y1]];
     }
     else if(y3-y1==x3-x1){
-            return ["overlap"];
+        return ["overlap"];
     }
     else{
         return ["parallel"];

@@ -11,6 +11,7 @@ map.push([
 ])
 
 function loadmap(i){
+    clearBlocks();
     map[i].forEach(item=>{
         if(item[0]=="spawnpoint"){
             player.X=item[1][0];
