@@ -2,7 +2,7 @@ function summonEnemy(source,quantity){
     for(let i=1;i<=quantity;i++){
         addEnemy(source);
     }
-    enemyInturn=quantity;
+    enemyInround=quantity;
     for(let i=enemyCount-quantity+1;i<=enemyCount;i++){
         placeEnemy(i,10);
     }
@@ -10,15 +10,15 @@ function summonEnemy(source,quantity){
 function placeEnemy(c,attempt){
     let xtemp=Math.floor(Math.random()*1000)%21;
     let ytemp=Math.floor(Math.random()*1000)%12;
-    enemySet[c].X=xtemp;
-    enemySet[c].Y=ytemp;
-    if(!isPosAvaliable(xtemp,ytemp)||distanceEnemyToPlayer(c)<=5){
+    enemy[c].X=xtemp;
+    enemy[c].Y=ytemp;
+    if(!isPosAvaliableLE1(xtemp,ytemp)||distanceEnemyToPlayer(c)<=5||!isPosEnemyPlacable(xtemp,ytemp)){
         if(attempt>0){
             placeEnemy(c,attempt-1);
         }
         else{
-            enemySet[c].isDefeat=1;
-            enemyInturn--;
+            enemy[c].isDefeat=1;
+            enemyInround--;
             return 0;
         }
     }
@@ -27,25 +27,29 @@ function placeEnemy(c,attempt){
 
 
 function addEnemy(source){
-    // if(!enemySet[name]){
-        loadImg(source);
+    // if(!enemy[name]){
         enemyCount++;
         enemyAlive++;
-        enemySet[enemyCount]={
+        enemy[enemyCount]={
             appear:source,
 
-            atk:10*(1+boost.enemy.atk/100),
+            atk:15*(1+boost.enemy.atk/100),
             hp:80*(1+boost.enemy.mhp/100),
             mhp:80*(1+boost.enemy.mhp/100),
             def:0+boost.enemy.def,
-            mat:15*(1+boost.enemy.mat),
+            mat:15*(1+boost.enemy.mat/100),
             mdf:0+boost.enemy.mdf,
             dmgBoost:1+boost.enemy.dmg/100,
-
+            atkR:1+boost.enemy.atkR,
+            warnR:10,
             atktype:1,
             X:0,
             Y:0,
             isDefeat:0,
+            movePattern:"default",
+            isUnderAttack:0,
+            bio:``,
+            effect:[],
         }
     // }
     return source;
@@ -53,26 +57,28 @@ function addEnemy(source){
 
 
 function setEnemy(count,x,y){
-    if(!enemySet[count]){
+    if(!enemy[count]){
         return console.error("enemy id not found");
     }
-    // drawImgZoom(enemySet[count].appear,x*50,y*50,50,50);
-    enemySet[count].X=x;
-    enemySet[count].Y=y;
+    // drawImgZoom(enemy[count].appear,x*50,y*50,50,50);
+    enemy[count].X=x;
+    enemy[count].Y=y;
 }
 
 function enemyAttack(count){
-    if(enemySet[count].atktype==1&&distanceEnemyToPlayer(count)<=1&&Math.random()<0.6&&enemySet[count].isDefeat==0){
-        player.hp=Math.max(player.hp-Math.max(enemySet[count].atk-player.def,enemySet[count].atk*0.1)*enemySet[count].dmgBoost,0);
+    if(enemy[count].atktype==1&&distanceEnemyToPlayer(count)<=enemy[count].atkR&&Math.random()<0.8&&enemy[count].isDefeat==0){
+        takeDamage(enemy[count].atk,false);
+        return 1;
     }
+    return 0;
 }
 function playerAttack(){
     for(let i=1;i<=enemyCount;i++){
-        if(enemySet[i].isDefeat){
+        if(enemy[i].isDefeat){
             continue;
         }
-        if(distanceEnemyToPlayer(i)<=1){
-            enemySet[i].hp=Math.max(enemySet[i].hp-player.atk*100/(100+enemySet[i].def),0);
+        if(distanceEnemyToPlayer(i)<=player.atkR){
+            dealDamage(i,player.atk,false);
         }
     }
 }
@@ -84,11 +90,14 @@ function flashmove(event){
     if(onBattle){
         let x=Math.floor(event.offsetX/50);
         let y=Math.floor(event.offsetY/50);
+        if(x==player.X&&y==player.Y){
+            return 0;
+        }
         let xtemp=player.X;
         let ytemp=player.Y;
         player.X=x;
         player.Y=y;
-        if(isPosAvaliable(x,y)&&isPosLegal(x,y)){
+        if(isPosAvaliableLE1(x,y)&&isPosLegal(x,y)){
             requestAnimationFrame(drawBattlefield);
             return 1;
         }
@@ -100,49 +109,16 @@ function flashmove(event){
     }
 }
 function fireball(event){
-
-    //Silly AI code. does not work as expected.
-    // const dx = x - player.x;
-    // const dy = y - player.y;
-    // const distance = Math.sqrt(dx * dx + dy * dy);
-    // const dirX = dx / distance;
-    // const dirY = dy / distance;
-
-    // let fireballX = player.x;
-    // let fireballY = player.y;
-    // const speed = 5;
-    // const explosionRadius = 50;
-    // const damage = player.atk * 150 / 100;
-
-    // const fireballInterval = setInterval(() => {
-    //     fireballX += dirX * speed;
-    //     fireballY += dirY * speed;
-
-    //     for (let i = 1; i <= enemyCount; i++) {
-    //         if (enemySet[i].isDefeat) continue;
-    //         const dist = Math.hypot(fireballX - enemySet[i].x, fireballY - enemySet[i].y);
-    //         if (dist < explosionRadius) {
-    //             enemySet[i].hp = Math.max(enemySet[i].hp - damage, 0);
-    //             if (enemySet[i].hp <= 0) {
-    //                 enemySet[i].isDefeat = 1;
-    //             }
-    //             clearInterval(fireballInterval);
-    //             return;
-    //         }
-    //     }
-
-    //     if (Math.hypot(fireballX - x, fireballY - y) > distance) {
-    //         clearInterval(fireballInterval);
-    //     }
-    // }, 30);
-
     if(onBattle){
         let x=Math.floor(event.offsetX/50);
         let y=Math.floor(event.offsetY/50);
         console.log(x,y);
         let dx=x-player.X;
         let dy=y-player.Y;
-        createProjectile("fireball.png",player.X,player.Y,dx,dy,3,1,player.mat*1.2,true,3);
+        if(dx==0&&dy==0){
+            return 0;
+        }
+        createProjectile("fireball.png",player.X,player.Y,dx,dy,3,1,player.mat*2,true,true,3);
         requestAnimationFrame(drawBattlefield);
         return 1;
     }
@@ -150,6 +126,22 @@ function fireball(event){
         return 0;
     }
 }
+function sacrificialStrike(event){
+    if(onBattle){
+        if(player.hp<=player.mhp*0.1){
+            return 0;
+        }
+        player.hp=max(1,player.hp-player.mhp*0.2);
+        for(let e=enemyCount-enemyInround+1;e<=enemyCount;e++){
+            if(enemy[e].isDefeat==0&&distanceEnemyToPlayer(e)<=6){
+                dealDamage(e,player.atk*5.5,false);
+            }
+        }
+        requestAnimationFrame(drawBattlefield);
+        return 1;
+    }
+}
+
 
 function clearProjectile(){
     for(let i=1;i<=projectileCount;i++){
@@ -166,11 +158,26 @@ function checkPlayerStat(){
 }
 function checkEnemyStat(){
     for(let i=1;i<=enemyCount;i++){
-        if(!enemySet[i].isDefeat){
-            if(enemySet[i].hp<=0){
-                enemySet[i].isDefeat=1;
+        if(!enemy[i].isDefeat){
+            if(enemy[i].hp<=0){
+                enemy[i].isDefeat=1;
                 enemyDefeated++;
                 enemyAlive--;
+            }
+            if(distanceEnemyToPlayer(i)<=enemy[i].warnR&&distanceEnemyToPlayer(i)>enemy[i].atkR){
+                enemy[i].movePattern="navigate";
+            }
+            else if(distanceEnemyToPlayer(i)<=enemy[i].atkR){
+                enemy[i].movePattern="attack";
+            }
+            else{
+                enemy[i].movePattern="default";
+            }
+            if(distanceEnemyToPlayer(i)<=player.atkR){
+                enemy[i].isUnderAttack=1;
+            }
+            else{
+                enemy[i].isUnderAttack=0;
             }
         }
     }
@@ -189,4 +196,32 @@ function cdDown(t){
     for(let i=1;i<=skillCount;i++){
         skillSet[i].cdt=Math.max(skillSet[i].cdt-t,0);
     }
+}
+
+function dealDamage(ec,dmg,isMagic){
+    if(isMagic){
+        enemy[ec].hp=max(0,enemy[ec].hp-max(dmg*0.05,dmg*(1-enemy[ec].mdf/100))*(1+boost.player.dmg/100))
+    }
+    else{
+        enemy[ec].hp=max(0,enemy[ec].hp-max(dmg*0.05,dmg-enemy[ec].def)*(1+boost.player.dmg/100));
+    }
+}
+function takeDamage(dmg,isMagic){
+    if(isMagic){
+        player.hp=max(0,player.hp-max(dmg*0.05,dmg*(1-player.mdf/100))*(1+boost.enemy.dmg/100))
+    }
+    else{
+        player.hp=max(0,player.hp-max(dmg*0.05,dmg-player.def)*(1+boost.enemy.dmg/100));
+    }
+}
+
+function updatePlayerStat(){
+    player.mhp=player.baseMhp*(1+boost.player.mhp/100);
+    player.mmp=player.baseMmp*(1+boost.player.mmp/100);
+    player.def=player.baseDef*(1+boost.player.def/100);
+    player.atk=player.baseAtk*(1+boost.player.atk/100);
+    player.mat=player.baseMat*(1+boost.player.mat/100);
+    player.mdf=player.baseMdf*(1+boost.player.mdf/100);
+    player.dmgBoost=1+boost.player.dmg/100;   
+    player.atkR=player.baseAtkR+boost.player.atkR;
 }

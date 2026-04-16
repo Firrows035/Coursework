@@ -1,34 +1,22 @@
-function loadImg(source){
-    if(!imageSet[source]){
-        let img=new Image;
-        img.src=source;
-        imageSet[source]=img;
-        imageSet[source].onload=()=>{
-            console.log("resource loaded successfully");
-        }
-    }
-    
-    return imageSet[source];
 
-}
 
-//these delays are essential but idk why
+//these delays are essential but idk why -- now i know and solved that
 function drawImg(source,x,y){
-    loadImg(source);
-    setTimeout(()=>context.drawImage(loadImg(source),x,y),50);
+
+    context.drawImage(imageSet[source],x,y);
 }
 
 function drawImgZoom(source,x,y,width,height){
-    loadImg(source);
-    setTimeout(()=>context.drawImage(loadImg(source),x,y,width,height),50);
+    context.drawImage(imageSet[source],x,y,width,height);
 }
 function drawImgCut(source,sx,sy,swidth,sheight,x,y){
-    loadImg(source);
-    setTimeout(()=>context.drawImage(loadImg(source),sx,sy,swidth,sheight,x,y),50);
+
+    context.drawImage(imageSet[source],sx,sy,swidth,sheight,x,y);
 }
 
 function drawMesh(){
-    context.strokeStyle="#0000FF";
+    context.strokeStyle="#bbbbbb";
+    context.lineWidth=2;
     for(let i=0;i<=13;i++){
         context.beginPath();
         context.moveTo(0,i*50);
@@ -57,8 +45,8 @@ function clearBattlefield(){
 
 
 function drawEnemy1(count){
-    if(!enemySet[count].isDefeat){
-        drawImgZoom(enemySet[count].appear,enemySet[count].X*50,enemySet[count].Y*50,50,50);
+    if(!enemy[count].isDefeat){
+        drawImgZoom(enemy[count].appear,enemy[count].X*50+5,enemy[count].Y*50+5,40,40);
     }
 }
 
@@ -69,28 +57,46 @@ function drawEnemy(){
 }
 
 function drawPlayerStat(){
+    context.clearRect(1052,0,548,150);
+    context.font="30px Arial";
     context.fillStyle="#000000";
+    context.fillText(`HP: ${floor(player.hp)}/${floor(player.mhp)}`,1410,80);
     context.fillRect(1098,48,304,34);
+    context.fillText(`MP: ${floor(player.mp)}/${floor(player.mmp)}`,1410,150);
+    context.fillRect(1098,118,304,34);
+
     context.fillStyle="white";
     context.fillRect(1100,50,300,30);
+    context.fillRect(1100,120,300,30);
+
     context.fillStyle="red";
     context.fillRect(1100,50,player.hp/player.mhp*300,30);
-    context.fillStyle="#000000";
-    context.fillRect(1098,118,304,34);
-    context.fillStyle="white";
-    context.fillRect(1100,120,300,30);
+
     context.fillStyle="blue";
     context.fillRect(1100,120,player.mp/player.mmp*300,30);
 }
-
+function drawRect(lineWidth,style,x,y,w,h){
+    context.lineWidth=lineWidth;
+    context.strokeStyle=style;
+    context.beginPath();
+    context.rect(x,y,w,h);
+    context.stroke();
+    context.closePath();
+}
 function drawEnemyStat1(count){
-    if(!enemySet[count].isDefeat){
+    if(!enemy[count].isDefeat){
+        if(enemy[count].movePattern=="attack"){
+            drawRect(2,"red",enemy[count].X*50+5,enemy[count].Y*50+5,40,40);
+        }
+        else if(enemy[count].movePattern=="navigate"){
+            drawRect(2,"orange",enemy[count].X*50+5,enemy[count].Y*50+5,40,40);
+        }
         context.fillStyle="#000000";
-        context.fillRect(enemySet[count].X*50,enemySet[count].Y*50,50,5);
+        context.fillRect(enemy[count].X*50,enemy[count].Y*50,50,5);
         context.fillStyle="white";
-        context.fillRect(enemySet[count].X*50+1,enemySet[count].Y*50+1,48,3);
+        context.fillRect(enemy[count].X*50+1,enemy[count].Y*50+1,48,3);
         context.fillStyle="red";
-        context.fillRect(enemySet[count].X*50+1,enemySet[count].Y*50+1,48*enemySet[count].hp/enemySet[count].mhp,3);
+        context.fillRect(enemy[count].X*50+1,enemy[count].Y*50+1,48*enemy[count].hp/enemy[count].mhp,3);
     }
 }
 
@@ -100,8 +106,8 @@ function drawEnemyStat(){
     }
 }
 
-function createProjectile(source,sx,sy,dx,dy,spd,triggerR,dmg,isAOE,dmgR){
-    loadImg(source);
+function createProjectile(source,sx,sy,dx,dy,spd,triggerR,dmg,isAOE,isMagic,dmgR){
+
     projectileCount++;
     projectileSet[projectileCount]={
         source:source,
@@ -114,6 +120,7 @@ function createProjectile(source,sx,sy,dx,dy,spd,triggerR,dmg,isAOE,dmgR){
         speed:spd,
         triggerR:triggerR,
         isAOE:isAOE,
+        isMagic:isMagic,
         damage:dmg,
         damageR:dmgR,
         isExpired:0,
@@ -129,4 +136,103 @@ function drawProjectile(){
         drawImgZoom(projectileSet[i].source,projectileSet[i].X*50+10,projectileSet[i].Y*50+10,30,30);
         // context.rotate(-projectileSet[i].direction);
     }
+}
+
+function drawSkillStat(){
+    context.clearRect(0,658,904,104);
+    for(let i=0;i<skillCount;i++){
+        if(!skillSet[i+1].cdt){
+            drawImgZoom(skillSet[i+1].source,100*i+2,660,80,80);
+        }
+        else{
+            drawImgZoom(skillSet[i+1].sourceCD,100*i+2,660,80,80);
+
+                context.fillStyle="black";
+                context.font="60px Arial";
+                context.fillText(`${skillSet[i+1].cdt}`,100*i+25+2,720);
+
+        }
+        
+        if(skillSet[i+1].cost>player.mp){
+            context.fillStyle="red";
+        }
+        else{
+            context.fillStyle="blue";
+        }
+        context.font="20px Arial";
+        context.fillText(`${skillSet[i+1].cost}`,100*i+80+2,760);
+        if(skillSet[i+1].isSelected){
+            drawSelectSkill(i+1);
+        }        
+    }
+}
+
+function drawSelectSkill(num){
+
+        context.beginPath();
+        context.strokeStyle="red";
+        context.rect(100*num-100+2,660,100,100);
+        context.stroke();
+        context.closePath();
+
+}
+
+function drawPlayerAttackRange(){
+    let r=player.atkR;
+
+    // context.beginPath();
+    // context.lineWidth=3;
+    // context.strokeStyle="green";
+    // let x=player.X-r;
+    // let y=player.Y;
+    // context.moveTo(x,y);
+    // for(let i=1;i<=r;i++){
+    //         y+=1;
+    //         context.lineTo(x,y);
+    //         x+=1;
+    //         context.lineTo(x,y);
+    // }
+    
+    // // if(isPosLegal(x,y)){
+    // //     x+=1;
+    // //     context.lineTo(x,y);
+    // // }
+    // // else{
+    // //     x+=1;
+    // //     context.moveTo(x,y);
+    // // }
+    // context.stroke();
+    // context.closePath();
+    for(let i=-r;i<=r;i++){
+
+            if(isPosLegal(player.X+i,player.Y+r-Math.abs(i)))drawBlockSelector(player.X+i,player.Y+r-Math.abs(i),"#11eeee");
+            if(isPosLegal(player.X+i,player.Y-r+Math.abs(i)))drawBlockSelector(player.X+i,player.Y-r+Math.abs(i),"#11eeee");
+
+        
+    }
+}
+function drawBlockSelector(x,y,color){
+        context.beginPath();
+        context.strokeStyle=color;
+        context.lineWidth=2;
+        context.rect(x*50,y*50,50,50);
+        context.stroke();
+        context.closePath();
+}
+
+function sacriStrikeSelector(){
+    for(let i=-6;i<=6;i++){
+        for(let j=Math.abs(i)-6;j<=6-Math.abs(i);j++){
+            if(i||j){
+                if(isPosLegal(player.X+i,player.Y+j))drawBlockSelector(player.X+i,player.Y+j,"#0000ff");
+            }
+            
+        }
+    }
+}
+
+function drawBlocks(){
+    block.forEach(bloc=>{
+        drawImgZoom(bloc.source,bloc.X*50,bloc.Y*50,50,50);
+    })
 }

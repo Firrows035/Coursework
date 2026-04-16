@@ -1,5 +1,7 @@
 //maybe some console commands, to make your adventure easier(?)...
+//actully, also used in regular exploration.
 
+//two outdated func
 function setMaxHp(MHP){
     player.mhp=MHP;
     player.hp=MHP;
@@ -10,6 +12,7 @@ function setMaxMP(MMP){
     player.mp=MMP;
     drawPlayerStat();
 }
+
 function recoverMP(x){
     player.mp=Math.min(player.mmp,player.mp+x);
     drawPlayerStat();

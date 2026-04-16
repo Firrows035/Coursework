@@ -7,6 +7,7 @@ function playerMove(direction){
     }
     actionCooldown=1;
     setTimeout(()=>{actionCooldown=0;},100);
+    playerAttack();
     let xtemp=player.X;
     let ytemp=player.Y;
     switch(direction){
@@ -27,7 +28,7 @@ function playerMove(direction){
         default:
             return;
     }
-    if(!isPosAvaliable(player.X,player.Y)){
+    if(!isPosAvaliableLE1(player.X,player.Y)){
         player.X=xtemp;
         player.Y=ytemp;
     }
@@ -35,25 +36,52 @@ function playerMove(direction){
         requestAnimationFrame(drawBattlefield);
     }
 }
-
-function playerSkill(num){
+function playerMoveByClick(x,y){
+    if(!onBattle){
+        return;
+    }
     if(actionCooldown){
         return;
     }
+    actionCooldown=1;
+    setTimeout(()=>{actionCooldown=0;},100);
+    playerAttack();
+    if(isPosAvailableL1(x,y)&&isPosLegal(x,y)){
+        player.X=x;
+        player.Y=y;
+    }
+    if(onBattle){
+        requestAnimationFrame(drawBattlefield);
+    }
+}
+
+function playSkill(num){
+    if(actionCooldown){
+        return 0;
+    }
+    if(player.hp==0){
+        return 0;
+    }
     if(num<1||num>skillCount){
-        return;
+        return 0;
     }
     if(skillSet[num].cdt>0){
-        return;
+        return 0;
     }
     if(skillSet[num].cost>player.mp){
         console.log("Cast Failed: No Enough MP");
-        return;
+        return 0;
     }
     else{
+        if(skillReady!=0){
+            skillSet[skillReady].isSelected=0;
+        }
         actionCooldown=1;
         setTimeout(()=>{actionCooldown=0;},100);
         skillReady=num;
+        skillSet[num].isSelected=1;
+        drawBattlefieldStatic();
+        skillSet[num].drawSelector(mouseX,mouseY);
         return num;
     }
 } 
@@ -62,98 +90,143 @@ function playerSkill(num){
 
 //randomly move or halt
 function enemyMove(count,direction){
-    let xtemp=enemySet[count].X;
-    let ytemp=enemySet[count].Y;
+    let xtemp=enemy[count].X;
+    let ytemp=enemy[count].Y;
     switch(direction){
         case 0:
-            enemySet[count].Y=Math.max(enemySet[count].Y-1,0);
+            enemy[count].Y=Math.max(enemy[count].Y-1,0);
             break;
         case 1:
-            enemySet[count].X=Math.max(enemySet[count].X-1,0);
+            enemy[count].X=Math.max(enemy[count].X-1,0);
             break;
         case 2:
-            enemySet[count].Y=Math.min(enemySet[count].Y+1,12);
+            enemy[count].Y=Math.min(enemy[count].Y+1,12);
             break;
         case 3:
-            enemySet[count].X=Math.min(enemySet[count].X+1,20);
+            enemy[count].X=Math.min(enemy[count].X+1,20);
             break;
-        case 5:
+        case 4:
             return;
         default:
             return;
     }
-    if(!isPosAvaliable(enemySet[count].X,enemySet[count].Y)){
-        enemySet[count].X=xtemp;
-        enemySet[count].Y=ytemp;
-        enemyMove(count,Math.floor(Math.random()*100)%5);
+    if(!isPosAvaliableLE1(enemy[count].X,enemy[count].Y)){
+        enemy[count].X=xtemp;
+        enemy[count].Y=ytemp;
+        enemyMove(count,random(0,4));
     }
 }
 function enemyApproachPlayer(count){
-    let xtemp=enemySet[count].X;
-    let ytemp=enemySet[count].Y;
+    let xtemp=enemy[count].X;
+    let ytemp=enemy[count].Y;
     if(Math.abs(directionEnemyToPlayer(count)[0])>=Math.abs(directionEnemyToPlayer(count)[1])){
-        enemySet[count].X+=Math.sign(directionEnemyToPlayer(count)[0]);
-        if(!isPosAvaliable(enemySet[count].X,enemySet[count].Y)){
-            enemySet[count].X=xtemp;
-            enemySet[count].Y+=Math.sign(directionEnemyToPlayer(count)[1]);
-            if(!isPosAvaliable(enemySet[count].X,enemySet[count].Y)){
-                enemySet[count].Y=ytemp;
+        enemy[count].X+=Math.sign(directionEnemyToPlayer(count)[0]);
+        if(!isPosAvaliableLE1(enemy[count].X,enemy[count].Y)){
+            enemy[count].X=xtemp;
+            enemy[count].Y+=Math.sign(directionEnemyToPlayer(count)[1]);
+            if(!isPosAvaliableLE1(enemy[count].X,enemy[count].Y)){
+                enemy[count].Y=ytemp;
                 return;
             }
         }
     }
     else{
-        enemySet[count].Y+=Math.sign(directionEnemyToPlayer(count)[1]);
-        if(!isPosAvaliable(enemySet[count].X,enemySet[count].Y)){
-            enemySet[count].Y=ytemp;
-            enemySet[count].X+=Math.sign(directionEnemyToPlayer(count)[0]);
-            if(!isPosAvaliable(enemySet[count].X,enemySet[count].Y)){
-                enemySet[count].X=xtemp;
+        enemy[count].Y+=Math.sign(directionEnemyToPlayer(count)[1]);
+        if(!isPosAvaliableLE1(enemy[count].X,enemy[count].Y)){
+            enemy[count].Y=ytemp;
+            enemy[count].X+=Math.sign(directionEnemyToPlayer(count)[0]);
+            if(!isPosAvaliableLE1(enemy[count].X,enemy[count].Y)){
+                enemy[count].X=xtemp;
                 return;
             }
         }
     }
-    if(!isPosAvaliable(enemySet[count].X,enemySet[count].Y)){
-        enemySet[count].X=xtemp;
-        enemySet[count].Y=ytemp;
-        enemyMove(count,Math.floor(Math.random()*100)%5);
+    if(!isPosAvaliableLE1(enemy[count].X,enemy[count].Y)){
+        enemy[count].X=xtemp;
+        enemy[count].Y=ytemp;
+        enemyMove(count,random(0,4));
     }
 }
 
 function enemyAction(){
     for(let i=1;i<=enemyCount;i++){
-        if(enemySet[i].isDefeat){
+        if(enemy[i].isDefeat){
             continue;
         }
-        let r=Math.floor(Math.random()*100);
-        if(distanceEnemyToPlayer(i)>10){
-            enemyMove(i,r%5);
+
+        if(enemy[i].movePattern=="default"){
+            enemyMove(i,random(0,4));
         }
-        else if(distanceEnemyToPlayer(i)>1){
+        else if(enemy[i].movePattern=="navigate"){
             enemyApproachPlayer(i);
         }
-        enemyAttack(i);
+        else if(enemy[i].movePattern=="attack"){
+            
+        }
+        if(enemyAttack(i)){
+            enemy[i].movePattern="attack";
+        }
     }
 }
 
-function isPosAvaliable(x,y){
+function isPosAvaliableLE1(x,y){
     let c=0;
-    for(let i=1;i<=enemyCount;i++){
-        if(enemySet[i].X==x&&enemySet[i].Y==y&&enemySet[i].isDefeat==0){
+    enemy.forEach(emy=>{
+        if(emy.X==x&&emy.Y==y&&emy.isDefeat==0){
             c++;
         }
-    }
+    })
     if(player.X==x&&player.Y==y){
         c++;
     }
+    block.forEach(bloc=>{
+        if(bloc.X==x&&bloc.Y==y&&bloc.isOnField&&!bloc.isPassable){
+            c++;
+        }
+    })
     return c<=1;
 }
+function isPosAvailableL1(x,y){
+    let c=0;
+    enemy.forEach(emy=>{
+        if(emy.X==x&&emy.Y==y&&emy.isDefeat==0){
+            c++;
+        }
+    })
+    if(player.X==x&&player.Y==y){
+        c++;
+    }
+    block.forEach(bloc=>{
+        if(bloc.X==x&&bloc.Y==y&&bloc.isOnField&&!bloc.isPassable){
+            c++;
+        }
+    })
+    return c<1;
+}
+
+function checkPosition(x,y){
+    if(player.X==x&&player.Y==y){
+        return ["player",0];
+    }
+    for(let i=enemyCount-enemyInround+1;i<=enemyCount;i++){
+        if(enemy[i].X==x&&enemy[i].Y==y&&enemy[i].isDefeat==0){
+            return ["enemy",i];
+        }
+    }
+    return ["empty",0];
+}
+
+
 
 function distanceEnemyToPlayer(count){
-    return Math.abs(player.X-enemySet[count].X)+Math.abs(player.Y-enemySet[count].Y);
+    return Math.abs(player.X-enemy[count].X)+Math.abs(player.Y-enemy[count].Y);
 }
 function directionEnemyToPlayer(count){
-    return [player.X-enemySet[count].X,player.Y-enemySet[count].Y];
+    return [player.X-enemy[count].X,player.Y-enemy[count].Y];
+}
+
+function distanceBetweenPosition(x1,y1,x2,y2){
+    return Math.abs(x1-x2)+Math.abs(y1-y2);
 }
 
 function projectileMove(){
@@ -168,6 +241,7 @@ function projectileMove(){
             projectileSet[i].X+=0.5*projectileSet[i].direction.X;
             projectileSet[i].Y+=0.5*projectileSet[i].direction.Y;
             if(isProjectileTriggered1(i)||(!isPosLegal(projectileSet[i].X,projectileSet[i].Y))){
+                console.log("projectile triggered");
                 triggerProjectile(i);
             }
         }
@@ -175,24 +249,48 @@ function projectileMove(){
 }
 
 function distanceEnemyToProjectile(Ecount,Pcount){
-    return Math.sqrt((enemySet[Ecount].X-projectileSet[Pcount].X)**2+(enemySet[Ecount].Y-projectileSet[Pcount].Y)**2);
+    return Math.sqrt((enemy[Ecount].X-projectileSet[Pcount].X)**2+(enemy[Ecount].Y-projectileSet[Pcount].Y)**2);
+}
+function distanceBetweenEntity(entity1,entity2){
+    return Math.sqrt((entity1.X-entity2.X)**2+(entity1.Y-entity2.Y)**2);
 }
 
+
 function isProjectileTriggered1(Pcount){
+    let sign=0;
     for(let i=1;i<=enemyCount;i++){
-        if(distanceEnemyToProjectile(i,Pcount)<=projectileSet[Pcount].triggerR&&enemySet[i].isDefeat==0){
-            console.log("triggered");
-            
-            return 1;
+        if(distanceEnemyToProjectile(i,Pcount)<=projectileSet[Pcount].triggerR&&enemy[i].isDefeat==0){
+            sign=1;
         }
     }
-    return 0;
+    block.forEach(bloc=>{
+        if(distanceBetweenEntity(bloc,projectileSet[Pcount])<=projectileSet[Pcount].triggerR&&bloc.isOnField&&!bloc.isProjectilePassable){
+            sign=1;
+        }
+    })
+    return sign;
 }
 
 function triggerProjectile(Pcount){
-    for(let i=1;i<=enemyCount;i++){
-        if(distanceEnemyToProjectile(i,Pcount)<=projectileSet[Pcount].damageR){
-            enemySet[i].hp=Math.max(enemySet[i].hp-projectileSet[Pcount].damage*(100-enemySet[i].mdf)/100,0);
+    if(projectileSet[Pcount].isAOE){
+        for(let i=1;i<=enemyCount;i++){
+            if(distanceEnemyToProjectile(i,Pcount)<=projectileSet[Pcount].damageR&&enemy[i].isDefeat==0){
+                dealDamage(i,projectileSet[Pcount].damage,projectileSet[Pcount].isMagic);
+            }
+        }
+        console.log(`damage dealt`);
+    }
+    else{
+        let minD=100;
+        let minE=0;
+        for(let e=1;e<=enemyCount;e++){
+            if(enemy[e].isDefeat==0&&distanceEnemyToProjectile(e,Pcount)<=projectileSet[Pcount].triggerR&&distanceEnemyToProjectile(e,Pcount)<minD){
+                minD=distanceEnemyToProjectile(e,Pcount);
+                minE=e;
+            }
+        }
+        if(minE!=0){
+            dealDamage(minE,projectileSet[Pcount].damage,projectileSet[Pcount].isMagic);
         }
     }
     projectileSet[Pcount].isExpired=1;
@@ -201,4 +299,67 @@ function triggerProjectile(Pcount){
 function isPosLegal(x,y){
     if(x<=20&&x>=0&&y<=12&&y>=0)return 1;
     else return 0;
+}
+
+var viewangle=15;
+function isPathBlocked(x1,y1,x2,y2){
+    let sign=0;
+    let dx=x2-x1;
+    let dy=y2-y1;
+    let side1=0;
+    let side2=0;
+    let online=0;
+    let a,b,c;
+    if(dx!=0){
+        a=dy/dx;
+        b=1;
+        c=b*y1-a*x1;
+    }
+    else{
+        a=1;
+        b=0;
+        c=x1;
+    }
+    if(isPosLegal(x1,y1)&&isPosLegal(x2,y2)){
+        block.forEach(bloc=>{
+            side1=0;
+            side2=0;
+            online=0;
+            let bx=[bloc.X-0.5,bloc.X+0.5];
+            let by=[bloc.Y-0.5,bloc.Y+0.5];
+            if(!bloc.isPassable){
+                if(bloc.Y>=min(y1,y2)&&bloc.Y<=max(y1,y2)&&bloc.X>=min(x1,x2)&&bloc.X<=max(x1,x2)){
+                    if(dx==0){
+                        if(bloc.X==x1){
+                            sign=1;
+                        }
+                    }
+                }
+
+                else{
+                    
+                }
+            }
+            
+
+        })
+    }
+    return sign;
+}
+
+function lineRelation(x1,y1,x2,y2,x3,y3,x4,y4){
+    let D0=(x3-x4)*(y2-y1)-(x2-x1)*(y3-y4);
+    if(D0!=0){
+        let D1=(y3-y1)*(x3-x4)-(x3-x1)*(y3-y4);
+        let D2=(y2-y1)*(x3-x1)-(x2-x1)*(y3-y1);
+        let t=D1/D0;
+        return ["intersect",(x2-x1)*t+x1,(y2-y1)*t+y1];
+    }
+    else if(y3-y1==x3-x1){
+            return ["overlap"];
+    }
+    else{
+        return ["parallel"];
+    }
+
 }

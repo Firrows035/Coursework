@@ -21,6 +21,24 @@
                 margin: 0px; 
                 padding: 0px;
                 text-align: center;
+                background-color: white;
+                align-items: center;
+                justify-content: center;
+            }
+            #info{
+                position: absolute;
+                top:250px;
+                left: 1080px;
+                font-size: 20px;
+                width: 500px;
+                height: 600px;
+                border: 1px solid black;
+                margin: 0px;
+                padding: 0px;
+                text-align: center;
+                background-color: white;
+                align-items: center;
+                justify-content: center;
             }
         </style>
     </head>
@@ -30,24 +48,22 @@
     <script src="battle.js"></script>
     <script src="main.js"></script>
     <script src="cheat.js"></script>
+    <script src="choice.js"></script>
+    <script src="loading.js"></script>
+    <script src="effects.js"></script>
+    <script src="map.js"></script>
+    <script src="blockFeature.js"></script>
     <script>
         window.onload=function(){
             info=document.getElementById("extra");
             canvas=document.getElementById("mainCanvas");
             context=canvas.getContext("2d");
-            canvas.addEventListener("keypress",e=>{ 
+            choiceSet=Array.from(document.getElementsByClassName(`choice`));
+            // canvas.addEventListener("keypress",e=>{ 
                 
-                    console.log(e.key);
-                    if(e.key=="w"||e.key=="a"||e.key=="s"||e.key=="d"||e.key=="W"||e.key=="A"||e.key=="S"||e.key=="D"||e.key==" "){
-                        e.preventDefault();
-                        skillReady=0;
-                        playerMove(e.key);
-                    }
-                    if(e.key>="1"&&e.key<="9"){
-                        playerSkill(+e.key);
-                    }
+
                 
-            })
+            // })
             canvas.addEventListener("click",e=>{
                 console.log(e.offsetX+','+e.offsetY);
             })
@@ -58,33 +74,41 @@
     </script>
     <body style="padding: 0px; margin: 0px; margin-top:  2px;">
         <h1>A simple turn-based game</h1>
-        <p>This game works best on screen no smaller than 1600x900.</p>
-        <p>A keyboard is needed.</p>
+
         <div id="Container">
-            <canvas id="mainCanvas" width="1600" height="900" style="display: block; margin: 0px; padding: 0px; outline:none; border: 3px solid palegreen;" tabindex="999" onclick="Click(event)">
+            <canvas id="mainCanvas" width="1600" height="900" style="display: block; margin: 0px; padding: 0px; outline:none; border: 3px solid palegreen;" tabindex="999" onclick="Click(event)" onmousemove="onMouseMove(event)" onkeypress="keyPress(event)">
                 
             </canvas>
 
-            <div class="choice" id="choice1" style="left: 40px; display: none;">
-               position: absolute; top: 100px; left: 680px; font-size: 20px; width: 300px; border: 1px solid black; margin: 0px; padding: 0px; 
-            </div>
-
-            <div class="choice" id="choice2" style="left: 360px; display: none;">
+            <div class="choice" id="choice1" style="left: 40px; display: none;" onclick="choose(c1)">
 
             </div>
 
-            <div class="choice" id="choice3" style="left: 680px; display: none;">
+            <div class="choice" id="choice2" style="left: 360px; display: none;" onclick="choose(c2)">
+
+            </div>
+
+            <div class="choice" id="choice3" style="left: 680px; display: none;" onclick="choose(c3)">
                 
             </div>
 
+            <div id="info">
+                <p style="position: absolute; top:400px; left:20px; width: 460px; height: 180px; border: 1px solid black; margin: 0px; padding: 0px;"></p>
+            </div>
         </div>
         
         <div id="extra"></div>
-
+        <p>This game works best on screen no smaller than 1600x900.</p>
+        <p>A keyboard is needed.</p>
         <div>
             <p>&lt;v0.1.0&gt;玩法：wasd移动，近距离自动近战攻击（敌人也会），数字键1 + 鼠标左键单击选择方向可施放火球</p>
             <p>&lt;v0.2.0&gt;修改敌人生成逻辑；添加无限回合；调整火球：增大触发和爆炸半径，略微降低伤害；修改局内mp恢复阈值至20%；改进伤害算法（暂无用处）</p>
             <p>&lt;v0.2.1&gt;改进在敌人索敌范围内时，敌人的行动方式；增加技能冷却时间，火球冷却时间由0上升至1；新增初始技能：闪现（数字键2），消耗5mp，冷却3t，移动至鼠标左键单击指定的任意合法位置；优化技能释放逻辑；提高局内mp恢复阈值至30%</p>
+            <p>&lt;v0.2.2&gt;修复了火球和闪现能原地放（但没效果，白耗蓝）的问题；添加技能图标显示；添加玩家mp/hp数值显示;新增技能【没想好名字】:hp不低于10%时，消耗20%hp（hp不会因此低于1），对5格内敌人造成atk*500%的物理伤害（注：即使是非指向性技能，选定后也需鼠标左键单击画面任意位置以确认施放。）</p>
+            <p>&lt;v0.3.0&gt;增加友方增益（显示）和敌方增益（隐藏）；修改了火球伤害和半径；上调技能3伤害；增加了一些机制；修复了若干bug；制造了若干bug</p>
+            <p>&lt;v0.3.91&gt;优化画面渲染逻辑；增加少许标识；修复若干bug；新增一些增益；提高基础mmp；整理图片</p>
+            <p>&lt;v0.3.911&gt;增加攻击范围及部分技能范围显示；可以单击玩家相邻格子以移动了（其实不好用）；为敌人信息显示预留了一块区域；若干优化；若干新bug<br>（前面忘说了，空格可以站在原地一回合）</p>
+            <p>&lt;v0.4.0&gt;增加了地形及异常状态：墙、毒池（每回合施加两层中毒）&中毒（每回合hp-=5%Maxhp（hp不会因此低于1），并减少一层中毒）；试运行手搓地图功能（翻源码找）；优化了数个函数；已知bug：墙体会妨碍npc寻路（未解决）</p>
         </div>
     </body>
     

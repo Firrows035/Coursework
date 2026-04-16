@@ -1,9 +1,14 @@
+var choiceChosen;
+var cooldownPerTurn=1;
+
 function preset(){
-    addSkill(fireball,5,1,"fireball.png");
-    addSkill(flashmove,5,3,"Lagrange.jpg");
+    addSkill(fireball,5,1,"fireball.png","fireball-cd.png",()=>{});
+    addSkill(flashmove,5,3,"flash.jpg","flash-cd.jpg",()=>{});
+    addSkill(sacrificialStrike,0,9,"sacriPunch.png","sacriPunch-cd.png",sacriStrikeSelector);
+    loadmap(0);
 }
 function beginTurn(){
-    summonEnemy("Enemy1.jpg",2+turn);
+    summonEnemy("Enemy1.jpg",min(20,2+round));
     requestAnimationFrame(drawBattlefield);
 }
 function frontPage(){
@@ -22,42 +27,83 @@ function failurePage(){
     context.font="100px Arial";
     context.fillText("You died!",300,200);
     context.font="50px Arial";
-    context.fillText("Enemy Defeated: "+enemyDefeated,300,300);
+    context.fillText(`Enemy Defeated: ${enemyDefeated}`,300,300);
 }
 
 function intermissonPage(){
     clearBattlefield();
     context.fillStyle="black";
     context.font="100px Arial";
-    context.fillText("Turn "+turn+" Cleared!",300,200);
+    context.fillText("Turn "+round+" Cleared!",200,200);
     context.font="50px Arial";
-    context.fillText("Enemy Defeated: "+enemyDefeated,300,300);
-    context.fillText("Click to Continue",300,400);
+    context.fillText(`Enemy Defeated: ${enemyDefeated}`,200,300);
+    context.fillText("Click to Continue",200,400);
+    choiceChosen=0;
+    setChoice();
 }
 
 function drawBattlefield(){
   
     clearCanvas();
-    enemyAction();
-    playerAttack();
+    
+    
     checkEnemyStat();
+
     drawMesh();
-    drawImgZoom("Lagrange.jpg",player.X*50,player.Y*50,50,50);
+    drawBlocks();
+    drawImgZoom("Lagrange.jpg",player.X*50+5,player.Y*50+5,40,40);
+    drawPlayerAttackRange();
+    activateEffectsAll();
     projectileMove();
+    
+    drawProjectile();
     checkEnemyStat();
+    drawEnemy();
+    drawEnemyStat();
+    drawPlayerStat();
+    
+    enemyAction();
+    activateBlockEffectAll();
+    cdDown(cooldownPerTurn);
+    drawSkillStat();
+    setTimeout(() => {
+        clearBattlefield();
+
+        drawMesh();
+        drawBlocks();
+        drawImgZoom("Lagrange.jpg",player.X*50+5,player.Y*50+5,40,40);
+        drawPlayerAttackRange();
+        drawProjectile();
+
+        checkEnemyStat();
+        drawEnemy();
+        drawEnemyStat();
+
+        checkPlayerStat();
+        checkScene();
+    }, 80);
     if(player.mp<player.mmp*0.3){
         recoverMP(player.mmp*0.01);
     }
-    cdDown(1);
-    drawEnemy();
-    setTimeout(()=>{drawEnemyStat();},50);
-    drawProjectile();
     drawPlayerStat();
-    checkPlayerStat();
-    checkScene();
+   
 }
 
-function addSkill(func,cost,cd,source){
+function drawBattlefieldStatic(){
+    clearCanvas();
+    drawMesh();
+    drawBlocks();
+    drawImgZoom("Lagrange.jpg",player.X*50+5,player.Y*50+5,40,40);
+    
+    drawPlayerAttackRange();
+    drawEnemy();
+    drawProjectile();
+    drawSkillStat();
+    drawPlayerStat();
+    drawEnemyStat();
+}
+
+function addSkill(func,cost,cd,source,source_cd,displayFunc){
     if(skillCount<9){
         skillCount++;
         skillSet[skillCount]={
@@ -66,11 +112,11 @@ function addSkill(func,cost,cd,source){
             cd:cd,
             cdt:0,
             source:source,
+            sourceCD:source_cd,
+            isSelected:0,
+            drawSelector:displayFunc,
         }
-        loadImg(source);
         return 1;
     }
     return 0;
 }
-
-var choice1=document.createElement("div");
