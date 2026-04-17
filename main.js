@@ -18,7 +18,7 @@ function frontPage(){
     context.fillText("Simple Turn Fight",200,300); 
     context.font="50px Arial";
     context.fillText("Click to Start",200,450);
-    startReady=1;
+    currentStage="startReady";
 }
 
 function failurePage(){
@@ -103,20 +103,4 @@ function drawBattlefieldStatic(){
     drawEnemyStat();
 }
 
-function addSkill(func,cost,cd,source,source_cd,displayFunc){
-    if(skillCount<9){
-        skillCount++;
-        skillSet[skillCount]={
-            skill:func,
-            cost:cost,
-            cd:cd,
-            cdt:0,
-            source:source,
-            sourceCD:source_cd,
-            isSelected:0,
-            drawSelector:displayFunc,
-        }
-        return 1;
-    }
-    return 0;
-}
+

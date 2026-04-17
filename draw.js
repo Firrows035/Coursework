@@ -106,26 +106,7 @@ function drawEnemyStat(){
     }
 }
 
-function createProjectile(source,sx,sy,dx,dy,spd,triggerR,dmg,isAOE,isMagic,dmgR){
 
-    projectileCount++;
-    projectileSet[projectileCount]={
-        source:source,
-        X:sx,
-        Y:sy,
-        direction:{
-            X:dx/Math.sqrt(dx**2+dy**2),
-            Y:dy/Math.sqrt(dx**2+dy**2)
-        },
-        speed:spd,
-        triggerR:triggerR,
-        isAOE:isAOE,
-        isMagic:isMagic,
-        damage:dmg,
-        damageR:dmgR,
-        isExpired:0,
-    }
-}
 
 function drawProjectile(){
     for(let i=1;i<=projectileCount;i++){
@@ -142,14 +123,14 @@ function drawSkillStat(){
     context.clearRect(0,658,904,104);
     for(let i=0;i<skillCount;i++){
         if(!skillSet[i+1].cdt){
-            drawImgZoom(skillSet[i+1].source,100*i+2,660,80,80);
+            drawImgZoom(skillSet[i+1].source,100*i+50,660,80,80);
         }
         else{
-            drawImgZoom(skillSet[i+1].sourceCD,100*i+2,660,80,80);
+            drawImgZoom(skillSet[i+1].sourceCD,100*i+50,660,80,80);
 
                 context.fillStyle="black";
                 context.font="60px Arial";
-                context.fillText(`${skillSet[i+1].cdt}`,100*i+25+2,720);
+                context.fillText(`${skillSet[i+1].cdt}`,100*i+25+50,720);
 
         }
         
@@ -160,7 +141,7 @@ function drawSkillStat(){
             context.fillStyle="blue";
         }
         context.font="20px Arial";
-        context.fillText(`${skillSet[i+1].cost}`,100*i+80+2,760);
+        context.fillText(`${skillSet[i+1].cost}`,100*i+80+50,760);
         if(skillSet[i+1].isSelected){
             drawSelectSkill(i+1);
         }        
@@ -171,7 +152,7 @@ function drawSelectSkill(num){
 
         context.beginPath();
         context.strokeStyle="red";
-        context.rect(100*num-100+2,660,100,100);
+        context.rect(100*num-100+50,660,100,100);
         context.stroke();
         context.closePath();
 
