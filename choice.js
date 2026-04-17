@@ -83,7 +83,7 @@ addChoice("atk++/Eatk+",()=>{
 
 function randChoice(){
     let c1=random(1,choiceCount);
-    if(random(1,choice[c1].weight)>1&&choice[c1].selectableTime!=0) return randChoice();
+    if(random(1,choice[c1].weight)>1||choice[c1].selectableTime==0) return randChoice();
     else return c1;
 }
 var c1,c2,c3,p1,p2,p3;
