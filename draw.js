@@ -236,3 +236,31 @@ function drawBlocks(){
         drawImgZoom(bloc.source,bloc.X*50,bloc.Y*50,50,50);
     })
 }
+
+function drawText(text,x,y,color,font,maxWidth,lineHeight,isChinese){
+    let word;
+    let seperator;
+    let line="";
+    context.fillStyle=color;
+    context.font=font;
+    if(isChinese){
+        word=text.split("");
+        seperator="";
+    }else{
+        word=text.split(" ");
+        seperator=" ";
+    }
+    for(let i=0;i<word.length;i++){
+        let tempLine=line+word[i]+seperator;
+        let measure=context.measureText(tempLine);
+        let tempWidth=measure.width;
+        if(tempWidth>maxWidth&&i>0){
+            context.fillText(line,x,y);
+            line=word[i]+seperator;
+            y+=lineHeight;
+        }else{
+            line=tempLine;
+        }
+    }
+    context.fillText(line,x,y);
+}
