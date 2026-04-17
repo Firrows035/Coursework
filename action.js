@@ -147,6 +147,46 @@ function enemyApproachPlayer(count){
         enemyMove(count,random(0,4));
     }
 }
+function enemyMoveNavigated(count){
+    if([enemy[count].X,enemy[count].Y]==enemy[count].navigatePosition){
+        enemyMove(count,random(0,3));
+        return;
+    }
+    if(isPosLegal(enemy[count].navigatePosition[0],enemy[count].navigatePosition[1])){
+        let xtemp=enemy[count].X;
+        let ytemp=enemy[count].Y;
+        if(Math.abs(directionToPosition([enemy[count].X,enemy[count].Y],enemy[count].navigatePosition)[0])>=Math.abs(directionToPosition([enemy[count].X,enemy[count].Y],enemy[count].navigatePosition)[1])){
+            enemy[count].X+=Math.sign(directionToPosition([enemy[count].X,enemy[count].Y],enemy[count].navigatePosition)[0]);
+            if(!isPosAvaliableLE1(enemy[count].X,enemy[count].Y)){
+                enemy[count].X=xtemp;
+                enemy[count].Y+=Math.sign(directionToPosition([enemy[count].X,enemy[count].Y],enemy[count].navigatePosition)[1]);
+                if(!isPosAvaliableLE1(enemy[count].X,enemy[count].Y)){
+                    enemy[count].Y=ytemp;
+                    return;
+                }
+            }
+        }
+        else{
+            enemy[count].Y+=Math.sign(directionToPosition([enemy[count].X,enemy[count].Y],enemy[count].navigatePosition)[1]);
+            if(!isPosAvaliableLE1(enemy[count].X,enemy[count].Y)){
+                enemy[count].Y=ytemp;
+                enemy[count].X+=Math.sign(directionToPosition([enemy[count].X,enemy[count].Y],enemy[count].navigatePosition)[0]);
+                if(!isPosAvaliableLE1(enemy[count].X,enemy[count].Y)){
+                    enemy[count].X=xtemp;
+                    return;
+                }
+            }
+        }
+        if(!isPosAvaliableLE1(enemy[count].X,enemy[count].Y)){
+            enemy[count].X=xtemp;
+            enemy[count].Y=ytemp;
+            enemyMove(count,random(0,4));
+        }
+    }
+
+}
+
+
 
 function enemyAction(){
     for(let i=1;i<=enemyCount;i++){
@@ -158,7 +198,7 @@ function enemyAction(){
             enemyMove(i,random(0,4));
         }
         else if(enemy[i].movePattern=="navigate"){
-            enemyApproachPlayer(i);
+            enemyMoveNavigated(i);
         }
         else if(enemy[i].movePattern=="attack"){
             
@@ -223,6 +263,9 @@ function distanceEnemyToPlayer(count){
 }
 function directionEnemyToPlayer(count){
     return [player.X-enemy[count].X,player.Y-enemy[count].Y];
+}
+function directionToPosition(p0,p1){
+    return [p1[0]-p0[0],p1[1]-p0[1]];
 }
 
 function distanceBetweenPosition(x1,y1,x2,y2){
@@ -342,7 +385,7 @@ function lineRelation(x1,y1,x2,y2,x3,y3,x4,y4){
         let D2=(y2-y1)*(x3-x1)-(x2-x1)*(y3-y1);
         let t1=D1/D0;
         let t2=D2/D0;
-        return ["intersect",t1>=0&&t1<=1&&t2>=0&&t2<=1,[(x2-x1)*t1+x1,(y2-y1)*t1+y1]];
+        return ["intersect",t1>0&&t1<1&&t2>0&&t2<1,[(x2-x1)*t1+x1,(y2-y1)*t1+y1]];
     }
     else if(y3-y1==x3-x1){
         return ["overlap"];
