@@ -47,6 +47,8 @@ function addEnemy(source){
             Y:0,
             isDefeat:0,
             movePattern:"default",
+            navigatePosition:[0,0],
+            warnedTime:0,
             isUnderAttack:0,
             bio:``,
             effect:[],
@@ -66,7 +68,7 @@ function setEnemy(count,x,y){
 }
 
 function enemyAttack(count){
-    if(enemy[count].atktype==1&&distanceEnemyToPlayer(count)<=enemy[count].atkR&&Math.random()<0.8&&enemy[count].isDefeat==0){
+    if(enemy[count].atktype==1&&distanceEnemyToPlayer(count)<=enemy[count].atkR&&Math.random()<0.8&&enemy[count].isDefeat==0&&!isPathBlocked(enemy[count].X,enemy[count].Y,player.X,player.Y)){
         takeDamage(enemy[count].atk,false);
         return 1;
     }
@@ -77,7 +79,7 @@ function playerAttack(){
         if(enemy[i].isDefeat){
             continue;
         }
-        if(distanceEnemyToPlayer(i)<=player.atkR){
+        if(distanceEnemyToPlayer(i)<=player.atkR&&!isPathBlocked(enemy[i].X,enemy[i].Y,player.X,player.Y)){
             dealDamage(i,player.atk,false);
         }
     }
@@ -156,6 +158,8 @@ function checkPlayerStat(){
         setTimeout(()=>{requestAnimationFrame(failurePage)},50);
     }
 }
+
+//修改enemy的状态机。default：若索敌范围内不可见player，随机移动；attack：player在攻击范围内，跟随玩家并尝试攻击；navigate：1. 索敌范围内可见玩家，将玩家位置修改为寻路地点；2. 索敌范围内不可见玩家，但此前处于寻路状态，继续寻路至目标地点附近直到到达、发现玩家或过长时间（因为每回合check三次所以要翻三倍）未发现玩家。
 function checkEnemyStat(){
     for(let i=1;i<=enemyCount;i++){
         if(!enemy[i].isDefeat){
@@ -163,17 +167,22 @@ function checkEnemyStat(){
                 enemy[i].isDefeat=1;
                 enemyDefeated++;
                 enemyAlive--;
+                continue;
             }
-            if(distanceEnemyToPlayer(i)<=enemy[i].warnR&&distanceEnemyToPlayer(i)>enemy[i].atkR){
-                enemy[i].movePattern="navigate";
-            }
-            else if(distanceEnemyToPlayer(i)<=enemy[i].atkR){
+            if(distanceEnemyToPlayer(i)<=enemy[i].atkR){
                 enemy[i].movePattern="attack";
+                enemy[i].warnedTime=15;
             }
-            else{
+            else if(distanceEnemyToPlayer(i)<=enemy[i].warnR&&!isPathBlocked(player.X,player.Y,enemy[i].X,enemy[i].Y)){
+                enemy[i].movePattern="navigate";
+                enemy[i].navigatePosition=[player.X,player.Y];
+                enemy[i].warnedTime=30;
+            }
+            else if(enemy[i].movePattern!="navigate"||[enemy[i].X,enemy[i].Y]==enemy[i].navigatePosition||enemy[i].warnedTime==0){
                 enemy[i].movePattern="default";
             }
-            if(distanceEnemyToPlayer(i)<=player.atkR){
+            enemy[i].warnedTime--;
+            if(distanceEnemyToPlayer(i)<=player.atkR&&!isPathBlocked(player.X,player.Y,enemy[i].X,enemy[i].Y)){
                 enemy[i].isUnderAttack=1;
             }
             else{
