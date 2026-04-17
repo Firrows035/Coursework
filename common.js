@@ -1,6 +1,9 @@
 var info;
 var canvas;
 var context;
+var rect;
+var scaleX;
+var scaleY;
 
 var choiceSet;
 
@@ -118,8 +121,11 @@ var seed=""+Math.floor(Math.random()*Math.pow(10,16))+Math.floor(Math.random()*M
 
 
 function Click(event){
-    let X=floor(event.offsetX/50);
-    let Y=floor(event.offsetY/50);
+    rect=canvas.getBoundingClientRect();
+    scaleX=canvas.width/rect.width;
+    scaleY=canvas.height/rect.height;    
+    let X=floor(event.offsetX*scaleX/50);
+    let Y=floor(event.offsetY*scaleY/50);
     if(startReady===1){
         if(imageReady){
             startReady=-1;
@@ -161,6 +167,9 @@ function Click(event){
 }
 var mouseMoveCd=0;
 function onMouseMove(event){
+    rect=canvas.getBoundingClientRect();
+    scaleX=canvas.width/rect.width;
+    scaleY=canvas.height/rect.height;
     if(mouseMoveCd||onBattle==0){
         return;
     }
@@ -169,8 +178,8 @@ function onMouseMove(event){
         mouseMoveCd=0;
     },50);
     // console.log(event);
-    let mx=floor(event.offsetX/50);
-    let my=floor(event.offsetY/50);
+    let mx=floor(event.offsetX*scaleX/50);
+    let my=floor(event.offsetY*scaleY/50);
     mouseX=mx;
     mouseY=my;
     // console.log(`${mx}, ${my}`);

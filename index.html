@@ -8,8 +8,12 @@
             #Container{
                 position: relative;
                 margin: 5px;
-                width: 90%;
+                width: 95%;
                 max-width: 1600px;
+            }
+            #mainCanvas{
+                width:100%;
+                object-fit: contain;
             }
             .choice{
                 position: absolute; 
@@ -68,6 +72,9 @@
                 console.log(e.offsetX+','+e.offsetY);
             })
             info.appendChild(document.createTextNode(seed));
+            rect=canvas.getBoundingClientRect();
+            scaleX=canvas.width/rect.width;
+            scaleY=canvas.height/rect.height;
             preset();
             frontPage();
         }
@@ -76,7 +83,7 @@
         <h1>A simple turn-based game</h1>
 
         <div id="Container">
-            <canvas id="mainCanvas" width="1600" height="900" style="display: block; margin: 0px; padding: 0px; outline:none; border: 3px solid palegreen;" tabindex="999" onclick="Click(event)" onmousemove="onMouseMove(event)" onkeypress="keyPress(event)">
+            <canvas id="mainCanvas" width="1600px" height="900px" style="display: block; margin: 0px; padding: 0px; outline:none; border: 3px solid palegreen;" tabindex="999" onclick="Click(event)" onmousemove="onMouseMove(event)" onkeypress="keyPress(event)">
                 
             </canvas>
 

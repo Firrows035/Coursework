@@ -90,8 +90,8 @@ function playerHeal(hp){
 
 function flashmove(event){
     if(onBattle){
-        let x=Math.floor(event.offsetX/50);
-        let y=Math.floor(event.offsetY/50);
+        let x=Math.floor(event.offsetX*scaleX/50);
+        let y=Math.floor(event.offsetY*scaleY/50);
         if(x==player.X&&y==player.Y){
             return 0;
         }
@@ -112,8 +112,8 @@ function flashmove(event){
 }
 function fireball(event){
     if(onBattle){
-        let x=Math.floor(event.offsetX/50);
-        let y=Math.floor(event.offsetY/50);
+        let x=Math.floor(event.offsetX*scaleX/50);
+        let y=Math.floor(event.offsetY*scaleY/50);
         console.log(x,y);
         let dx=x-player.X;
         let dy=y-player.Y;
