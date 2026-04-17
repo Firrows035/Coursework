@@ -215,8 +215,8 @@ function keyPress(e){
 function choose(c){
     choiceChosen=1;
     choice[c].buff();
-    if(choice[c].isDisposable){
-        choice[c].weight=999999;
+    if(choice[c].selectableTime>0){
+        choice[c].selectableTime--;
     }
     changeClassStyle("choice",{display:"none"});
     p1.remove();
