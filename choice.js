@@ -13,14 +13,14 @@ function addChoice(name,buff,description,weight,selectableTime){
     return choice[choiceCount];
 }
 
-addChoice(`atk+`,
+addChoice(`atk++mhp--`,
     ()=>{
-        boost.player.atk+=100;
-        boost.player.mhp-=80;
-        boost.player.atkR+=2;
+        boost.player.atk+=150;
+        player.baseMhp-=player.baseMhp*0.8;
+        boost.player.atkR+=3;
         updatePlayerStat();
     },
-    `物理攻击力+100%,hp上限-80%, 攻击距离+3`,1,1);
+    `物理攻击力+150%,基础hp-80%, 攻击距离+3`,1,1);
 addChoice(`def+`,
     ()=>{
         player.baseDef+=5;
@@ -43,10 +43,10 @@ addChoice(`mmp+`,()=>{
     },  
     `mp上限+10%`,1,-1);
 addChoice(`mat+`,()=>{
-        boost.player.mat+=5;
+        boost.player.mat+=10;
         updatePlayerStat();
     },
-    `法术攻击力+5%`,1,-1);    
+    `法术攻击力+10%`,1,-1);    
 addChoice(`atkR+`,()=>{
         boost.player.atkR+=1;
         updatePlayerStat();
@@ -74,48 +74,37 @@ addChoice(`cd-`,()=>{
 "技能冷却-50%，mp上限+100%，造成伤害-20%",3,1);
 addChoice("atk++/Eatk+",()=>{
     boost.player.atk+=40;
+    boost.player.mat+=40;
     boost.enemy.atk+=20;
     updatePlayerStat();
 },
-"物理攻击力+40%，敌人攻击力+20%",4,5);
+"物理攻击力+40%，法术攻击力+40%，敌人攻击力+20%",4,5);
 
 
 
 function randChoice(){
-    let c1=random(1,choiceCount);
-    if(random(1,choice[c1].weight)>1||choice[c1].selectableTime==0) return randChoice();
-    else return c1;
+    let c=random(1,choiceCount);
+    if(random(1,choice[c].weight)>1||choice[c].selectableTime==0) return randChoice();
+    else return c;
 }
-var c1,c2,c3,p1,p2,p3;
+var c1;
+var choiceChosen=1;
 function setChoice(){
     if(currentStage=="intermission"){
-        c1=randChoice();
-        p1=document.createElement("p");;
-        choiceSet[0].appendChild(p1);
-        p1.appendChild(document.createTextNode(choice[c1].description));
-
-        c2=randChoice();
-        p2=document.createElement("p");
-        choiceSet[1].appendChild(p2);
-        p2.appendChild(document.createTextNode(choice[c2].description));
-
-        c3=randChoice();
-        p3=document.createElement("p");
-        choiceSet[2].appendChild(p3);
-        p3.appendChild(document.createTextNode(choice[c3].description));
-
-        changeClassStyle("choice",{display:"flex"});
+        choiceSlot.forEach(slot=>{
+            c1=randChoice();
+            slot.selector.description.id=c1;
+            slot.selector.description.text=choice[c1].description;
+        })
     }
+    choiceChosen=0;
 }
 function choose(c){
+    if(currentStage!="intermission") return;
     choiceChosen=1;
     choice[c].buff();
     if(choice[c].selectableTime>0){
         choice[c].selectableTime--;
     }
-    changeClassStyle("choice",{display:"none"});
-    p1.remove();
-    p2.remove();
-    p3.remove();
-
+    choiceChosen=1;
 }

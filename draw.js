@@ -269,13 +269,13 @@ function drawStatBar(x,y,length,height,point,maxPoint,color,id){
     context.fillStyle=color;
     context.fillRect(x+2,y+2,(length-4)*point/maxPoint,height-4);
 }
-function displayDiscription(target){
+function displayDescription(target){
     if(target.isSelectable){
         switch(target.selector.type){
             case "troop":
-                drawText(target.selector.discription.id,1080,365,"black","30px 黑体",490,35,false);
+                drawText(target.selector.description.id,1080,365,"black","30px 黑体",490,35,false);
                 drawStatBar(1260,335,180,30,target.hp,target.mhp,"red","");
-                drawImgZoom(target.selector.discription.icon,1080,370,100,100);
+                drawImgZoom(target.selector.description.icon,1080,370,100,100);
                 drawText(`ATK: ${floor(target.atk)}`,1200,415,"black","30px 黑体",500,40,false);
                 drawText(`DEF: ${floor(target.def)}`,1390,415,"black","30px 黑体",500,40,false);
                 drawText(`MAT: ${floor(target.mat)}`,1200,470,"black","30px 黑体",500,40,false);
@@ -290,6 +290,14 @@ function displayDiscription(target){
 function drawKeys(){
     key.forEach(k=>{
         drawImgZoom(k.source,k.selector.offsetX,k.selector.offsetY,k.selector.width,k.selector.height);
+    })
+}
+function drawChoiceSlot(){
+    choiceSlot.forEach(slot=>{
+        context.fillStyle="white";
+        context.fillRect(slot.selector.offsetX,slot.selector.offsetY,slot.selector.width,slot.selector.height);
+        drawRect(2,"black",slot.selector.offsetX,slot.selector.offsetY,slot.selector.width,slot.selector.height);
+        drawText(slot.selector.description.text,slot.selector.offsetX+5,slot.selector.offsetY+150,"black","30px 微软雅黑",slot.selector.width-10,35,true);
     })
 }
     

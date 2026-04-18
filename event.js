@@ -45,10 +45,8 @@ function Click(event){
     }
 }
 function onMouseMove(event){
-    rect=canvas.getBoundingClientRect();
-    scaleX=canvas.width/rect.width;
-    scaleY=canvas.height/rect.height;
-    if(mouseMoveCd||currentStage!="battle"){
+    
+    if(mouseMoveCd){
         return;
     }
     mouseMoveCd=1;
@@ -56,18 +54,27 @@ function onMouseMove(event){
         mouseMoveCd=0;
     },20);
     // console.log(event);
+    rect=canvas.getBoundingClientRect();
+    scaleX=canvas.width/rect.width;
+    scaleY=canvas.height/rect.height;
     mouseOffsetX=event.offsetX*scaleX;
     mouseOffsetY=event.offsetY*scaleY;
     let mx=floor(event.offsetX*scaleX/50);
     let my=floor(event.offsetY*scaleY/50);
     mouseX=mx;
     mouseY=my;
-    // console.log(`${mx}, ${my}`);
-    drawBattlefieldStatic();
-    checkSelector();
-    if(isPosLegal(mx,my)){
-        drawBlockSelector(mx,my,"red");
+    if(currentStage=="battle"){
+        drawBattlefieldStatic();
+
+        if(isPosLegal(mx,my)){
+            drawBlockSelector(mx,my,"red");
+        }
     }
+    if(currentStage=="intermission"){
+        intermissonPage();
+    }
+    checkSelector();
+    
 }
 function keyPress(e){
         console.log(e.key);
@@ -106,6 +113,11 @@ function checkSelector(){
             k.onMouseOver();
         }
     })
+    choiceSlot.forEach(slot=>{
+        if(isTargetOnMouseOver(slot)&&currentStage=="intermission"&&!choiceChosen){
+            slot.onMouseOver();
+        }
+    })
 }
 function checkOnClick(){
     enemy.forEach(emy=>{
@@ -127,6 +139,11 @@ function checkOnClick(){
     if(isTargetOnMouseOver(player)&&currentStage=="battle"){
         player.onClick();
     }
+    choiceSlot.forEach(slot=>{
+        if(isTargetOnMouseOver(slot)&&currentStage=="intermission"&&!choiceChosen){
+            slot.onClick();
+        }
+    })
 }
 function isTargetOnMouseOver(target){
     if(target.selector.offsetX<mouseOffsetX&&target.selector.offsetY<mouseOffsetY&&target.selector.offsetX+target.selector.width>mouseOffsetX&&target.selector.offsetY+target.selector.height>mouseOffsetY) return true;

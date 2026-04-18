@@ -32,7 +32,7 @@ function addEnemy(source){
             offsetY:0,
             width:50,
             height:50,
-            discription:{
+            description:{
                 id:"enemy",
                 icon:"Enemy1.jpg",
                 text:"undefined"
@@ -44,7 +44,7 @@ function addEnemy(source){
         },    
         onMouseOver(){
             if(!this.isDefeat){
-                displayDiscription(this);
+                displayDescription(this);
                 drawRect(2,this.selector.color,this.selector.offsetX,this.selector.offsetY,this.selector.width,this.selector.height);
             }    
         },
