@@ -10,15 +10,17 @@ function Click(event){
     mouseY=Y;
     if(currentStage=="startReady"){
         if(imageReady){
-            currentStage="battle";
-            round++;
-            beginTurn();            
+            currentStage="prologue";
+            characterPage();        
         }else{
             console.log(`Loading resources. Please wait...`);
             return 0;
         }
     }
-    if(skillReady){
+    if(currentStage=="prologue"){
+        checkOnClick();
+    }
+    if(currentStage=="battle"&&skillReady){
         if(isPosLegal(mouseX,mouseY)){
             if(skillSet[skillReady].skill(event)){
                 skillSet[skillReady].cdt=skillSet[skillReady].cd+1;
@@ -38,8 +40,7 @@ function Click(event){
         boost.enemy.mhp+=5;
         recoverHP(Math.max((player.mhp-player.hp)*0.8,player.mhp*0.2));
         recoverMP(Math.max((player.mmp-player.mp)*0.5,player.mmp*0.2));
-        round++;
-        beginTurn();
+        beginRound();
     }else{
         checkOnClick();
     }
@@ -63,6 +64,9 @@ function onMouseMove(event){
     let my=floor(event.offsetY*scaleY/50);
     mouseX=mx;
     mouseY=my;
+    if(currentStage=="prologue"){
+        characterPage();
+    }
     if(currentStage=="battle"){
         drawBattlefieldStatic();
 
@@ -118,6 +122,11 @@ function checkSelector(){
             slot.onMouseOver();
         }
     })
+    character.forEach(chara=>{
+        if(isTargetOnMouseOver(chara)&&currentStage=="prologue"){
+            chara.onMouseOver();
+        }
+    })
 }
 function checkOnClick(){
     enemy.forEach(emy=>{
@@ -142,6 +151,11 @@ function checkOnClick(){
     choiceSlot.forEach(slot=>{
         if(isTargetOnMouseOver(slot)&&currentStage=="intermission"&&!choiceChosen){
             slot.onClick();
+        }
+    })
+    character.forEach(chara=>{
+        if(isTargetOnMouseOver(chara)&&currentStage=="prologue"){
+            chara.onClick();
         }
     })
 }

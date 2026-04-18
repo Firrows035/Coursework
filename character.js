@@ -1,0 +1,53 @@
+var character=[];
+
+character.push({
+    id:"Lagrange",
+    source:"Lagrange.jpg",
+    mhp:150,
+    mmp:80,
+    atk:20,
+    def:5,
+    mat:20,
+    mdf:5,
+    atkR:2,
+    isSelectable:true,
+    selector:{
+        type:"character",
+        color:"red",
+        offsetX:50,
+        offsetY:100,
+        width:100,
+        height:100,
+        description:{
+            id:"Lagrange",
+            icon:"Lagrange.jpg",
+            text:`住在世界底层的观察者，前来“评估”地牢。`,
+        }
+    },
+    onClick(){
+        setCharacter(this);
+        if(currentStage=="prologue"){
+            currentStage="battle";
+            beginRound();
+        }
+    },
+    onMouseOver(){
+        drawRect(2,this.selector.color,this.selector.offsetX,this.selector.offsetY,this.selector.width,this.selector.height);
+        displayDescription(this);
+    }
+})
+
+function setCharacter(chara){
+    player.baseMhp=chara.mhp;
+    player.baseMmp=chara.mmp
+    player.baseDef=chara.def;
+    player.baseAtk=chara.atk;
+    player.baseMat=chara.mat;
+    player.baseMdf=chara.mdf;
+    player.baseAtkR=chara.atkR;
+    player.selector.description.icon=chara.source;
+    player.selector.description.id=chara.id;
+    player.selector.description.text=chara.selector.description.text;
+    updatePlayerStat();
+    checkPlayerStat();
+}

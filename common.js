@@ -5,8 +5,6 @@ var rect;
 var scaleX;
 var scaleY;
 
-var choiceSet;
-
 var mouseX=0;
 var mouseOffsetX=0;
 var mouseY=0;

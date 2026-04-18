@@ -2,13 +2,21 @@ var cooldownPerTurn=1;
 
 function preset(){
     addSkill(fireball,5,1,"fireball.png","fireball-cd.png",()=>{});
-    addSkill(flashmove,5,3,"flash.jpg","flash-cd.jpg",()=>{});
+    addSkill(flashmove,5,3,"flash.png","flash-cd.png",()=>{});
     addSkill(sacrificialStrike,0,9,"sacriPunch.png","sacriPunch-cd.png",sacriStrikeSelector);
     addSkill(heal,10,5,"heal.png","heal-cd.png",()=>{});
-    loadmap(0);
+    loadMap(0);
 }
-function beginTurn(){
-    summonEnemy("Enemy1.jpg",min(20,2+round));
+function characterPage(){
+    clearCanvas();
+    drawMesh();
+    drawText("选择角色",50,80,"black","60px 微软雅黑",1000,90,true);
+    drawCharacterChoice();
+}
+function beginRound(){
+    round++;
+    loadMap(random(0,map.length-1));
+    summonEnemy(enemyType[0],min(20,2+round));
     requestAnimationFrame(drawBattlefield);
 }
 function frontPage(){
