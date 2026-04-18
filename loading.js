@@ -27,6 +27,8 @@ var loadResource=new function(){
     loadImg("image/skill/","flash-cd.jpg");
     loadImg("image/skill/","sacriPunch.png");
     loadImg("image/skill/","sacriPunch-cd.png");
+    loadImg("image/skill/","heal.png");
+    loadImg("image/skill/","heal-cd.png");
     loadImg("image/color/","colorRed.png");
     loadImg("image/color/","colorBlue.png");
     loadImg("image/color/","colorWhite.png");

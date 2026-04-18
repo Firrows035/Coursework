@@ -1,10 +1,10 @@
-var choiceChosen;
 var cooldownPerTurn=1;
 
 function preset(){
     addSkill(fireball,5,1,"fireball.png","fireball-cd.png",()=>{});
     addSkill(flashmove,5,3,"flash.jpg","flash-cd.jpg",()=>{});
     addSkill(sacrificialStrike,0,9,"sacriPunch.png","sacriPunch-cd.png",sacriStrikeSelector);
+    addSkill(heal,10,5,"heal.png","heal-cd.png",()=>{});
     loadmap(0);
 }
 function beginTurn(){
@@ -38,8 +38,7 @@ function intermissonPage(){
     context.font="50px Arial";
     context.fillText(`Enemy Defeated: ${enemyDefeated}`,200,300);
     context.fillText("Click to Continue",200,400);
-    choiceChosen=0;
-    setChoice();
+    if(!choiceChosen) drawChoiceSlot();
 }
 
 function drawBattlefield(){

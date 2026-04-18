@@ -31,7 +31,7 @@ function addSkill(func,cost,cd,source,source_cd,displayFunc){
                 },
             },
             onMouseOver(){
-                displayDiscription(this);
+                displayDescription(this);
             },
             onClick(){
                 playSkill(this.id);
@@ -132,4 +132,9 @@ function sacrificialStrike(event){
         requestAnimationFrame(drawBattlefield);
         return 1;
     }
+}
+function heal(event){
+    if(player.hp==player.mhp) return 0;
+    player.hp=min(player.mhp,player.hp+1.2*player.mat);
+    return 1;
 }

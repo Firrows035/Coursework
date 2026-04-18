@@ -27,7 +27,7 @@ var player={
         offsetY:300,
         width:50,
         height:50,
-        discription:{
+        description:{
             id:"You",
             icon:"Lagrange.jpg",
             text:"undefined",
@@ -46,7 +46,7 @@ var player={
         this.selector.offsetY=this.Y*50;
     },
     onMouseOver(){
-        displayDiscription(this);
+        displayDescription(this);
     },
     onClick(){
         drawBattlefield();

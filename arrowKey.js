@@ -9,7 +9,7 @@ key.push({
         offsetY:660,
         width:95,
         height:95,
-        discription:"undefined"
+        description:"undefined"
     },
     onMouseOver(){
         drawRect(2,this.selector.color,this.selector.offsetX+2,this.selector.offsetY+2,this.selector.width-4,this.selector.height-4);
@@ -28,7 +28,7 @@ key.push({
         offsetY:760,
         width:95,
         height:95,
-        discription:"undefined"
+        description:"undefined"
     },
     onMouseOver(){
         drawRect(2,this.selector.color,this.selector.offsetX+2,this.selector.offsetY+2,this.selector.width-4,this.selector.height-4);
@@ -47,7 +47,7 @@ key.push({
         offsetY:760,
         width:95,
         height:95,
-        discription:"undefined"
+        description:"undefined"
     },
     onMouseOver(){
         drawRect(2,this.selector.color,this.selector.offsetX+2,this.selector.offsetY+2,this.selector.width-4,this.selector.height-4);
@@ -66,7 +66,7 @@ key.push({
         offsetY:760,
         width:95,
         height:95,
-        discription:"undefined"
+        description:"undefined"
     },
     onMouseOver(){
         drawRect(2,this.selector.color,this.selector.offsetX+2,this.selector.offsetY+2,this.selector.width-4,this.selector.height-4);
