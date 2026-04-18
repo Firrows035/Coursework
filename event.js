@@ -24,12 +24,14 @@ function Click(event){
                 skillSet[skillReady].cdt=skillSet[skillReady].cd+1;
                 player.mp-=skillSet[skillReady].cost;
             }
+            skillSet[skillReady].isSelected=0;
+            skillReady=0;
+            drawSkillStat();
         }else{
+            skillSet[skillReady].isSelected=0;
+            skillReady=0;
             checkOnClick();
-        }
-        skillSet[skillReady].isSelected=0;
-        skillReady=0;
-        drawSkillStat();        
+        }      
     }else if(currentStage=="intermission"&&choiceChosen){
         currentStage="battle";
         boost.enemy.atk+=5;
