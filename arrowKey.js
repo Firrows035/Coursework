@@ -1,0 +1,77 @@
+var key=[];
+key.push({
+    source:"arrowUp.png",
+    isSelectable:true,
+    selector:{
+        type:"key",
+        color:"red",
+        offsetX:850,
+        offsetY:660,
+        width:95,
+        height:95,
+        discription:"undefined"
+    },
+    onMouseOver(){
+        drawRect(2,this.selector.color,this.selector.offsetX+2,this.selector.offsetY+2,this.selector.width-4,this.selector.height-4);
+    },
+    onClick(){
+        playerMove("w");
+    }
+})
+key.push({
+    source:"arrowDown.png",
+    isSelectable:true,
+    selector:{
+        type:"key",
+        color:"red",
+        offsetX:850,
+        offsetY:760,
+        width:95,
+        height:95,
+        discription:"undefined"
+    },
+    onMouseOver(){
+        drawRect(2,this.selector.color,this.selector.offsetX+2,this.selector.offsetY+2,this.selector.width-4,this.selector.height-4);
+    },
+    onClick(){
+        playerMove("s");
+    }
+})
+key.push({
+    source:"arrowLeft.png",
+    isSelectable:true,
+    selector:{
+        type:"key",
+        color:"red",
+        offsetX:750,
+        offsetY:760,
+        width:95,
+        height:95,
+        discription:"undefined"
+    },
+    onMouseOver(){
+        drawRect(2,this.selector.color,this.selector.offsetX+2,this.selector.offsetY+2,this.selector.width-4,this.selector.height-4);
+    },
+    onClick(){
+        playerMove("a");
+    }
+})
+key.push({
+    source:"arrowRight.png",
+    isSelectable:true,
+    selector:{
+        type:"key",
+        color:"red",
+        offsetX:950,
+        offsetY:760,
+        width:95,
+        height:95,
+        discription:"undefined"
+    },
+    onMouseOver(){
+        drawRect(2,this.selector.color,this.selector.offsetX+2,this.selector.offsetY+2,this.selector.width-4,this.selector.height-4);
+    },
+    onClick(){
+        playerMove("d");
+    }
+})

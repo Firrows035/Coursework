@@ -88,7 +88,7 @@ function randChoice(){
 }
 var c1,c2,c3,p1,p2,p3;
 function setChoice(){
-    if(intermisson){
+    if(currentStage=="intermission"){
         c1=randChoice();
         p1=document.createElement("p");;
         choiceSet[0].appendChild(p1);
@@ -106,4 +106,16 @@ function setChoice(){
 
         changeClassStyle("choice",{display:"flex"});
     }
+}
+function choose(c){
+    choiceChosen=1;
+    choice[c].buff();
+    if(choice[c].selectableTime>0){
+        choice[c].selectableTime--;
+    }
+    changeClassStyle("choice",{display:"none"});
+    p1.remove();
+    p2.remove();
+    p3.remove();
+
 }
