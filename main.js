@@ -18,7 +18,7 @@ function frontPage(){
     context.fillText("Simple Turn Fight",200,300); 
     context.font="50px Arial";
     context.fillText("Click to Start",200,450);
-    startReady=1;
+    currentStage="startReady";
 }
 
 function failurePage(){
@@ -51,6 +51,7 @@ function drawBattlefield(){
 
     drawMesh();
     drawBlocks();
+    drawKeys();
     drawImgZoom("Lagrange.jpg",player.X*50+5,player.Y*50+5,40,40);
     drawPlayerAttackRange();
     activateEffectsAll();
@@ -71,6 +72,7 @@ function drawBattlefield(){
 
         drawMesh();
         drawBlocks();
+        drawKeys();
         drawImgZoom("Lagrange.jpg",player.X*50+5,player.Y*50+5,40,40);
         drawPlayerAttackRange();
         drawProjectile();
@@ -93,8 +95,8 @@ function drawBattlefieldStatic(){
     clearCanvas();
     drawMesh();
     drawBlocks();
+    drawKeys();
     drawImgZoom("Lagrange.jpg",player.X*50+5,player.Y*50+5,40,40);
-    
     drawPlayerAttackRange();
     drawEnemy();
     drawProjectile();
@@ -103,20 +105,4 @@ function drawBattlefieldStatic(){
     drawEnemyStat();
 }
 
-function addSkill(func,cost,cd,source,source_cd,displayFunc){
-    if(skillCount<9){
-        skillCount++;
-        skillSet[skillCount]={
-            skill:func,
-            cost:cost,
-            cd:cd,
-            cdt:0,
-            source:source,
-            sourceCD:source_cd,
-            isSelected:0,
-            drawSelector:displayFunc,
-        }
-        return 1;
-    }
-    return 0;
-}
+

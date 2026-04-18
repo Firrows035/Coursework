@@ -49,7 +49,6 @@
     </head>
     <script src="common.js"></script>
     <script src="draw.js"></script>
-    <script src="action.js"></script>
     <script src="battle.js"></script>
     <script src="main.js"></script>
     <script src="cheat.js"></script>
@@ -57,25 +56,27 @@
     <script src="loading.js"></script>
     <script src="effects.js"></script>
     <script src="map.js"></script>
-    <script src="blockFeature.js"></script>
+    <script src="block.js"></script>
+    <script src="player.js"></script>
+    <script src="projectile.js"></script>
+    <script src="enemy.js"></script>
+    <script src="event.js"></script>
+    <script src="skill.js"></script>
+    <script src="testSelection.js"></script>
+    <script src="arrowKey.js"></script>
     <script>
         window.onload=function(){
             info=document.getElementById("extra");
             canvas=document.getElementById("mainCanvas");
             context=canvas.getContext("2d");
-            choiceSet=Array.from(document.getElementsByClassName(`choice`));
-            // canvas.addEventListener("keypress",e=>{ 
-                
-
-                
-            // })
-            canvas.addEventListener("click",e=>{
-                console.log(e.offsetX+','+e.offsetY);
-            })
-            info.appendChild(document.createTextNode(seed));
             rect=canvas.getBoundingClientRect();
             scaleX=canvas.width/rect.width;
             scaleY=canvas.height/rect.height;
+            choiceSet=Array.from(document.getElementsByClassName(`choice`));
+            canvas.addEventListener("click",e=>{
+                console.log(floor(e.offsetX*scaleX)+','+floor(e.offsetY*scaleY));
+            })
+            info.appendChild(document.createTextNode(seed));
             preset();
             frontPage();
         }
@@ -100,9 +101,6 @@
                 
             </div>
 
-            <div id="info">
-                <p style="position: absolute; top:400px; left:20px; width: 460px; height: 180px; border: 1px solid black; margin: 0px; padding: 0px;"></p>
-            </div>
         </div>
         
         <div id="extra"></div>

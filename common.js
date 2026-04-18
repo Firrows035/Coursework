@@ -8,18 +8,17 @@ var scaleY;
 var choiceSet;
 
 var mouseX=0;
+var mouseOffsetX=0;
 var mouseY=0;
+var mouseOffsetY=0;
 
-var enemy=[];
 var block=[];
 var enemyCount=0;
 var enemyDefeated=0;
 var enemyAlive=0;
 var enemyInround=0;
 
-var skillSet=[];
-var skillCount=0;
-var skillReady=0;
+
 
 var projectileSet=[];
 var projectileCount=0;
@@ -50,10 +49,7 @@ var boost={
         atkR:0,
     }
 };
-
-var onBattle=0;
-var startReady=0;
-var intermisson=0;
+var currentStage="initiate";
 
 var choice={};
 
@@ -61,29 +57,6 @@ var choice={};
 //due to the fukin' delay.. Now no delays but we need to restrict game speed
 var actionCooldown=0;
 
-var player={
-    baseMhp:100,
-    baseMmp:80,
-    baseDef:5,
-    baseAtk:15,
-    baseMat:15,
-    baseMdf:5,
-    baseAtkR:2,
-    hp:100+boost.player.mhp,
-    mhp:100+boost.player.mhp,
-    mp:80+boost.player.mmp,
-    mmp:80+boost.player.mmp,
-    def:5+boost.player.def,
-    atk:15*(1+boost.player.atk/100),
-    mat:15*(1+boost.player.mat/100),
-    mdf:5+boost.player.mdf,
-    dmgBoost:1+boost.player.dmg/100,    
-    atkR:2+boost.player.atkR,
-    
-    X:10,//0-20, 0px-1000(1050)px
-    Y:6,//0-12, 0px-600(650)px
-    effect:[],
-}
 
 function random(min,max){
     return Math.floor(Math.random()*(max-min+1)-Number.EPSILON)+min;
@@ -111,126 +84,130 @@ function max(x,y){
 function abs(x){
     return Math.abs(x);
 }
-
-
-var time=new Date();
-
 //i guess it might be useful...
 var seed=""+Math.floor(Math.random()*Math.pow(10,16))+Math.floor(Math.random()*Math.pow(10,16));
-
-
-
-function Click(event){
-    rect=canvas.getBoundingClientRect();
-    scaleX=canvas.width/rect.width;
-    scaleY=canvas.height/rect.height;    
-    let X=floor(event.offsetX*scaleX/50);
-    let Y=floor(event.offsetY*scaleY/50);
-    if(startReady===1){
-        if(imageReady){
-            startReady=-1;
-            onBattle=1;
-            round++;
-            beginTurn();            
-        }
-        else{
-            console.log(`Loading resources. Please wait...`);
-            return 0;
-        }
-
-    }
-    if(skillReady){
-        skillSet[skillReady].isSelected=0;
-        if(skillSet[skillReady].skill(event)){
-            skillSet[skillReady].cdt=skillSet[skillReady].cd+1;
-            player.mp-=skillSet[skillReady].cost;
-            skillReady=0;
-        }
-        else{
-            skillReady=0;
-            drawSkillStat();
-        }
-    }
-    else if(distanceBetweenPosition(X,Y,player.X,player.Y)<=1){
-        playerMoveByClick(X,Y);
-    }
-    if(intermisson===1&&choiceChosen){
-        intermisson=0;
-        onBattle=1;
-        boost.enemy.atk+=5;
-        boost.enemy.mhp+=5;
-        recoverHP(Math.max((player.mhp-player.hp)*0.8,player.mhp*0.2));
-        recoverMP(Math.max((player.mmp-player.mp)*0.5,player.mmp*0.2));
-        round++;
-        beginTurn();
-    }
-}
 var mouseMoveCd=0;
-function onMouseMove(event){
-    rect=canvas.getBoundingClientRect();
-    scaleX=canvas.width/rect.width;
-    scaleY=canvas.height/rect.height;
-    if(mouseMoveCd||onBattle==0){
-        return;
-    }
-    mouseMoveCd=1;
-    setTimeout(()=>{
-        mouseMoveCd=0;
-    },50);
-    // console.log(event);
-    let mx=floor(event.offsetX*scaleX/50);
-    let my=floor(event.offsetY*scaleY/50);
-    mouseX=mx;
-    mouseY=my;
-    // console.log(`${mx}, ${my}`);
-    if(isPosLegal(mx,my)){
-        drawBattlefieldStatic();
-        drawBlockSelector(mx,my,"#ee1111");
-        if(skillReady){
-            skillSet[skillReady].drawSelector(mx,my);
-        }
-    }
-}
-function keyPress(e){
-        console.log(e.key);
-        e.preventDefault();
-    if(e.key=="w"||e.key=="a"||e.key=="s"||e.key=="d"||e.key==" "){
-        
-        if(skillReady){
-            skillSet[skillReady].isSelected=0;
-            skillReady=0;
-            // drawSkillStat();
-        }
-        playerMove(e.key);
-    }
-    if(e.key>="1"&&e.key<="9"){
-        playSkill(+e.key);
-    }
-}
-
-
-
-
-
-function choose(c){
-    choiceChosen=1;
-    choice[c].buff();
-    if(choice[c].selectableTime>0){
-        choice[c].selectableTime--;
-    }
-    changeClassStyle("choice",{display:"none"});
-    p1.remove();
-    p2.remove();
-    p3.remove();
-
-}
-
-
 function changeClassStyle(className,styles){
     let c=Array.from(document.getElementsByClassName(`${className}`));
     c.forEach(ce=>{
         Object.assign(ce.style,styles);
     });
+}
+function isPosAvaliableLE1(x,y){
+    let c=0;
+    enemy.forEach(emy=>{
+        if(emy.X==x&&emy.Y==y&&emy.isDefeat==0){
+            c++;
+        }
+    })
+    if(player.X==x&&player.Y==y){
+        c++;
+    }
+    block.forEach(bloc=>{
+        if(bloc.X==x&&bloc.Y==y&&bloc.isOnField&&!bloc.isPassable){
+            c++;
+        }
+    })
+    return c<=1;
+}
+function isPosAvailableL1(x,y){
+    let c=0;
+    enemy.forEach(emy=>{
+        if(emy.X==x&&emy.Y==y&&emy.isDefeat==0){
+            c++;
+        }
+    })
+    if(player.X==x&&player.Y==y){
+        c++;
+    }
+    block.forEach(bloc=>{
+        if(bloc.X==x&&bloc.Y==y&&bloc.isOnField&&!bloc.isPassable){
+            c++;
+        }
+    })
+    return c<1;
+}
+
+function checkPosition(x,y){
+    if(player.X==x&&player.Y==y){
+        return ["player",0];
+    }
+    for(let i=enemyCount-enemyInround+1;i<=enemyCount;i++){
+        if(enemy[i].X==x&&enemy[i].Y==y&&enemy[i].isDefeat==0){
+            return ["enemy",i];
+        }
+    }
+    return ["empty",0];
+}
+function distanceEnemyToPlayer(count){
+    return Math.abs(player.X-enemy[count].X)+Math.abs(player.Y-enemy[count].Y);
+}
+function directionEnemyToPlayer(count){
+    return [player.X-enemy[count].X,player.Y-enemy[count].Y];
+}
+function directionToPosition(p0,p1){
+    return [p1[0]-p0[0],p1[1]-p0[1]];
+}
+function distanceBetweenPosition(x1,y1,x2,y2){
+    return Math.abs(x1-x2)+Math.abs(y1-y2);
+}
+function distanceEnemyToProjectile(Ecount,Pcount){
+    return Math.sqrt((enemy[Ecount].X-projectileSet[Pcount].X)**2+(enemy[Ecount].Y-projectileSet[Pcount].Y)**2);
+}
+function distanceBetweenEntity(entity1,entity2){
+    return Math.sqrt((entity1.X-entity2.X)**2+(entity1.Y-entity2.Y)**2);
+}
+function isPosLegal(x,y){
+    if(x<=20&&x>=0&&y<=12&&y>=0)return 1;
+    else return 0;
+}
+function isPathBlocked(x1,y1,x2,y2){
+    let sign=0;
+    if(isPosLegal(x1,y1)&&isPosLegal(x2,y2)){
+        block.forEach(bloc=>{
+            if(sign) return;
+            let bx1=bloc.X-0.5,bx2=bloc.X+0.5;
+            let by1=bloc.Y-0.5,by2=bloc.Y+0.5;
+
+            if(!bloc.isPassable&&(x1-bloc.X)*(x2-bloc.X)<=0&&(y1-bloc.Y)*(y2-bloc.Y)<=0){
+                let j1=lineRelation(x1,y1,x2,y2,bx1,by1,bx2,by2);
+                if(j1[0]=="overlap"){
+                    sign=1;
+                }
+                else if(j1[0]=="intersect"){
+                    if(j1[1]){
+                        sign=2;
+                    }
+                }
+                let j2=lineRelation(x1,y1,x2,y2,bx1,by2,bx2,by1);
+                if(j2[0]=="overlap"){
+                    sign=3;
+                }
+                else if(j2[0]=="intersect"){
+                    if(j2[1]){
+                        sign=4;
+                    }
+                }
+            }            
+        })
+    }
+    return sign;
+}
+function lineRelation(x1,y1,x2,y2,x3,y3,x4,y4){
+    let D0=(x3-x4)*(y2-y1)-(x2-x1)*(y3-y4);
+    if(D0!=0){
+        let D1=(y3-y1)*(x3-x4)-(x3-x1)*(y3-y4);
+        let D2=(y2-y1)*(x3-x1)-(x2-x1)*(y3-y1);
+        let t1=D1/D0;
+        let t2=D2/D0;
+        return ["intersect",t1>0&&t1<1&&t2>0&&t2<1,[(x2-x1)*t1+x1,(y2-y1)*t1+y1]];
+    }
+    else if(y3-y1==x3-x1){
+        return ["overlap"];
+    }
+    else{
+        return ["parallel"];
+    }
 }
 
 

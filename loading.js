@@ -34,6 +34,10 @@ var loadResource=new function(){
     loadImg("image/color/","colorGreen.png");
     loadImg("image/block/","wall.png");
     loadImg("image/block/","poisonBlock.png");
+    loadImg("image/key/","arrowUp.png");
+    loadImg("image/key/","arrowDown.png");
+    loadImg("image/key/","arrowLeft.png");
+    loadImg("image/key/","arrowRight.png");
     checkResource();
 }
 

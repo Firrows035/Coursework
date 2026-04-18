@@ -4,6 +4,7 @@ function addEffectType(effectName,source,effectFunc,maxDuration){
         source:source,
         effectFunc:effectFunc,
         maxDuration:maxDuration,
+        type:"effect",
     }
 }
 

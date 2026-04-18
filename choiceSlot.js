@@ -1,5 +1,5 @@
 var choiceSlot=[];
-function addChoiceSlot(slotName,usage,x,y,width,height,description,font,color,onClick){
+function addChoiceSlot(slotName,usage,x,y,width,height,description,font,color,onMouseOver,onClick){
     choiceSlot.push({
         slotName:slotName,
         usage:usage,
@@ -13,5 +13,6 @@ function addChoiceSlot(slotName,usage,x,y,width,height,description,font,color,on
             color:color,
         },
         onClick:onClick,
-    }
+        onMouseOver:onMouseOver,
+    })
 }
