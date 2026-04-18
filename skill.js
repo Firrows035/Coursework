@@ -7,6 +7,7 @@ function addSkill(func,cost,cd,source,source_cd,displayFunc){
     if(skillCount<9){
         skillCount++;
         skillSet[skillCount]={
+            id:skillCount,
             skill:func,
             cost:cost,
             cd:cd,
@@ -15,7 +16,26 @@ function addSkill(func,cost,cd,source,source_cd,displayFunc){
             sourceCD:source_cd,
             isSelected:0,
             drawSelector:displayFunc,
-            type:"skill",
+            isSelectable:true,
+            selector:{
+                type:"skill",
+                color:"blue",
+                offsetX:100*skillCount-50,
+                offsetY:660,
+                width:100,
+                height:100,
+                description:{
+                    id:"undefined",
+                    icon:source,
+                    description:"undefined",
+                },
+            },
+            onMouseOver(){
+                displayDiscription(this);
+            },
+            onClick(){
+                playSkill(this.id);
+            }
         }
         return 1;
     }

@@ -1,25 +1,63 @@
 var player={
-    baseMhp:100,
+    baseMhp:150,
     baseMmp:80,
     baseDef:5,
-    baseAtk:15,
-    baseMat:15,
+    baseAtk:20,
+    baseMat:20,
     baseMdf:5,
     baseAtkR:2,
-    hp:100+boost.player.mhp,
-    mhp:100+boost.player.mhp,
+    hp:150+boost.player.mhp,
+    mhp:150+boost.player.mhp,
     mp:80+boost.player.mmp,
     mmp:80+boost.player.mmp,
     def:5+boost.player.def,
-    atk:15*(1+boost.player.atk/100),
-    mat:15*(1+boost.player.mat/100),
+    atk:20*(1+boost.player.atk/100),
+    mat:20*(1+boost.player.mat/100),
     mdf:5+boost.player.mdf,
     dmgBoost:1+boost.player.dmg/100,    
     atkR:2+boost.player.atkR,
     X:10,//0-20, 0px-1000(1050)px
     Y:6,//0-12, 0px-600(650)px
     effect:[],
-    type:"entity",
+    isSelectable:true,
+    selector:{
+        type:"troop",
+        color:"red",
+        offsetX:500,
+        offsetY:300,
+        width:50,
+        height:50,
+        discription:{
+            id:"You",
+            icon:"Lagrange.jpg",
+            text:"undefined",
+        },
+        
+    },
+    attack(target){
+        if(distanceBetweenEntity(this,target)<=this.atkR&&!isPathBlocked(this.X,this.Y,target.X,target.Y)){
+            this.dealDamageTo(target,this.atk,false);
+            return 1;
+        }
+        else return 0;
+    },
+    updateSelector(){
+        this.selector.offsetX=this.X*50;
+        this.selector.offsetY=this.Y*50;
+    },
+    onMouseOver(){
+        displayDiscription(this);
+    },
+    onClick(){
+        drawBattlefield();
+    },
+    dealDamageTo(target,damage,isMagic){
+        if(isMagic){
+            target.hp=max(0,target.hp-max(damage*0.05,damage*(1-target.mdf/100))*this.dmgBoost);
+        }else{
+            target.hp=max(0,target.hp-max(damage*0.05,damage-target.def)*this.dmgBoost);
+        }
+    }
 }
 
 function playerMove(direction){
@@ -31,7 +69,6 @@ function playerMove(direction){
     }
     actionCooldown=1;
     setTimeout(()=>{actionCooldown=0;},100);
-    playerAttack();
     let xtemp=player.X;
     let ytemp=player.Y;
     switch(direction){

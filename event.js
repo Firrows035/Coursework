@@ -1,20 +1,22 @@
 function Click(event){
     rect=canvas.getBoundingClientRect();
     scaleX=canvas.width/rect.width;
-    scaleY=canvas.height/rect.height;    
+    scaleY=canvas.height/rect.height;
+    mouseOffsetX=event.offsetX*scaleX;
+    mouseOffsetY=event.offsetY*scaleY;
     let X=floor(event.offsetX*scaleX/50);
     let Y=floor(event.offsetY*scaleY/50);
+    mouseX=X;
+    mouseY=Y;
     if(currentStage=="startReady"){
         if(imageReady){
             currentStage="battle";
             round++;
             beginTurn();            
-        }
-        else{
+        }else{
             console.log(`Loading resources. Please wait...`);
             return 0;
         }
-
     }
     if(skillReady){
         skillSet[skillReady].isSelected=0;
@@ -22,16 +24,11 @@ function Click(event){
             skillSet[skillReady].cdt=skillSet[skillReady].cd+1;
             player.mp-=skillSet[skillReady].cost;
             skillReady=0;
-        }
-        else{
+        }else{
             skillReady=0;
             drawSkillStat();
         }
-    }
-    else if(distanceBetweenPosition(X,Y,player.X,player.Y)<=1){
-        playerMoveByClick(X,Y);
-    }
-    if(currentStage=="intermission"&&choiceChosen){
+    }else if(currentStage=="intermission"&&choiceChosen){
         currentStage="battle";
         boost.enemy.atk+=5;
         boost.enemy.mhp+=5;
@@ -39,6 +36,8 @@ function Click(event){
         recoverMP(Math.max((player.mmp-player.mp)*0.5,player.mmp*0.2));
         round++;
         beginTurn();
+    }else{
+        checkOnClick();
     }
 }
 function onMouseMove(event){
@@ -51,19 +50,19 @@ function onMouseMove(event){
     mouseMoveCd=1;
     setTimeout(()=>{
         mouseMoveCd=0;
-    },50);
+    },20);
     // console.log(event);
+    mouseOffsetX=event.offsetX*scaleX;
+    mouseOffsetY=event.offsetY*scaleY;
     let mx=floor(event.offsetX*scaleX/50);
     let my=floor(event.offsetY*scaleY/50);
     mouseX=mx;
     mouseY=my;
     // console.log(`${mx}, ${my}`);
+    drawBattlefieldStatic();
+    checkSelector();
     if(isPosLegal(mx,my)){
-        drawBattlefieldStatic();
-        drawBlockSelector(mx,my,"#ee1111");
-        if(skillReady){
-            skillSet[skillReady].drawSelector(mx,my);
-        }
+        drawBlockSelector(mx,my,"red");
     }
 }
 function keyPress(e){
@@ -81,4 +80,51 @@ function keyPress(e){
     if(e.key>="1"&&e.key<="9"){
         playSkill(+e.key);
     }
+}
+function checkSelector(){
+    enemy.forEach(emy=>{
+        emy.updateSelector();
+        if(isTargetOnMouseOver(emy)&&currentStage=="battle"){
+            emy.onMouseOver();
+        }
+    })
+    skillSet.forEach(skil=>{
+        if(isTargetOnMouseOver(skil)&&currentStage=="battle"){
+            skil.onMouseOver();
+        }
+    })
+    player.updateSelector();
+    if(isTargetOnMouseOver(player)&&currentStage=="battle"){
+        player.onMouseOver();
+    }
+    key.forEach(k=>{
+        if(isTargetOnMouseOver(k)&&currentStage=="battle"){
+            k.onMouseOver();
+        }
+    })
+}
+function checkOnClick(){
+    enemy.forEach(emy=>{
+        if(isTargetOnMouseOver(emy)&&currentStage=="battle"){
+            emy.onClick();
+        }
+    })
+    key.forEach(k=>{
+        if(isTargetOnMouseOver(k)&&currentStage=="battle"){
+            k.onClick();
+        }
+    })
+    skillSet.forEach(skil=>{
+        if(isTargetOnMouseOver(skil)&&currentStage=="battle"){
+            skil.onClick();
+        }
+    })
+    player.updateSelector();
+    if(isTargetOnMouseOver(player)&&currentStage=="battle"){
+        player.onClick();
+    }
+}
+function isTargetOnMouseOver(target){
+    if(target.selector.offsetX<mouseOffsetX&&target.selector.offsetY<mouseOffsetY&&target.selector.offsetX+target.selector.width>mouseOffsetX&&target.selector.offsetY+target.selector.height>mouseOffsetY) return true;
+    else return false;
 }

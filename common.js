@@ -8,9 +8,10 @@ var scaleY;
 var choiceSet;
 
 var mouseX=0;
+var mouseOffsetX=0;
 var mouseY=0;
+var mouseOffsetY=0;
 
-var enemy=[];
 var block=[];
 var enemyCount=0;
 var enemyDefeated=0;

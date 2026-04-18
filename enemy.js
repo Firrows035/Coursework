@@ -1,32 +1,59 @@
-function addEnemy(source){
-    // if(!enemy[name]){
-        enemyCount++;
-        enemyAlive++;
-        enemy[enemyCount]={
-            appear:source,
+var enemy=[];
 
-            atk:15*(1+boost.enemy.atk/100),
-            hp:80*(1+boost.enemy.mhp/100),
-            mhp:80*(1+boost.enemy.mhp/100),
-            def:0+boost.enemy.def,
-            mat:15*(1+boost.enemy.mat/100),
-            mdf:0+boost.enemy.mdf,
-            dmgBoost:1+boost.enemy.dmg/100,
-            atkR:1+boost.enemy.atkR,
-            warnR:10,
-            atktype:1,
-            X:0,
-            Y:0,
-            isDefeat:0,
-            movePattern:"default",
-            navigatePosition:[0,0],
-            warnedTime:0,
-            isUnderAttack:0,
-            bio:``,
-            effect:[],
-            type:"entity",
-        }
-    // }
+function addEnemy(source){
+    enemyCount++;
+    enemyAlive++;
+    enemy[enemyCount]={
+        source:source,
+        atk:15*(1+boost.enemy.atk/100),
+        hp:80*(1+boost.enemy.mhp/100),
+        mhp:80*(1+boost.enemy.mhp/100),
+        def:0+boost.enemy.def,
+        mat:15*(1+boost.enemy.mat/100),
+        mdf:0+boost.enemy.mdf,
+        dmgBoost:1+boost.enemy.dmg/100,
+        atkR:1+boost.enemy.atkR,
+        warnR:10,
+        atktype:1,
+        X:0,
+        Y:0,
+        isDefeat:0,
+        movePattern:"default",
+        navigatePosition:[0,0],
+        warnedTime:0,
+        isUnderAttack:0,
+        bio:``,
+        effect:[],
+        isSelectable:true,
+        selector:{
+            type:"troop",
+            color:"red",
+            offsetX:0,
+            offsetY:0,
+            width:50,
+            height:50,
+            discription:{
+                id:"enemy",
+                icon:"Enemy1.jpg",
+                text:"undefined"
+            },
+        },
+        updateSelector(){
+            this.selector.offsetX=this.X*50;
+            this.selector.offsetY=this.Y*50;
+        },    
+        onMouseOver(){
+            if(!this.isDefeat){
+                displayDiscription(this);
+                drawRect(2,this.selector.color,this.selector.offsetX,this.selector.offsetY,this.selector.width,this.selector.height);
+            }    
+        },
+        onClick(){
+            if(player.attack(this)&&!this.isDefeat){
+                drawBattlefield();
+            }
+        }   
+    }
     return source;
 }
 function enemyMove(count,direction){
@@ -175,7 +202,6 @@ function setEnemy(count,x,y){
     if(!enemy[count]){
         return console.error("enemy id not found");
     }
-    // drawImgZoom(enemy[count].appear,x*50,y*50,50,50);
     enemy[count].X=x;
     enemy[count].Y=y;
 }

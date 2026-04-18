@@ -31,6 +31,21 @@ function drawMesh(){
         context.stroke();
         context.closePath();
     }
+    context.beginPath();
+    context.moveTo(1050,330);
+    context.lineTo(1600,330);
+    context.stroke();
+    context.closePath();
+    context.beginPath();
+    context.moveTo(1050,600);
+    context.lineTo(1600,600);
+    context.stroke();
+    context.closePath();
+    context.beginPath();
+    context.moveTo(1050,650);
+    context.lineTo(1050,900);
+    context.stroke();
+    context.closePath();
 }
 
 function clearCanvas(){
@@ -41,12 +56,9 @@ function clearBattlefield(){
     context.clearRect(0,0,1050,650);
 }
 
-
-
-
 function drawEnemy1(count){
     if(!enemy[count].isDefeat){
-        drawImgZoom(enemy[count].appear,enemy[count].X*50+5,enemy[count].Y*50+5,40,40);
+        drawImgZoom(enemy[count].source,enemy[count].X*50+5,enemy[count].Y*50+5,40,40);
     }
 }
 
@@ -59,7 +71,7 @@ function drawEnemy(){
 function drawPlayerStat(){
     context.clearRect(1052,0,548,150);
     context.font="30px Arial";
-    context.fillStyle="#000000";
+    context.fillStyle="black";
     context.fillText(`HP: ${floor(player.hp)}/${floor(player.mhp)}`,1410,80);
     context.fillRect(1098,48,304,34);
     context.fillText(`MP: ${floor(player.mp)}/${floor(player.mmp)}`,1410,150);
@@ -120,7 +132,7 @@ function drawProjectile(){
 }
 
 function drawSkillStat(){
-    context.clearRect(0,658,904,104);
+    context.clearRect(50,660,700,100);
     for(let i=0;i<skillCount;i++){
         if(!skillSet[i+1].cdt){
             drawImgZoom(skillSet[i+1].source,100*i+50,660,80,80);
@@ -144,6 +156,7 @@ function drawSkillStat(){
         context.fillText(`${skillSet[i+1].cost}`,100*i+80+50,760);
         if(skillSet[i+1].isSelected){
             drawSelectSkill(i+1);
+            skillSet[i+1].drawSelector();
         }        
     }
 }
@@ -245,3 +258,38 @@ function drawText(text,x,y,color,font,maxWidth,lineHeight,isChinese){
     }
     context.fillText(line,x,y);
 }
+//快速绘制计量条
+function drawStatBar(x,y,length,height,point,maxPoint,color,id){
+    context.fillStyle="black";
+    context.font=`${height}px Arial`;
+    context.fillRect(x,y,length,height);
+    context.fillText(`${id} ${floor(point)}/${floor(maxPoint)}`,x+length+5,y+height);
+    context.fillStyle="white";
+    context.fillRect(x+2,y+2,length-4,height-4);
+    context.fillStyle=color;
+    context.fillRect(x+2,y+2,(length-4)*point/maxPoint,height-4);
+}
+function displayDiscription(target){
+    if(target.isSelectable){
+        switch(target.selector.type){
+            case "troop":
+                drawText(target.selector.discription.id,1080,365,"black","30px 黑体",490,35,false);
+                drawStatBar(1260,335,180,30,target.hp,target.mhp,"red","");
+                drawImgZoom(target.selector.discription.icon,1080,370,100,100);
+                drawText(`ATK: ${floor(target.atk)}`,1200,415,"black","30px 黑体",500,40,false);
+                drawText(`DEF: ${floor(target.def)}`,1390,415,"black","30px 黑体",500,40,false);
+                drawText(`MAT: ${floor(target.mat)}`,1200,470,"black","30px 黑体",500,40,false);
+                drawText(`MDF: ${floor(target.mdf)}`,1390,470,"black","30px 黑体",500,40,false);
+                break;
+            case "skill":
+                break;//预留空间
+        }
+    }
+}
+
+function drawKeys(){
+    key.forEach(k=>{
+        drawImgZoom(k.source,k.selector.offsetX,k.selector.offsetY,k.selector.width,k.selector.height);
+    })
+}
+    

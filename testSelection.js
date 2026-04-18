@@ -15,7 +15,3 @@ function addSelection(selectionName,x,y,width,height,description,font,color,onMo
         onClick:onClick
     })
 }
-
-function highlightSelection(selec){
-    drawRect(2,"red",selec.offsetX,selec.offsetY,selec.Width,selec.height);
-}
