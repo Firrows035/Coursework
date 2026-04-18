@@ -1,28 +1,47 @@
 var enemy=[];
-
-function addEnemy(source){
+var enemyType=[];
+enemyType.push({
+    id:"Kanade",
+    source:"Enemy1.jpg",
+    mhp:80,
+    atk:15,
+    def:0,
+    mat:15,
+    mdf:0,
+    atkR:1,
+    warnR:10,
+    atktype:1,
+    movePattern:"default",
+    selector:{
+        description:{
+            id:"Kanade",
+            icon:"Enemy1.jpg",
+            text:`地牢里随处可见。`
+        },
+    },
+})
+function addEnemy(type){
     enemyCount++;
     enemyAlive++;
     enemy[enemyCount]={
-        source:source,
-        atk:15*(1+boost.enemy.atk/100),
-        hp:80*(1+boost.enemy.mhp/100),
-        mhp:80*(1+boost.enemy.mhp/100),
-        def:0+boost.enemy.def,
-        mat:15*(1+boost.enemy.mat/100),
-        mdf:0+boost.enemy.mdf,
+        source:type.source,
+        atk:type.atk*(1+boost.enemy.atk/100),
+        hp:type.mhp*(1+boost.enemy.mhp/100),
+        mhp:type.mhp*(1+boost.enemy.mhp/100),
+        def:type.def+boost.enemy.def,
+        mat:type.mat*(1+boost.enemy.mat/100),
+        mdf:type.mdf+boost.enemy.mdf,
         dmgBoost:1+boost.enemy.dmg/100,
-        atkR:1+boost.enemy.atkR,
-        warnR:10,
-        atktype:1,
+        atkR:type.atkR+boost.enemy.atkR,
+        warnR:type.warnR,
+        atktype:type.atktype,
         X:0,
         Y:0,
         isDefeat:0,
-        movePattern:"default",
+        movePattern:type.movePattern,
         navigatePosition:[0,0],
         warnedTime:0,
         isUnderAttack:0,
-        bio:``,
         effect:[],
         isSelectable:true,
         selector:{
@@ -33,9 +52,9 @@ function addEnemy(source){
             width:50,
             height:50,
             description:{
-                id:"enemy",
-                icon:"Enemy1.jpg",
-                text:"undefined"
+                id:type.id,
+                icon:type.selector.description.icon,
+                text:type.selector.description.text
             },
         },
         updateSelector(){
@@ -49,12 +68,12 @@ function addEnemy(source){
             }    
         },
         onClick(){
-            if(player.attack(this)&&!this.isDefeat){
+            if(player.attack(this)){
                 drawBattlefield();
             }
         }   
     }
-    return source;
+    return type;
 }
 function enemyMove(count,direction){
     let xtemp=enemy[count].X;
@@ -172,9 +191,9 @@ function enemyAction(){
         }
     }
 }
-function summonEnemy(source,quantity){
+function summonEnemy(type,quantity){
     for(let i=1;i<=quantity;i++){
-        addEnemy(source);
+        addEnemy(type);
     }
     enemyInround=quantity;
     for(let i=enemyCount-quantity+1;i<=enemyCount;i++){

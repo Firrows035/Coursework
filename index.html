@@ -65,6 +65,7 @@
     <script src="testSelection.js"></script>
     <script src="arrowKey.js"></script>
     <script src="choiceSlot.js"></script>
+    <script src="character.js"></script>
     <script>
         window.onload=function(){
             info=document.getElementById("extra");
@@ -73,7 +74,6 @@
             rect=canvas.getBoundingClientRect();
             scaleX=canvas.width/rect.width;
             scaleY=canvas.height/rect.height;
-            choiceSet=Array.from(document.getElementsByClassName(`choice`));
             canvas.addEventListener("click",e=>{
                 console.log(floor(e.offsetX*scaleX)+','+floor(e.offsetY*scaleY));
             })
@@ -89,19 +89,6 @@
             <canvas id="mainCanvas" width="1600px" height="900px" style="display: block; margin: 0px; padding: 0px; outline:none; border: 3px solid palegreen;" tabindex="999" onclick="Click(event)" onmousemove="onMouseMove(event)" onkeypress="keyPress(event)">
                 
             </canvas>
-
-            <div class="choice" id="choice1" style="left: 40px; display: none;" onclick="choose(c1)">
-
-            </div>
-
-            <div class="choice" id="choice2" style="left: 360px; display: none;" onclick="choose(c2)">
-
-            </div>
-
-            <div class="choice" id="choice3" style="left: 680px; display: none;" onclick="choose(c3)">
-                
-            </div>
-
         </div>
         
         <div id="extra"></div>

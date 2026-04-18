@@ -6,9 +6,9 @@ var player={
     baseMat:20,
     baseMdf:5,
     baseAtkR:2,
-    hp:150+boost.player.mhp,
+    hp:9999,
     mhp:150+boost.player.mhp,
-    mp:80+boost.player.mmp,
+    mp:9999,
     mmp:80+boost.player.mmp,
     def:5+boost.player.def,
     atk:20*(1+boost.player.atk/100),
@@ -145,6 +145,8 @@ function takeDamage(dmg,isMagic){
     }
 }
 function checkPlayerStat(){
+    player.hp=min(player.hp,player.mhp);
+    player.mp=min(player.mp,player.mmp);
     if(player.hp<=0){
         currentStage="failure";
         clearProjectile();

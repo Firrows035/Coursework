@@ -23,8 +23,8 @@ var loadResource=new function(){
     loadImg("image/character/","Enemy1.jpg");
     loadImg("image/skill/","fireball.png");
     loadImg("image/skill/","fireball-cd.png");
-    loadImg("image/skill/","flash.jpg");
-    loadImg("image/skill/","flash-cd.jpg");
+    loadImg("image/skill/","flash.png");
+    loadImg("image/skill/","flash-cd.png");
     loadImg("image/skill/","sacriPunch.png");
     loadImg("image/skill/","sacriPunch-cd.png");
     loadImg("image/skill/","heal.png");
