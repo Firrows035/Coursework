@@ -19,15 +19,19 @@ function Click(event){
         }
     }
     if(skillReady){
-        skillSet[skillReady].isSelected=0;
-        if(skillSet[skillReady].skill(event)){
-            skillSet[skillReady].cdt=skillSet[skillReady].cd+1;
-            player.mp-=skillSet[skillReady].cost;
-            skillReady=0;
-        }else{
+        if(isPosLegal(mouseX,mouseY)){
+            if(skillSet[skillReady].skill(event)){
+                skillSet[skillReady].cdt=skillSet[skillReady].cd+1;
+                player.mp-=skillSet[skillReady].cost;
+            }
+            skillSet[skillReady].isSelected=0;
             skillReady=0;
             drawSkillStat();
-        }
+        }else{
+            skillSet[skillReady].isSelected=0;
+            skillReady=0;
+            checkOnClick();
+        }      
     }else if(currentStage=="intermission"&&choiceChosen){
         currentStage="battle";
         boost.enemy.atk+=5;
