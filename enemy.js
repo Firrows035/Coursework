@@ -16,7 +16,7 @@ enemyType.push({
         description:{
             id:"Kanade",
             icon:"Enemy1.jpg",
-            text:`地牢里随处可见。`
+            text:`随处可见的小气走`
         },
     },
 })

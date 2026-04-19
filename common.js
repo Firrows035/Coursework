@@ -10,7 +10,6 @@ var mouseOffsetX=0;
 var mouseY=0;
 var mouseOffsetY=0;
 
-var block=[];
 var enemyCount=0;
 var enemyDefeated=0;
 var enemyAlive=0;

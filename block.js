@@ -1,35 +1,87 @@
 var blockType={};
 var block=[];
 
-var blockTypeCount=0;
-var blockCount=0;
-function addBlockType(name,source,isPassable,isProjectilePassable,stepOnEffect,effectDuration){
-    blockTypeCount++;
-    blockType[name]={
-        name:name,
-        source:source,
-        isPassable,isPassable,
-        isProjectilePassable:isProjectilePassable,
-        stepOnEffect:stepOnEffect,
-        effectDuration:effectDuration,
-    }
-}
-addBlockType("wall","wall.png",false,false,"void",0);
-addBlockType("poisonArea","poisonBlock.png",true,true,"poison",2);
 
-function addBlock(name,x,y){
+var blockCount=0;
+
+blockType["wall"]={
+    id:"wall",
+    source:"wall.png",
+    isPassable:false,
+    isProjectilePassable:false,
+    stepOnEffect:"void",
+    effectDuration:0,
+    isSelectable:false,
+    selector:{
+        type:"block",
+        color:"red",
+        offsetX:0,
+        offsetY:0,
+        width:50,
+        height:50,
+        description:{
+            id:"wall",
+            icon:"wall.png",
+            text:"普通的墙"
+        },
+    },
+}
+blockType["poisonArea"]={
+    id:"poisonArea",
+    source:"poisonBlock.png",
+    isPassable:true,
+    isProjectilePassable:true,
+    stepOnEffect:"poison",
+    effectDuration:2,
+    isSelectable:false,
+    selector:{
+        type:"block",
+        color:"red",
+        offsetX:0,
+        offsetY:0,
+        width:50,
+        height:50,
+        description:{
+            id:"poisonArea",
+            icon:"poisonBlock.png",
+            text:"会使人中毒的区域。"
+        },
+    },
+}
+
+function addBlock(id,x,y){
     blockCount++;
     block.push({
-        type:name,
-        source:blockType[name].source,
+        type:blockType[id].id,
+        source:blockType[id].source,
         X:x,
         Y:y,
         isOnField:1,
         isEnemyPlacable:false,
-        isPassable:blockType[name].isPassable,
-        isProjectilePassable:blockType[name].isProjectilePassable,
-        stepOnEffect:blockType[name].stepOnEffect,
-        effectDuration:blockType[name].effectDuration,
+        isPassable:blockType[id].isPassable,
+        isProjectilePassable:blockType[id].isProjectilePassable,
+        stepOnEffect:blockType[id].stepOnEffect,
+        effectDuration:blockType[id].effectDuration,
+        isSelectable:true,
+        selector:{
+            type:"block",
+            color:"red",
+            offsetX:x*50,
+            offsetY:y*50,
+            width:50,
+            height:50,
+            description:{
+                id:blockType[id].selector.description.id,
+                icon:blockType[id].selector.description.icon,
+                text:blockType[id].selector.description.text
+            },
+        },
+        onMouseOver(){
+            displayDescription(this);
+        },
+        onClick(){
+            ;
+        }
     });
 }
 function clearBlocks(){
