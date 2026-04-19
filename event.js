@@ -100,7 +100,7 @@ function checkSelector(){
     let isTroopSelected=0;
     enemy.forEach(emy=>{
         emy.updateSelector();
-        if(isTargetOnMouseOver(emy)&&currentStage=="battle"){
+        if(isTargetOnMouseOver(emy)&&currentStage=="battle"&&!emy.isDefeat){
             emy.onMouseOver();
             isTroopSelected=1;
         }
