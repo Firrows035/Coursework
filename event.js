@@ -97,10 +97,12 @@ function keyPress(e){
     }
 }
 function checkSelector(){
+    let isTroopSelected=0;
     enemy.forEach(emy=>{
         emy.updateSelector();
         if(isTargetOnMouseOver(emy)&&currentStage=="battle"){
             emy.onMouseOver();
+            isTroopSelected=1;
         }
     })
     skill.forEach(skil=>{
@@ -111,6 +113,7 @@ function checkSelector(){
     player.updateSelector();
     if(isTargetOnMouseOver(player)&&currentStage=="battle"){
         player.onMouseOver();
+        isTroopSelected=1;
     }
     key.forEach(k=>{
         if(isTargetOnMouseOver(k)&&currentStage=="battle"){
@@ -127,6 +130,7 @@ function checkSelector(){
             chara.onMouseOver();
         }
     })
+    if(!isTroopSelected)
     block.forEach(bloc=>{
         if(isTargetOnMouseOver(bloc)&&currentStage=="battle"){
             bloc.onMouseOver();
