@@ -134,29 +134,29 @@ function drawProjectile(){
 function drawSkillStat(){
     context.clearRect(50,660,700,100);
     for(let i=0;i<skillCount;i++){
-        if(!skillSet[i+1].cdt){
-            drawImgZoom(skillSet[i+1].source,100*i+50,660,80,80);
+        if(!skill[i+1].cdt){
+            drawImgZoom(skill[i+1].source,100*i+50,660,80,80);
         }
         else{
-            drawImgZoom(skillSet[i+1].sourceCD,100*i+50,660,80,80);
+            drawImgZoom(skill[i+1].sourceCD,100*i+50,660,80,80);
 
                 context.fillStyle="black";
                 context.font="60px Arial";
-                context.fillText(`${skillSet[i+1].cdt}`,100*i+25+50,720);
+                context.fillText(`${skill[i+1].cdt}`,100*i+25+50,720);
 
         }
         
-        if(skillSet[i+1].cost>player.mp){
+        if(skill[i+1].cost>player.mp){
             context.fillStyle="red";
         }
         else{
             context.fillStyle="blue";
         }
         context.font="20px Arial";
-        context.fillText(`${skillSet[i+1].cost}`,100*i+80+50,760);
-        if(skillSet[i+1].isSelected){
+        context.fillText(`${skill[i+1].cost}`,100*i+80+50,760);
+        if(skill[i+1].isSelected){
             drawSelectSkill(i+1);
-            skillSet[i+1].drawSelector();
+            skill[i+1].drawSelector();
         }        
     }
 }
@@ -283,7 +283,10 @@ function displayDescription(target){
                 drawText(target.selector.description.text,1080,650,"black","30px 宋体",490,40,true);
                 break;
             case "skill":
-                break;//预留空间
+                drawText(target.selector.description.id,1200,390,"black","50px 微软雅黑",490,55,false);
+                drawImgZoom(target.selector.description.icon,1080,350,100,100);
+                drawText(target.selector.description.text,1080,650,"black","30px 宋体",490,40,true);
+                break;
             case "character":
                 drawText(target.selector.description.id,1080,365,"black","30px 黑体",490,35,false);
                 drawStatBar(1260,335,180,30,target.mhp,target.mhp,"red","");
@@ -294,6 +297,12 @@ function displayDescription(target){
                 drawText(`MAT: ${floor(target.mat)}`,1200,510,"black","30px 黑体",500,40,false);
                 drawText(`MDF: ${floor(target.mdf)}`,1390,510,"black","30px 黑体",500,40,false);
                 drawText(target.selector.description.text,1080,650,"black","30px 宋体",490,40,true);
+                break;
+            case "block":
+                drawText(target.selector.description.id,1200,390,"black","50px 微软雅黑",490,55,false);
+                drawImgZoom(target.selector.description.icon,1080,350,100,100);
+                drawText(target.selector.description.text,1080,650,"black","30px 宋体",490,40,true);
+                break;
         }
     }
 }

@@ -1,10 +1,10 @@
 var cooldownPerTurn=1;
 
 function preset(){
-    addSkill(fireball,5,1,"fireball.png","fireball-cd.png",()=>{});
-    addSkill(flashmove,5,3,"flash.png","flash-cd.png",()=>{});
-    addSkill(sacrificialStrike,0,9,"sacriPunch.png","sacriPunch-cd.png",sacriStrikeSelector);
-    addSkill(heal,10,5,"heal.png","heal-cd.png",()=>{});
+    addSkill("fireball");
+    addSkill("flashmove");
+    addSkill("sacriStrike");
+    addSkill("heal");
     loadMap(0);
 }
 function characterPage(){

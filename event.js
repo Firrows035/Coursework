@@ -22,15 +22,15 @@ function Click(event){
     }
     if(currentStage=="battle"&&skillReady){
         if(isPosLegal(mouseX,mouseY)){
-            if(skillSet[skillReady].skill(event)){
-                skillSet[skillReady].cdt=skillSet[skillReady].cd+1;
-                player.mp-=skillSet[skillReady].cost;
+            if(skill[skillReady].spell(event)){
+                skill[skillReady].cdt=skill[skillReady].cd+1;
+                player.mp-=skill[skillReady].cost;
             }
-            skillSet[skillReady].isSelected=0;
+            skill[skillReady].isSelected=0;
             skillReady=0;
             drawSkillStat();
         }else{
-            skillSet[skillReady].isSelected=0;
+            skill[skillReady].isSelected=0;
             skillReady=0;
             checkOnClick();
         }      
@@ -86,7 +86,7 @@ function keyPress(e){
     if(e.key=="w"||e.key=="a"||e.key=="s"||e.key=="d"||e.key==" "){
         
         if(skillReady){
-            skillSet[skillReady].isSelected=0;
+            skill[skillReady].isSelected=0;
             skillReady=0;
             // drawSkillStat();
         }
@@ -103,7 +103,7 @@ function checkSelector(){
             emy.onMouseOver();
         }
     })
-    skillSet.forEach(skil=>{
+    skill.forEach(skil=>{
         if(isTargetOnMouseOver(skil)&&currentStage=="battle"){
             skil.onMouseOver();
         }
@@ -127,6 +127,11 @@ function checkSelector(){
             chara.onMouseOver();
         }
     })
+    block.forEach(bloc=>{
+        if(isTargetOnMouseOver(bloc)&&currentStage=="battle"){
+            bloc.onMouseOver();
+        }
+    })
 }
 function checkOnClick(){
     enemy.forEach(emy=>{
@@ -139,7 +144,7 @@ function checkOnClick(){
             k.onClick();
         }
     })
-    skillSet.forEach(skil=>{
+    skill.forEach(skil=>{
         if(isTargetOnMouseOver(skil)&&currentStage=="battle"){
             skil.onClick();
         }
