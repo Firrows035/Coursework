@@ -21,7 +21,7 @@ character.push({
         description:{
             id:"Lagrange",
             icon:"Lagrange.jpg",
-            text:`住在世界底层的观察者，前来“评估”地牢。`,
+            text:`住在世界底层的研究者，前来“观察”迷宫。`,
         }
     },
     onClick(){
