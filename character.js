@@ -62,6 +62,7 @@ character.push({
     },
     onClick(){
         setCharacter(this);
+        giveEffect(player,"revival",1,true);
         if(currentStage=="prologue"){
             currentStage="battle";
             beginRound();

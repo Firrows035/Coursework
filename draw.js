@@ -300,6 +300,13 @@ function displayDescription(target){
                 drawImgZoom(target.selector.description.icon,1080,350,100,100);
                 drawText(target.selector.description.text,1080,650,"black","30px 宋体",490,40,true);
                 break;
+            case "effect":
+                drawText(target.selector.description.id,1200,390,"black","50px 微软雅黑",490,55,false);
+                drawImgZoom(target.selector.description.icon,1080,350,100,100);
+                drawText(target.selector.description.text,1080,650,"black","30px 宋体",490,40,true);
+                break;
+            default:
+                break;
         }
     }
 }
@@ -320,6 +327,20 @@ function drawChoiceSlot(){
 function drawCharacterChoice(){
     character.forEach(slot=>{
         drawImgZoom(slot.source,slot.selector.offsetX,slot.selector.offsetY,slot.selector.width,slot.selector.height);
+    })
+}
+
+function drawPlayerEffects(){
+    let order=0;
+    context.clearRect(1055,275,600,50);
+    player.effect.forEach(eff=>{
+        if(eff.isSelectable){
+            eff.selector.offsetX=1060+50*order;
+            eff.selector.offsetY=280;
+            drawImgZoom(eff.selector.description.icon,eff.selector.offsetX,eff.selector.offsetY,eff.selector.width,eff.selector.height);
+            drawRect(2,"grey",eff.selector.offsetX,eff.selector.offsetY,eff.selector.width,eff.selector.height)
+            order++;
+        }
     })
 }
     
