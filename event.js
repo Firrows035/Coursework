@@ -137,6 +137,11 @@ function checkSelector(){
             bloc.onMouseOver();
         }
     })
+    player.effect.forEach(eff=>{
+        if(isTargetOnMouseOver(eff)&&currentStage=="battle"){
+            eff.onMouseOver();
+        }
+    })
 }
 function checkOnClick(){
     enemy.forEach(emy=>{

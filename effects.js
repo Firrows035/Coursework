@@ -4,16 +4,20 @@ effectType.poison={
     id:"poison",
     source:"poison.png",
     gain(target){
-
+        return 0;
     },
-    trigger(target){
+    turnStart(target){
         target.hp=max(1,target.hp-target.mhp*0.05);
+        return 1;
+    },
+    turnEnd(target){
+        return 0;
     },
     expire(target){
-
+        return 0;
     },
     maxDuration:10,
-    isSelectable:false,
+    isSelectable:true,
     selector:{
         type:"effectType",
         color:"red",
@@ -25,6 +29,74 @@ effectType.poison={
             id:"poison",
             icon:"poison.png",
             text:"poisonous"
+        }
+    }
+}
+effectType.immortal={
+    id:"immortal",
+    source:"immortal.png",
+    gain(target){
+        return 0;
+    },
+    turnStart(target){
+        return 0;
+    },
+    turnEnd(target){
+        target.hp=max(target.hp,1);
+        return 1;
+    },
+    expire(target){
+        return 0;
+    },
+    maxDuration:10,
+    isSelectable:true,
+    selector:{
+        type:"effectType",
+        color:"red",
+        offsetX:0,
+        offsetY:0,
+        width:0,
+        height:0,
+        description:{
+            id:"immortal",
+            icon:"immortal.png",
+            text:"immortal"
+        }
+    }
+}
+effectType.revival={
+    id:"revival",
+    source:"revival.png",
+    gain(target){
+        return 0;
+    },
+    turnStart(target){
+        return 0;
+    },
+    turnEnd(target){
+        if(target.hp<=0){
+            target.hp=target.mhp*0.5;
+            giveEffect(target,"immortal",5,false);
+            return 1;
+        }
+        return 0;
+    },
+    expire(target){
+        return 0;
+    },
+    maxDuration:10,
+    isSelectable:true,
+    selector:{
+        type:"effectType",
+        color:"red",
+        offsetX:0,
+        offsetY:0,
+        width:0,
+        height:0,
+        description:{
+            id:"revival",
+            icon:"revival.png",
+            text:"revive"
         }
     }
 }
@@ -50,8 +122,7 @@ effectType.void={
         }
     }
 }
-
-function giveEffect(entity,effectId,duration){
+function giveEffect(entity,effectId,duration,isCrossRound){
     let type=effectType[effectId];
     let i=entity.effect.findIndex(eff=>eff.id==type.id);
     if(i!=-1){
@@ -60,35 +131,53 @@ function giveEffect(entity,effectId,duration){
         entity.effect.push({
             id:type.id,
             source:type.source,
-            trigger:type.trigger,
+            gain:type.gain,
+            turnStart:type.turnStart,
+            turnEnd:type.turnEnd,
+            expire:type.expire,
             duration:duration,
-            isSelectable:true,
+            isSelectable:type.isSelectable,
+            isCrossRound:isCrossRound,
             selector:{
                 type:"effect",
-                color:"red",
+                color:"orange",
                 offsetX:0,
                 offsetY:0,
-                width:30,
-                height:30,
+                width:40,
+                height:40,
                 description:{
                     id:type.selector.description.id,
                     icon:type.selector.description.icon,
                     text:type.selector.description.text
                 }
             },
-        })
+            onMouseOver(){
+                drawRect(2,this.selector.color,this.selector.offsetX,this.selector.offsetY,this.selector.width,this.selector.height);
+                displayDescription(this);
+            }
+        });
+        type.gain(entity);
     }
+
 }
-function activateEffectsAll(){
-    activateEffects(player);
-    enemy.forEach(emy=>activateEffects(emy));
+function activateEnemyEffects(timing){
+    enemy.forEach(emy=>activateEffects(emy,timing));
 }
 
-function activateEffects(entity){
+function activateEffects(entity,timing){
     entity.effect.forEach(eff=>{
-        eff.trigger(entity);
-        eff.duration--;
-        if(eff.duration<=0){
+        switch(timing){
+            case "turnStart":
+                if(eff.duration>0&&eff.turnStart(entity)) eff.duration--;
+                break;
+            case "turnEnd":
+                if(eff.duration>0&&eff.turnEnd(entity)) eff.duration--;
+                break;
+            default:
+                break;
+        }        
+        if(eff.duration==0){
+            eff.expire(entity);
             entity.effect.splice(entity.effect.findIndex((eff1)=>eff1==eff),1);
         }
     })
@@ -100,6 +189,13 @@ function giveVoidEffect(entity){
 
 function poison(entity){
     entity.hp=max(1,entity.hp-entity.mhp*0.05);
+}
+function clearEffect(isLongLastingEffectCleared){
+    player.effect.forEach(eff=>{
+        if(!eff.isCrossRound||isLongLastingEffectCleared){
+            player.effect.splice(player.effect.findIndex(eff1=>eff1==eff),1);
+        }
+    })
 }
 
 

@@ -107,7 +107,7 @@ function triggerProjectile(proj){
         })
         if(target!={}) dealDamage(target,proj.damage,proj.isMagic);
     }
-    projectile.splice(projectile.findIndex(p=>p.number==proj.number));
+    projectile.splice(projectile.findIndex(p=>p.number==proj.number),1);
 }
 function clearProjectile(){
     projectile=[];

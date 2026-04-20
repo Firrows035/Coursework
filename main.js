@@ -50,28 +50,34 @@ function intermissonPage(){
 }
 
 function drawBattlefield(){
-  
     clearCanvas();
+    //player's turn
+    activateEffects(player,"turnStart");
     
     
-    checkEnemyStat();
-
+    drawPlayerEffects();
     drawMesh();
     drawBlocks();
     drawKeys();
     drawImgZoom(player.source,player.X*50+5,player.Y*50+5,40,40);
     drawPlayerAttackRange();
-    activateEffectsAll();
+    
     projectileMove();
+
+    activateBlockEffectAll();
+    activateEnemyEffects("turnEnd");
+
+    checkEnemyStat();
     
     drawProjectile();
-    checkEnemyStat();
     drawEnemy();
     drawEnemyStat();
     drawPlayerStat();
     
+    //enemy turn
+    activateEnemyEffects("turnStart");
     enemyAction();
-    activateBlockEffectAll();
+    
     cdDown(cooldownPerTurn);
     drawSkillStat();
     setTimeout(() => {
@@ -87,14 +93,16 @@ function drawBattlefield(){
         checkEnemyStat();
         drawEnemy();
         drawEnemyStat();
-
+        activateEffects(player,"turnEnd");
+        drawPlayerEffects();
         checkPlayerStat();
+        drawPlayerStat();
         checkScene();
     }, 80);
     if(player.mp<player.mmp*0.3){
         recoverMP(player.mmp*0.01);
     }
-    drawPlayerStat();
+    
    
 }
 
@@ -110,6 +118,7 @@ function drawBattlefieldStatic(){
     drawSkillStat();
     drawPlayerStat();
     drawEnemyStat();
+    drawPlayerEffects();
 }
 
 
