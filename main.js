@@ -59,7 +59,7 @@ function drawBattlefield(){
     drawMesh();
     drawBlocks();
     drawKeys();
-    drawImgZoom("Lagrange.jpg",player.X*50+5,player.Y*50+5,40,40);
+    drawImgZoom(player.source,player.X*50+5,player.Y*50+5,40,40);
     drawPlayerAttackRange();
     activateEffectsAll();
     projectileMove();
@@ -80,7 +80,7 @@ function drawBattlefield(){
         drawMesh();
         drawBlocks();
         drawKeys();
-        drawImgZoom("Lagrange.jpg",player.X*50+5,player.Y*50+5,40,40);
+        drawImgZoom(player.source,player.X*50+5,player.Y*50+5,40,40);
         drawPlayerAttackRange();
         drawProjectile();
 
@@ -103,7 +103,7 @@ function drawBattlefieldStatic(){
     drawMesh();
     drawBlocks();
     drawKeys();
-    drawImgZoom("Lagrange.jpg",player.X*50+5,player.Y*50+5,40,40);
+    drawImgZoom(player.source,player.X*50+5,player.Y*50+5,40,40);
     drawPlayerAttackRange();
     drawEnemy();
     drawProjectile();

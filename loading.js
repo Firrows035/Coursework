@@ -21,6 +21,8 @@ var loadResource=new function(){
 
     loadImg("image/character/","Lagrange.jpg");
     loadImg("image/character/","Enemy1.jpg");
+    loadImg("image/character/","Tairitsu.png");
+    loadImg("image/character/","Hikari.png");
     loadImg("image/skill/","fireball.png");
     loadImg("image/skill/","fireball-cd.png");
     loadImg("image/skill/","flash.png");
