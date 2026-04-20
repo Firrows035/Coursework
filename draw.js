@@ -121,14 +121,11 @@ function drawEnemyStat(){
 
 
 function drawProjectile(){
-    for(let i=1;i<=projectileCount;i++){
-        if(projectileSet[i].isExpired){
-            continue;
-        }
-        // context.rotate(projectileSet[i].direction);
-        drawImgZoom(projectileSet[i].source,projectileSet[i].X*50+10,projectileSet[i].Y*50+10,30,30);
-        // context.rotate(-projectileSet[i].direction);
-    }
+    projectile.forEach(proj=>{
+        // context.rotate(projectile[i].direction);
+        drawImgZoom(proj.source,proj.X*50+10,proj.Y*50+10,30,30);
+        // context.rotate(-projectile[i].direction);
+    })
 }
 
 function drawSkillStat(){

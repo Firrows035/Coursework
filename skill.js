@@ -235,7 +235,7 @@ function fireball(event){
         if(dx==0&&dy==0){
             return 0;
         }
-        createProjectile("fireball.png",player.X,player.Y,dx,dy,3,1,player.mat*2,true,true,3);
+        createProjectile("fireball",player.X,player.Y,dx,dy,player.mat*2,true);
         requestAnimationFrame(drawBattlefield);
         return 1;
     }
