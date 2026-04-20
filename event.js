@@ -11,7 +11,8 @@ function Click(event){
     if(currentStage=="startReady"){
         if(imageReady){
             currentStage="prologue";
-            characterPage();        
+            characterPage();  
+            return 1;      
         }else{
             console.log(`Loading resources. Please wait...`);
             return 0;

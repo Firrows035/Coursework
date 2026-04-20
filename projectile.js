@@ -63,39 +63,26 @@ function projectileMove(){
             proj.X=floor(tempX);
             proj.Y=floor(tempY);
             if(isProjectileTriggered(proj)){
-
+                triggerProjectile(proj);
             }
         }
+        proj.X=tempX;
+        proj.Y=tempY;
     })
-    for(let i=1;i<=projectileCount;i++){
-        if(projectile[i].isExpired){
-            continue;
-        }
-        for(let j=1;j<=projectile[i].speed*2;j++){
-            if(projectile[i].isExpired){
-                break;
-            }
-            projectile[i].X+=0.5*projectile[i].direction.X;
-            projectile[i].Y+=0.5*projectile[i].direction.Y;
-            if(isProjectileTriggered1(i)||(!isPosLegal(projectile[i].X,projectile[i].Y))){
-                console.log("projectile triggered");
-                triggerProjectile(i);
-            }
-        }
-    }
 }
 function isProjectileTriggered(proj){
     let sign=0;
+    if(!isPosLegal(proj.X,proj.Y)) return true;
     if(proj.isFriendly){
         enemy.forEach(emy=>{
-            if(distanceBetweenEntity(emy,proj)<=proj.triggerR&&emy.isDefeat==0){
+            if(distanceBetweenEntity(emy,proj)<proj.triggerR&&emy.isDefeat==0){
                 sign=1;
             }
         })
-    }else if(distanceBetweenEntity(player,proj)<=proj.triggerR) sign=1;
+    }else if(distanceBetweenEntity(player,proj)<proj.triggerR) sign=1;
     if(sign) return true;
     block.forEach(bloc=>{
-        if(distanceBetweenEntity(bloc,proj)<=proj.triggerR&&bloc.isOnField&&!bloc.isProjectilePassable){
+        if(distanceBetweenEntity(bloc,proj)<proj.triggerR&&bloc.isOnField&&!bloc.isProjectilePassable){
             sign=1;
         }
     })
@@ -123,7 +110,5 @@ function triggerProjectile(proj){
     projectile.splice(projectile.findIndex(p=>p.number==proj.number));
 }
 function clearProjectile(){
-    for(let i=1;i<=projectileCount;i++){
-        projectile[i].isExpired=1;
-    }
+    projectile=[];
 }
