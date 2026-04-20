@@ -17,8 +17,7 @@ var enemyInround=0;
 
 
 
-var projectileSet=[];
-var projectileCount=0;
+
 
 var round=0;
 
@@ -149,7 +148,7 @@ function distanceBetweenPosition(x1,y1,x2,y2){
     return Math.abs(x1-x2)+Math.abs(y1-y2);
 }
 function distanceEnemyToProjectile(Ecount,Pcount){
-    return Math.sqrt((enemy[Ecount].X-projectileSet[Pcount].X)**2+(enemy[Ecount].Y-projectileSet[Pcount].Y)**2);
+    return Math.sqrt((enemy[Ecount].X-projectile[Pcount].X)**2+(enemy[Ecount].Y-projectile[Pcount].Y)**2);
 }
 function distanceBetweenEntity(entity1,entity2){
     return Math.sqrt((entity1.X-entity2.X)**2+(entity1.Y-entity2.Y)**2);

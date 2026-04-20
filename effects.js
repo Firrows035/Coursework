@@ -3,13 +3,19 @@ var effectType={};
 effectType.poison={
     id:"poison",
     source:"poison.png",
-    trigger(entity){
-        entity.hp=max(1,entity.hp-entity.mhp*0.05);
+    gain(target){
+
+    },
+    trigger(target){
+        target.hp=max(1,target.hp-target.mhp*0.05);
+    },
+    expire(target){
+
     },
     maxDuration:10,
     isSelectable:false,
     selector:{
-        type:"effect",
+        type:"effectType",
         color:"red",
         offsetX:0,
         offsetY:0,
@@ -31,7 +37,7 @@ effectType.void={
     maxDuration:10,
     isSelectable:false,
     selector:{
-        type:"effect",
+        type:"effectType",
         color:"red",
         offsetX:0,
         offsetY:0,

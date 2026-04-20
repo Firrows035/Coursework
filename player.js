@@ -116,6 +116,8 @@ function playerMoveByClick(x,y){
         requestAnimationFrame(drawBattlefield);
     }
 }
+
+//已弃用
 function playerAttack(){
     for(let i=1;i<=enemyCount;i++){
         if(enemy[i].isDefeat){
@@ -129,12 +131,12 @@ function playerAttack(){
 function playerHeal(hp){
     player.hp=Math.min(player.hp+hp,player.mhp);
 }
-function dealDamage(ec,dmg,isMagic){
+function dealDamage(emy,dmg,isMagic){
     if(isMagic){
-        enemy[ec].hp=max(0,enemy[ec].hp-max(dmg*0.05,dmg*(1-enemy[ec].mdf/100))*(1+boost.player.dmg/100))
+        emy.hp=max(0,emy.hp-max(dmg*0.05,dmg*(1-emy.mdf/100))*(1+boost.player.dmg/100))
     }
     else{
-        enemy[ec].hp=max(0,enemy[ec].hp-max(dmg*0.05,dmg-enemy[ec].def)*(1+boost.player.dmg/100));
+        emy.hp=max(0,emy.hp-max(dmg*0.05,dmg-emy.def)*(1+boost.player.dmg/100));
     }
 }
 function takeDamage(dmg,isMagic){
