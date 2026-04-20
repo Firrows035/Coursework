@@ -15,3 +15,13 @@ function addSelection(selectionName,x,y,width,height,description,font,color,onMo
         onClick:onClick
     })
 }
+
+
+var testify={
+    id:999,
+    constructor:{
+        changeid(entity,idNew){
+            entity.id=idNew;
+        }
+    }
+}

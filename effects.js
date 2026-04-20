@@ -1,25 +1,77 @@
 var effectType={};
-function addEffectType(effectName,source,effectFunc,maxDuration){
-    effectType[effectName]={
-        source:source,
-        effectFunc:effectFunc,
-        maxDuration:maxDuration,
+
+effectType.poison={
+    id:"poison",
+    source:"poison.png",
+    trigger(entity){
+        entity.hp=max(1,entity.hp-entity.mhp*0.05);
+    },
+    maxDuration:10,
+    isSelectable:false,
+    selector:{
         type:"effect",
+        color:"red",
+        offsetX:0,
+        offsetY:0,
+        width:0,
+        height:0,
+        description:{
+            id:"poison",
+            icon:"poison.png",
+            text:"poisonous"
+        }
+    }
+}
+effectType.void={
+    id:"void",
+    source:"poison.png",
+    trigger(entity){
+        ;
+    },
+    maxDuration:10,
+    isSelectable:false,
+    selector:{
+        type:"effect",
+        color:"red",
+        offsetX:0,
+        offsetY:0,
+        width:0,
+        height:0,
+        description:{
+            id:"void",
+            icon:"poison.png",
+            text:"void"
+        }
     }
 }
 
-function giveEffect(entity,effectName,duration){
-    if(entity.effect.findIndex(eff=>eff.name==effectName)!=-1){
-        entity.effect[entity.effect.findIndex(eff=>eff.name==effectName)].duration=min(duration+entity.effect[entity.effect.findIndex(eff=>eff.name==effectName)].duration,effectType[effectName].maxDuration);
-    }
-    else{
+function giveEffect(entity,effectId,duration){
+    let type=effectType[effectId];
+    let i=entity.effect.findIndex(eff=>eff.id==type.id);
+    if(i!=-1){
+        entity.effect[i].duration=min(type.maxDuration,entity.effect[i].duration+duration);
+    }else{
         entity.effect.push({
-            name:effectName,
-            effectFunc:effectType[effectName].effectFunc,
-            duration:min(duration,effectType[effectName].maxDuration),
-        })    
+            id:type.id,
+            source:type.source,
+            trigger:type.trigger,
+            duration:duration,
+            isSelectable:true,
+            selector:{
+                type:"effect",
+                color:"red",
+                offsetX:0,
+                offsetY:0,
+                width:30,
+                height:30,
+                description:{
+                    id:type.selector.description.id,
+                    icon:type.selector.description.icon,
+                    text:type.selector.description.text
+                }
+            },
+        })
     }
-    
 }
 function activateEffectsAll(){
     activateEffects(player);
@@ -28,7 +80,7 @@ function activateEffectsAll(){
 
 function activateEffects(entity){
     entity.effect.forEach(eff=>{
-        eff.effectFunc(entity);
+        eff.trigger(entity);
         eff.duration--;
         if(eff.duration<=0){
             entity.effect.splice(entity.effect.findIndex((eff1)=>eff1==eff),1);
@@ -44,5 +96,4 @@ function poison(entity){
     entity.hp=max(1,entity.hp-entity.mhp*0.05);
 }
 
-addEffectType("poison","poison.png",poison,10);
-addEffectType("void","poison.png",()=>{},99);
+

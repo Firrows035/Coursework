@@ -36,16 +36,89 @@ character.push({
         displayDescription(this);
     }
 })
+character.push({
+    id:"Tairitsu",
+    source:"Tairitsu.png",
+    mhp:100,
+    mmp:100,
+    atk:27,
+    def:5,
+    mat:25,
+    mdf:5,
+    atkR:2,
+    isSelectable:true,
+    selector:{
+        type:"character",
+        color:"red",
+        offsetX:200,
+        offsetY:100,
+        width:100,
+        height:100,
+        description:{
+            id:"Tairitsu",
+            icon:"Tairitsu.png",
+            text:`黑暗常伴的少女。`,
+        }
+    },
+    onClick(){
+        setCharacter(this);
+        if(currentStage=="prologue"){
+            currentStage="battle";
+            beginRound();
+        }
+    },
+    onMouseOver(){
+        drawRect(2,this.selector.color,this.selector.offsetX,this.selector.offsetY,this.selector.width,this.selector.height);
+        displayDescription(this);
+    }
+})
+character.push({
+    id:"Hikari",
+    source:"Hikari.png",
+    mhp:200,
+    mmp:100,
+    atk:10,
+    def:0,
+    mat:40,
+    mdf:0,
+    atkR:1,
+    isSelectable:true,
+    selector:{
+        type:"character",
+        color:"red",
+        offsetX:350,
+        offsetY:100,
+        width:100,
+        height:100,
+        description:{
+            id:"Hikari",
+            icon:"Hikari.png",
+            text:`光芒常伴的少女。`,
+        }
+    },
+    onClick(){
+        setCharacter(this);
+        if(currentStage=="prologue"){
+            currentStage="battle";
+            beginRound();
+        }
+    },
+    onMouseOver(){
+        drawRect(2,this.selector.color,this.selector.offsetX,this.selector.offsetY,this.selector.width,this.selector.height);
+        displayDescription(this);
+    }
+})
 
 function setCharacter(chara){
+    player.source=chara.source;
     player.baseMhp=chara.mhp;
-    player.baseMmp=chara.mmp
+    player.baseMmp=chara.mmp;
     player.baseDef=chara.def;
     player.baseAtk=chara.atk;
     player.baseMat=chara.mat;
     player.baseMdf=chara.mdf;
     player.baseAtkR=chara.atkR;
-    player.selector.description.icon=chara.source;
+    player.selector.description.icon=chara.selector.description.icon;
     player.selector.description.id=chara.id;
     player.selector.description.text=chara.selector.description.text;
     updatePlayerStat();

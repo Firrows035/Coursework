@@ -1,4 +1,5 @@
 var player={
+    source:"Lagrange.jpg",
     baseMhp:150,
     baseMmp:80,
     baseDef:5,
