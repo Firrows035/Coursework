@@ -154,7 +154,7 @@ function distanceBetweenEntity(entity1,entity2){
     return abs(entity1.X-entity2.X)+abs(entity1.Y-entity2.Y);
 }
 function isPosLegal(x,y){
-    if(x<=20&&x>=0&&y<=12&&y>=0)return 1;
+    if(x<=29&&x>=0&&y<=14&&y>=0)return 1;
     else return 0;
 }
 function isPathBlocked(x1,y1,x2,y2){
@@ -271,7 +271,7 @@ function searchPath(x0,y0,xEnd,yEnd){
 }
 
 function randPosUnblocked(){
-    let x=random(0,20),y=random(0,12);
+    let x=random(0,29),y=random(0,14);
     if(!isPosBlocked(x,y)) return [x,y];
     else return randPosUnblocked();
 }

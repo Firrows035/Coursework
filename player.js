@@ -17,8 +17,8 @@ var player={
     mdf:5+boost.player.mdf,
     dmgBoost:1+boost.player.dmg/100,    
     atkR:2+boost.player.atkR,
-    X:10,//0-20, 0px-1000(1050)px
-    Y:6,//0-12, 0px-600(650)px
+    X:10,//0-29, 0px-1500px
+    Y:6,//0-14, 0px-750px
     effect:[],
     isSelectable:true,
     selector:{
@@ -91,10 +91,10 @@ function playerMove(direction){
             player.X=Math.max(player.X-1,0);
             break;
         case "s":
-            player.Y=Math.min(player.Y+1,12);
+            player.Y=Math.min(player.Y+1,14);
             break;
         case "d":
-            player.X=Math.min(player.X+1,20);
+            player.X=Math.min(player.X+1,29);
             break;
         case " ":
             break;

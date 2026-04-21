@@ -143,8 +143,8 @@ function addSkill(typeName){
             selector:{
                 type:"skill",
                 color:"blue",
-                offsetX:100*skillCount-50,
-                offsetY:660,
+                offsetX:110*skillCount-60,
+                offsetY:760,
                 width:100,
                 height:100,
                 description:{
@@ -152,6 +152,9 @@ function addSkill(typeName){
                     icon:type.selector.description.icon,
                     text:type.selector.description.text,
                 },
+                update(i){
+                    this.offsetX=110*i+50;
+                }
             },
             onMouseOver(){
                 drawRect(2,this.selector.color,this.selector.offsetX+2,this.selector.offsetY+2,this.selector.width-4,this.selector.height-4);
