@@ -151,7 +151,7 @@ function distanceEnemyToProjectile(Ecount,Pcount){
     return Math.sqrt((enemy[Ecount].X-projectile[Pcount].X)**2+(enemy[Ecount].Y-projectile[Pcount].Y)**2);
 }
 function distanceBetweenEntity(entity1,entity2){
-    return abs(entity1.X-entity2.X)+abs(entity1.Y-entity2.Y);
+    return abs(floor(entity1.X)-floor(entity2.X))+abs(floor(entity1.Y)-floor(entity2.Y));
 }
 function isPosLegal(x,y){
     if(x<=29&&x>=0&&y<=14&&y>=0)return 1;
@@ -160,34 +160,38 @@ function isPosLegal(x,y){
 function isPathBlocked(x1,y1,x2,y2){
     let sign=0;
     if(isPosLegal(x1,y1)&&isPosLegal(x2,y2)){
-        block.forEach(bloc=>{
-            if(sign) return;
+        for(let bloc of block){
+
             let bx1=bloc.X-0.5,bx2=bloc.X+0.5;
             let by1=bloc.Y-0.5,by2=bloc.Y+0.5;
-
             if(!bloc.isPassable&&(x1-bloc.X)*(x2-bloc.X)<=0&&(y1-bloc.Y)*(y2-bloc.Y)<=0){
                 let j1=lineRelation(x1,y1,x2,y2,bx1,by1,bx2,by2);
                 if(j1[0]=="overlap"){
-                    sign=1;
+                    return 1;
                 }
                 else if(j1[0]=="intersect"){
                     if(j1[1]){
-                        sign=2;
+                        return 2;
                     }
                 }
                 let j2=lineRelation(x1,y1,x2,y2,bx1,by2,bx2,by1);
                 if(j2[0]=="overlap"){
-                    sign=3;
+                    return 3;
                 }
                 else if(j2[0]=="intersect"){
                     if(j2[1]){
-                        sign=4;
+                        return 4;
                     }
                 }
             }            
-        })
+        }
     }
-    return sign;
+    return 0;
+}
+function distancePointToSegment(x,y,x1,y1,x2,y2){
+    if(x1==x2&&y1==y2) return Math.sqrt((x-x1)**2+(y-y1)**2);
+    else if((x-x1)*(x2-x1)+(y-y1)*(y2-y1)>=0(x-x1)*(x2-x1)+(y-y1)*(y2-y1)<=(x-x1)**2+(y-y1)**2) return min(Math.sqrt((x-x1)**2+(y-y1)**2),Math.sqrt((x-x2)**2+(y-y2)**2));
+    else return abs((y1-y2)*x-(x2-x1)*y+x1*y2-y1*x2)/Math.sqrt((x2-x1)**2+(y2-y1)**2);
 }
 function isPosBlocked(x,y){
     for(let i=0;i<block.length;i++){

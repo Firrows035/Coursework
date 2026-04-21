@@ -25,7 +25,7 @@ function Click(event){
         let skil=skill.get(skillReady);
         if(isPosLegal(mouseX,mouseY)){
             if(skil.spell(event)){
-                skil.cdt=skil.cd+1;
+                skil.cdt=skil.cd;
                 player.mp-=skil.cost;
             }
             skil.isSelected=0;

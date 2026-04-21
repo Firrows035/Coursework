@@ -54,12 +54,14 @@ function createProjectile(projId,sx,sy,dx,dy,damage,isFriendly){
         isExpired:0,
     })
 }
+
+//需要修改
 function projectileMove(){
     for(let proj of projectile){
         let tempX=proj.X,tempY=proj.Y;
-        for(let i=0;i<proj.speed*2;i++){
-            tempX+=0.5*proj.direction.X;
-            tempY+=0.5*proj.direction.Y;
+        for(let i=0;i<proj.speed*10;i++){
+            tempX+=0.1*proj.direction.X;
+            tempY+=0.1*proj.direction.Y;
             console.log(tempX,tempY);
             proj.X=floor(tempX);
             proj.Y=floor(tempY);

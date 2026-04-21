@@ -136,7 +136,7 @@ function updateEnemyStateUsual(emy){
         case "default":
             if(distanceBetweenEntity(emy,player)<=emy.atkR+1&&!isPathBlocked(emy.X,emy.Y,player.X,player.Y)){
                 emy.state="attacking";
-                emy.warnedTime=10;
+                emy.warnedTime=5;
             }else if(distanceBetweenEntity(emy,player)<=emy.warnR&&!isPathBlocked(emy.X,emy.Y,player.X,player.Y)){
                 emy.state="warning";
                 emy.warnedTime=10;
@@ -150,10 +150,10 @@ function updateEnemyStateUsual(emy){
             if(distanceBetweenEntity(emy,player)<=emy.atkR+1&&!isPathBlocked(emy.X,emy.Y,player.X,player.Y)){
                 emy.state="attacking";
                 emy.navigatePosition=[player.X,player.Y];
-                emy.warnedTime=30;
+                emy.warnedTime=5;
             }else if(distanceBetweenEntity(emy,player)<=emy.warnR&&!isPathBlocked(emy.X,emy.Y,player.X,player.Y)){
                 emy.state="warning";
-                emy.warnedTime=30;
+                emy.warnedTime=10;
                 emy.navigatePosition=[player.X,player.Y];
             }else if(distanceBetweenPosition(emy.X,emy.Y,emy.navigatePosition[0],emy.navigatePosition[1])<2){
                 emy.navigatePosition=randPosUnblocked();
@@ -163,10 +163,10 @@ function updateEnemyStateUsual(emy){
             if(distanceBetweenEntity(emy,player)<=emy.atkR+1&&!isPathBlocked(emy.X,emy.Y,player.X,player.Y)){
                 emy.state="attacking";
                 emy.navigatePosition=[player.X,player.Y];
-                emy.warnedTime=30;
+                emy.warnedTime=5;
             }else if(distanceBetweenEntity(emy,player)<=emy.warnR&&!isPathBlocked(emy.X,emy.Y,player.X,player.Y)){
                 emy.navigatePosition=[player.X,player.Y];
-                emy.warnedTime=30;
+                emy.warnedTime=10;
             }else if([emy.X,emy.Y]==emy.navigatePosition){
                 emy.warnedTime--;
                 emy.navigatePosition=randPosUnblocked();
@@ -180,10 +180,10 @@ function updateEnemyStateUsual(emy){
             break;
         case "attacking":
             if(distanceBetweenEntity(emy,player)<=emy.atkR+1&&!isPathBlocked(emy.X,emy.Y,player.X,player.Y)){
-                emy.warnedTime=30;
+                emy.warnedTime=5;
             }else if(distanceBetweenEntity(emy,player)<=emy.warnR&&!isPathBlocked(emy.X,emy.Y,player.X,player.Y)){
                 emy.state="warning";
-                emy.warnedTime=30;
+                emy.warnedTime=10;
             }
             emy.navigatePosition=[player.X,player.Y];
             break;

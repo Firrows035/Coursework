@@ -43,7 +43,7 @@ var player={
             case "halt":
                 break;
             case "skill":
-                playSkill()
+                playSkill();
         }
     },
     attack(target){
