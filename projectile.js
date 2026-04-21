@@ -1,7 +1,7 @@
 var projectile=[];
-var projectileType={};
+var projectileType=new Map();
 var projectileCount=0;
-projectileType.fireball={
+projectileType.set("fireball",{
     id:"fireball",
     source:"fireball.png",
     X:0,
@@ -26,10 +26,10 @@ projectileType.fireball={
             text:"fireball"
         }
     }
-}
+});
 function createProjectile(projId,sx,sy,dx,dy,damage,isFriendly){
     projectileCount++;
-    let type=projectileType[projId];
+    let type=projectileType.get(projId);
     projectile.push({
         id:type.id,
         number:projectileCount,
@@ -55,7 +55,7 @@ function createProjectile(projId,sx,sy,dx,dy,damage,isFriendly){
     })
 }
 function projectileMove(){
-    projectile.forEach(proj=>{
+    for(let proj of projectile){
         let tempX=proj.X,tempY=proj.Y;
         for(let i=0;i<proj.speed*2;i++){
             tempX+=0.5*proj.direction.X;
@@ -65,31 +65,28 @@ function projectileMove(){
             proj.Y=floor(tempY);
             if(isProjectileTriggered(proj)){
                 triggerProjectile(proj);
-                return;
+                break;
             }
         }
         proj.X=tempX;
         proj.Y=tempY;
-    })
+    }
 }
 function isProjectileTriggered(proj){
-    let sign=0;
     if(!isPosLegal(proj.X,proj.Y)) return true;
     if(proj.isFriendly){
-        enemy.forEach(emy=>{
+        for(let emy of enemy){
             if(distanceBetweenEntity(emy,proj)<proj.triggerR&&emy.isDefeat==0){
-                sign=1;
+                return 1;
             }
-        })
-    }else if(distanceBetweenEntity(player,proj)<proj.triggerR) sign=1;
-    if(sign) return true;
-    block.forEach(bloc=>{
-        if(distanceBetweenEntity(bloc,proj)<1&&bloc.isOnField&&!bloc.isProjectilePassable){
-            sign=1;
         }
-    })
-    if(sign) return true;
-    else return false;
+    }else if(distanceBetweenEntity(player,proj)<proj.triggerR) return 1;
+    for(let bloc of block){
+        if(distanceBetweenEntity(bloc,proj)<1&&bloc.isOnField&&!bloc.isProjectilePassable){
+            return 1;
+        }
+    }
+    return 0;
 }
 function triggerProjectile(proj){
     if(proj.isAOE&&proj.isFriendly){
@@ -101,12 +98,12 @@ function triggerProjectile(proj){
     }else if(proj.isFriendly){
         let minD=999;
         let target={};
-        enemy.forEach(emy=>{
+        for(let emy of enemy){
             if(distanceBetweenEntity(proj,emy)<minD){
                 minD=distanceBetweenEntity(proj,emy);
                 target=emy;
             }
-        })
+        }
         if(target!={}) dealDamage(target,proj.damage,proj.isMagic);
     }
     projectile.splice(projectile.findIndex(p=>p.number==proj.number),1);

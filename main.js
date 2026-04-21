@@ -17,7 +17,7 @@ function beginRound(){
     round++;
     loadMap(random(0,map.length-1));
     summonEnemy("Kanade",min(20,2+round));
-    requestAnimationFrame(drawBattlefield);
+    playerTurn();
 }
 function frontPage(){
     clearCanvas();
@@ -49,73 +49,71 @@ function intermissonPage(){
     if(!choiceChosen) drawChoiceSlot();
 }
 
-function drawBattlefield(){
-    clearCanvas();
-    //player's turn
-    activateEffects(player,"turnStart");
-    activateEnemyEffects("turnStart");
-    
-    drawPlayerEffects();
-    drawMesh();
-    drawBlocks();
-    drawKeys();
-    drawImgZoom(player.source,player.X*50+5,player.Y*50+5,40,40);
-    drawPlayerAttackRange();
-    
-    projectileMove();
-
-    activateBlockEffectAll();
-    
-
-    activateEnemyEffects("turnMiddle");
-    checkEnemyStat();
-    enemy.forEach(emy=>{emy.updateState();});
-
-    drawProjectile();
-    drawEnemy();
-    drawEnemyStat();
-    drawPlayerStat();
-    
-    //enemy turn
-    
-    enemy.forEach(emy=>{emy.action();});
-    projectile.forEach(proj=>{
-        if(isProjectileTriggered(proj)){
-            triggerProjectile(proj);
-        }
-    })
-
-    activateEnemyEffects("turnEnd");
-    checkEnemyStat();
-    enemy.forEach(emy=>{emy.updateState();});
+function playerTurn(act,target){
+    activateEffects(player,"player","TurnStart");
+    activateEnemyEffects("player","TurnStart");
+    player.action(act,target);
+    for(let proj of projectile){
+        if(isProjectileTriggered(proj))triggerProjectile(proj);
+    }
     cdDown(cooldownPerTurn);
-    drawSkillStat();
-    setTimeout(() => {
-        clearBattlefield();
-
-        drawMesh();
-        drawBlocks();
-        drawKeys();
-        drawImgZoom(player.source,player.X*50+5,player.Y*50+5,40,40);
-        drawPlayerAttackRange();
-        drawProjectile();
-
-        checkEnemyStat();
-        enemy.forEach(emy=>{emy.updateState();});
-        drawEnemy();
-        drawEnemyStat();
-        activateEffects(player,"turnEnd");
-        drawPlayerEffects();
-        checkPlayerStat();
-        drawPlayerStat();
-        checkScene();
-    }, 80);
+    activateEffects(player,"player","TurnMiddle");
+    activateEnemyEffects("player","TurnMiddle");
+    checkEnemyStat();
+    checkPlayerStat();
     if(player.mp<player.mmp*0.3){
         recoverMP(player.mmp*0.01);
     }
+    activateEffects(player,"player","TurnEnd");
+    activateEnemyEffects("player","TurnEnd");
+    drawBattlefieldStatic();
+    checkScene();
+    neutralTurn();
+}
+function neutralTurn(){
+    activateBlockEffectAll();
+    activateEffects(player,"neutral","TurnStart");
+    activateEnemyEffects("neutral","TurnStart");
+    projectileMove();
+    for(let proj of projectile){
+        if(isProjectileTriggered(proj))triggerProjectile(proj);
+    }
+    activateEffects(player,"neutral","TurnMiddle");
+    activateEnemyEffects("neutral","TurnMiddle");
+    checkEnemyStat();
+    checkPlayerStat();
+    activateEffects(player,"neutral","TurnEnd");
+    activateEnemyEffects("neutral","TurnEnd");
+    drawBattlefieldStatic();
+    checkScene();
+    enemyTurn();
+}
+function enemyTurn(){
+    activateEffects(player,"enemy","TurnStart");
+    activateEnemyEffects("enemy","TurnStart");
+
+    for(let emy of enemy){
+        emy.updateState();
+        emy.action();
+    }
+    for(let proj of projectile){
+        if(isProjectileTriggered(proj))triggerProjectile(proj);
+    }
+    activateEffects(player,"enemy","TurnMiddle");
+    activateEnemyEffects("enemy","TurnMiddle");
+    checkEnemyStat();
+    checkPlayerStat();
+    activateEffects(player,"enemy","TurnEnd");
+    activateEnemyEffects("enemy","TurnEnd");
+    drawBattlefieldStatic();
+    checkScene();
+}
+
+
+    
     
    
-}
+
 
 function drawBattlefieldStatic(){
     clearCanvas();

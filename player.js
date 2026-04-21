@@ -35,6 +35,17 @@ var player={
         },
         
     },
+    action(act,target){
+        switch(act){
+            case "move":
+            playerMove(target.direction);
+            break;
+            case "halt":
+                break;
+            case "skill":
+                playSkill()
+        }
+    },
     attack(target){
         if(distanceBetweenEntity(this,target)<=this.atkR&&!isPathBlocked(this.X,this.Y,target.X,target.Y)){
             this.dealDamageTo(target,this.atk,false);
@@ -50,7 +61,7 @@ var player={
         displayDescription(this);
     },
     onClick(){
-        drawBattlefield();
+        playerTurn();
     },
     dealDamageTo(target,damage,isMagic){
         if(isMagic){
@@ -95,7 +106,7 @@ function playerMove(direction){
         player.Y=ytemp;
     }
     if(currentStage=="battle"){
-        requestAnimationFrame(drawBattlefield);
+        playerTurn();
     }
 }
 function playerMoveByClick(x,y){
@@ -113,21 +124,11 @@ function playerMoveByClick(x,y){
         player.Y=y;
     }
     if(currentStage=="battle"){
-        requestAnimationFrame(drawBattlefield);
+        playerTurn();
     }
 }
 
-//已弃用
-function playerAttack(){
-    for(let i=1;i<=enemyCount;i++){
-        if(enemy[i].isDefeat){
-            continue;
-        }
-        if(distanceEnemyToPlayer(i)<=player.atkR&&!isPathBlocked(enemy[i].X,enemy[i].Y,player.X,player.Y)){
-            dealDamage(i,player.atk,false);
-        }
-    }
-}
+
 function playerHeal(hp){
     player.hp=Math.min(player.hp+hp,player.mhp);
 }

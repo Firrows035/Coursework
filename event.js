@@ -22,16 +22,17 @@ function Click(event){
         checkOnClick();
     }
     if(currentStage=="battle"&&skillReady){
+        let skil=skill.get(skillReady);
         if(isPosLegal(mouseX,mouseY)){
-            if(skill[skillReady].spell(event)){
-                skill[skillReady].cdt=skill[skillReady].cd+1;
-                player.mp-=skill[skillReady].cost;
+            if(skil.spell(event)){
+                skil.cdt=skil.cd+1;
+                player.mp-=skil.cost;
             }
-            skill[skillReady].isSelected=0;
+            skil.isSelected=0;
             skillReady=0;
             drawSkillStat();
         }else{
-            skill[skillReady].isSelected=0;
+            skil.isSelected=0;
             skillReady=0;
             checkOnClick();
         }      
@@ -87,92 +88,103 @@ function keyPress(e){
     if(e.key=="w"||e.key=="a"||e.key=="s"||e.key=="d"||e.key==" "){
         
         if(skillReady){
-            skill[skillReady].isSelected=0;
+            skill.get(skillReady).isSelected=0;
             skillReady=0;
             // drawSkillStat();
         }
         playerMove(e.key);
     }
     if(e.key>="1"&&e.key<="9"&&currentStage=="battle"){
-        playSkill(+e.key);
+        prepareSkill(+e.key);
     }
 }
 function checkSelector(){
-    let isTroopSelected=0;
-    enemy.forEach(emy=>{
+    for(let emy of enemy){
         emy.updateSelector();
         if(isTargetOnMouseOver(emy)&&currentStage=="battle"&&!emy.isDefeat){
             emy.onMouseOver();
-            isTroopSelected=1;
+            return;
         }
-    })
-    skill.forEach(skil=>{
+    }
+    for(let [id,skil] of skill){
         if(isTargetOnMouseOver(skil)&&currentStage=="battle"){
             skil.onMouseOver();
+            return;
         }
-    })
+    }
     player.updateSelector();
     if(isTargetOnMouseOver(player)&&currentStage=="battle"){
         player.onMouseOver();
-        isTroopSelected=1;
+        return;
     }
-    key.forEach(k=>{
+    for(let k of key){
         if(isTargetOnMouseOver(k)&&currentStage=="battle"){
             k.onMouseOver();
+            return;
         }
-    })
-    choiceSlot.forEach(slot=>{
+    }
+    for(let slot of choiceSlot){
         if(isTargetOnMouseOver(slot)&&currentStage=="intermission"&&!choiceChosen){
             slot.onMouseOver();
+            return;
         }
-    })
-    character.forEach(chara=>{
+    }
+    for(let [id,chara] of character){
         if(isTargetOnMouseOver(chara)&&currentStage=="prologue"){
             chara.onMouseOver();
+            return;
         }
-    })
-    if(!isTroopSelected)
-    block.forEach(bloc=>{
+    }
+
+    for(let bloc of block){
         if(isTargetOnMouseOver(bloc)&&currentStage=="battle"){
             bloc.onMouseOver();
+            return;
         }
-    })
-    player.effect.forEach(eff=>{
+    }
+    for(let eff of player.effect){
         if(isTargetOnMouseOver(eff)&&currentStage=="battle"){
             eff.onMouseOver();
+            return;
         }
-    })
+    }
 }
 function checkOnClick(){
-    enemy.forEach(emy=>{
+    for(let emy of enemy){
         if(isTargetOnMouseOver(emy)&&currentStage=="battle"){
             emy.onClick();
+            return;
         }
-    })
-    key.forEach(k=>{
+    }
+    for(let k of key){
         if(isTargetOnMouseOver(k)&&currentStage=="battle"){
             k.onClick();
+            return;
         }
-    })
-    skill.forEach(skil=>{
+    }
+    for(let [id,skil] of skill){
         if(isTargetOnMouseOver(skil)&&currentStage=="battle"){
             skil.onClick();
+            return;
         }
-    })
+    }
     player.updateSelector();
     if(isTargetOnMouseOver(player)&&currentStage=="battle"){
         player.onClick();
+        return;
     }
-    choiceSlot.forEach(slot=>{
+    for(let slot of choiceSlot){
         if(isTargetOnMouseOver(slot)&&currentStage=="intermission"&&!choiceChosen){
             slot.onClick();
+            return;
         }
-    })
-    character.forEach(chara=>{
+    }
+    for(let [id,chara] of character){
         if(isTargetOnMouseOver(chara)&&currentStage=="prologue"){
             chara.onClick();
+            return;
         }
-    })
+    }
 }
 function isTargetOnMouseOver(target){
     if(target.selector.offsetX<mouseOffsetX&&target.selector.offsetY<mouseOffsetY&&target.selector.offsetX+target.selector.width>mouseOffsetX&&target.selector.offsetY+target.selector.height>mouseOffsetY) return true;
