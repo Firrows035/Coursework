@@ -16,7 +16,7 @@ function characterPage(){
 function beginRound(){
     round++;
     loadMap(random(0,map.length-1));
-    summonEnemy(enemyType[0],min(20,2+round));
+    summonEnemy("Kanade",min(20,2+round));
     requestAnimationFrame(drawBattlefield);
 }
 function frontPage(){
@@ -53,7 +53,7 @@ function drawBattlefield(){
     clearCanvas();
     //player's turn
     activateEffects(player,"turnStart");
-    
+    activateEnemyEffects("turnStart");
     
     drawPlayerEffects();
     drawMesh();
@@ -65,19 +65,29 @@ function drawBattlefield(){
     projectileMove();
 
     activateBlockEffectAll();
-    activateEnemyEffects("turnEnd");
-
-    checkEnemyStat();
     
+
+    activateEnemyEffects("turnMiddle");
+    checkEnemyStat();
+    enemy.forEach(emy=>{emy.updateState();});
+
     drawProjectile();
     drawEnemy();
     drawEnemyStat();
     drawPlayerStat();
     
     //enemy turn
-    activateEnemyEffects("turnStart");
-    enemyAction();
     
+    enemy.forEach(emy=>{emy.action();});
+    projectile.forEach(proj=>{
+        if(isProjectileTriggered(proj)){
+            triggerProjectile(proj);
+        }
+    })
+
+    activateEnemyEffects("turnEnd");
+    checkEnemyStat();
+    enemy.forEach(emy=>{emy.updateState();});
     cdDown(cooldownPerTurn);
     drawSkillStat();
     setTimeout(() => {
@@ -91,6 +101,7 @@ function drawBattlefield(){
         drawProjectile();
 
         checkEnemyStat();
+        enemy.forEach(emy=>{emy.updateState();});
         drawEnemy();
         drawEnemyStat();
         activateEffects(player,"turnEnd");

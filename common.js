@@ -128,7 +128,7 @@ function checkPosition(x,y){
     if(player.X==x&&player.Y==y){
         return ["player",0];
     }
-    for(let i=enemyCount-enemyInround+1;i<=enemyCount;i++){
+    for(let i=0;i<enemy.length;i++){
         if(enemy[i].X==x&&enemy[i].Y==y&&enemy[i].isDefeat==0){
             return ["enemy",i];
         }
@@ -151,7 +151,7 @@ function distanceEnemyToProjectile(Ecount,Pcount){
     return Math.sqrt((enemy[Ecount].X-projectile[Pcount].X)**2+(enemy[Ecount].Y-projectile[Pcount].Y)**2);
 }
 function distanceBetweenEntity(entity1,entity2){
-    return Math.sqrt((entity1.X-entity2.X)**2+(entity1.Y-entity2.Y)**2);
+    return abs(entity1.X-entity2.X)+abs(entity1.Y-entity2.Y);
 }
 function isPosLegal(x,y){
     if(x<=20&&x>=0&&y<=12&&y>=0)return 1;
@@ -189,6 +189,12 @@ function isPathBlocked(x1,y1,x2,y2){
     }
     return sign;
 }
+function isPosBlocked(x,y){
+    for(let i=0;i<block.length;i++){
+        if(block[i].X==x&&block[i].Y==y&&!block[i].isPassable) return true;
+    }
+    return false;
+}
 function lineRelation(x1,y1,x2,y2,x3,y3,x4,y4){
     let D0=(x3-x4)*(y2-y1)-(x2-x1)*(y3-y4);
     if(D0!=0){
@@ -205,6 +211,67 @@ function lineRelation(x1,y1,x2,y2,x3,y3,x4,y4){
         return ["parallel"];
     }
 }
+function searchPath(x0,y0,xEnd,yEnd){
+    if(x0==xEnd&&y0==yEnd) return [x0,y0];
+    let path=[[x0,y0,0]];
+    let xtemp,ytemp;
+    let pLength;
+    let found=0;
+    while(true){
+        pLength=path.length;
+        let p=random(0,1)*2-1
+        let q=random(0,1)*2-1;
+        for(let i=0;i<path.length;i++){
+            xtemp=path[i][0]+p;
+            ytemp=path[i][1];
+            if(!isPosBlocked(xtemp,ytemp)&&isPosLegal(xtemp,ytemp)&&path.findIndex(key=>key[0]==xtemp&&key[1]==ytemp)==-1){
+                path.push([xtemp,ytemp,i]);
+            }
+            if(xtemp==xEnd&&ytemp==yEnd){
+                found=1;
+                break;
+            }
+            xtemp=path[i][0];
+            ytemp=path[i][1]+q;
+            if(!isPosBlocked(xtemp,ytemp)&&isPosLegal(xtemp,ytemp)&&path.findIndex(key=>key[0]==xtemp&&key[1]==ytemp)==-1){
+                path.push([xtemp,ytemp,i]);
+            }
+            if(xtemp==xEnd&&ytemp==yEnd){
+                found=1;
+                break;
+            }
+            xtemp=path[i][0];
+            ytemp=path[i][1]-q;
+            if(!isPosBlocked(xtemp,ytemp)&&isPosLegal(xtemp,ytemp)&&path.findIndex(key=>key[0]==xtemp&&key[1]==ytemp)==-1){
+                path.push([xtemp,ytemp,i]);
+            }
+            if(xtemp==xEnd&&ytemp==yEnd){
+                found=1;
+                break;
+            }
+            xtemp=path[i][0]-p;
+            ytemp=path[i][1];
+            if(!isPosBlocked(xtemp,ytemp)&&isPosLegal(xtemp,ytemp)&&path.findIndex(key=>key[0]==xtemp&&key[1]==ytemp)==-1){
+                path.push([xtemp,ytemp,i]);
+            }
+            if(xtemp==xEnd&&ytemp==yEnd){
+                found=1;
+                break;
+            }
+        }
+        if(found){
+            let tag=path[path.length-1][2];
+            while(path[tag][2]!=0){
+                tag=path[tag][2];
+            }
+            return [path[tag][0]-x0,path[tag][1]-y0];
+        }
+        if(pLength==path.length)  return -1;
+    }
+}
 
-
-
+function randPosUnblocked(){
+    let x=random(0,20),y=random(0,12);
+    if(!isPosBlocked(x,y)) return [x,y];
+    else return randPosUnblocked();
+}

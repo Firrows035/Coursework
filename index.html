@@ -75,7 +75,7 @@
             scaleX=canvas.width/rect.width;
             scaleY=canvas.height/rect.height;
             canvas.addEventListener("click",e=>{
-                console.log(floor(e.offsetX*scaleX)+','+floor(e.offsetY*scaleY));
+                console.log(floor(e.offsetX*scaleX/50)+','+floor(e.offsetY*scaleY/50));
             })
             info.appendChild(document.createTextNode(seed));
             preset();
