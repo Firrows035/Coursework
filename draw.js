@@ -121,17 +121,21 @@ function drawProjectile(){
 }
 
 function drawSkillStat(){
-    context.clearRect(0,755,1155,110); //(0,750,1100,100)
-    for(let i=0;i<skill.length;i++){
-        skill[i].selector.update(i);
-        if(!skill[i].cdt){
-            drawImgZoom(skill[i].source,110*i+50,760,80,80);
+    context.clearRect(50,660,700,100);
+    let i=0;
+    for(let [id,skil] of skill){
+
+        context.clearRect(0,755,1155,110); //(0,750,1100,100)
+
+        skil.selector.update(i);
+        if(!skil.cdt){
+            drawImgZoom(skil.source,110*i+50,760,80,80);
         }
         else{
-            drawImgZoom(skill[i].sourceCD,110*i+50,760,80,80);
+            drawImgZoom(skil.sourceCD,110*i+50,760,80,80);
                 context.fillStyle="black";
                 context.font="60px Arial";
-                context.fillText(`${skill[i].cdt}`,110*i+25+50,820);
+                context.fillText(`${skil.cdt}`,110*i+25+50,820);
 
         }
         if(skill[i].cost>player.mp){
@@ -141,11 +145,12 @@ function drawSkillStat(){
             context.fillStyle="blue";
         }
         context.font="20px Arial";
-        context.fillText(`${skill[i].cost}`,110*i+80+50,860);
-        if(skill[i].isSelected){
-            drawSelectSkill(i);
-            skill[i].drawSelector();
-        }        
+        context.fillText(`${skil.cost}`,110*i+80+50,860);
+        if(skil.isSelected){
+            drawSelectSkill(i+1);
+            skil.drawSelector();
+        }
+        i++;
     }
 }
 
@@ -308,10 +313,10 @@ function drawChoiceSlot(){
     })
 }
 function drawCharacterChoice(){
-    character.forEach(slot=>{
+    for(let [id,slot] of character){
         if(slot.isSelectable)
         drawImgZoom(slot.source,slot.selector.offsetX,slot.selector.offsetY,slot.selector.width,slot.selector.height);
-    })
+    }
 }
 
 function drawPlayerEffects(){

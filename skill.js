@@ -1,8 +1,8 @@
-var skill=[];
+var skill=new Map();
 var skillCount=0;
 var skillReady=0;
-var skillType=[];
-skillType.push({
+var skillType=new Map();
+skillType.set("fireball",{
     id:"fireball",
     spell:fireball,
     cost:5,
@@ -33,7 +33,7 @@ skillType.push({
         ;
     }
 });
-skillType.push({
+skillType.set("flashmove",{
     id:"flashmove",
     spell:flashmove,
     cost:5,
@@ -64,7 +64,7 @@ skillType.push({
         ;
     }
 });
-skillType.push({
+skillType.set("sacriStrike",{
     id:"sacriStrike",
     spell:sacrificialStrike,
     cost:0,
@@ -93,7 +93,7 @@ skillType.push({
         ;
     }
 });
-skillType.push({
+skillType.set("heal",{
     id:"heal",
     spell:heal,
     cost:10,
@@ -125,10 +125,10 @@ skillType.push({
     }
 });
 function addSkill(typeName){
-    let type=skillType.find((element)=>element.id==typeName);
+    let type=skillType.get(typeName);
     if(skillCount<9){
         skillCount++;
-        skill.push({
+        skill.set(skillCount,{
             id:type.id,
             number:skillCount,
             spell:type.spell,
@@ -161,7 +161,7 @@ function addSkill(typeName){
                 displayDescription(this);
             },
             onClick(){
-                playSkill(this);
+                prepareSkill(this);
             }
         })
         return 1;
@@ -169,10 +169,23 @@ function addSkill(typeName){
     return 0;
 }
 
-function playSkill(skill1){
+function prepareSkill(skillId){
+    if(skillReady!=0){
+       skill.get(skillReady).isSelected=0;
+       skillReady=0;    
+    }
+    
     let skil;
-    if(typeof skill1=="number"&&skill1>=1&&skill1<=skillCount) skil=skill.find(skil=>skil.number==skill1);
-    else if(typeof skill1=="object") skil=skill1;
+    if(typeof skillId=="number"&&skillId>=1&&skillId<=9){
+        for(let [id,item] of skill){
+            skillId--;
+            if(skillId==0){
+                skil=item;
+                break;
+            }
+        }
+    }
+    else if(typeof skillId=="object") skil=skillId;
     else return 0;
     if(actionCooldown){
         return 0;
@@ -184,26 +197,23 @@ function playSkill(skill1){
         return 0;
     }
     if(skil.cost>player.mp){
-        console.log("Cast Failed: No Enough MP");
+        console.log("No Enough MP");
         return 0;
     }
     else{
-        if(skillReady!=0){
-            skill.find(skil=>skil.number==skillReady).isSelected=0;
-        }
         actionCooldown=1;
         setTimeout(()=>{actionCooldown=0;},100);
         skillReady=skil.number;
         skil.isSelected=1;
         drawBattlefieldStatic();
         skil.drawSelector(mouseX,mouseY);
-        return skil.number;
+        return skillReady;
     }
 } 
 function cdDown(t){
-    skill.forEach(skil=>{
-        skil.cdt=max(0,skil.cdt-t);
-    })
+    for(let [id,skil] of skill){
+        skil.cdt=max(skil.cdt-t,0);
+    }
 }
 //skills
 function flashmove(event){
@@ -218,7 +228,7 @@ function flashmove(event){
         player.X=x;
         player.Y=y;
         if(isPosAvaliableLE1(x,y)&&isPosLegal(x,y)){
-            requestAnimationFrame(drawBattlefield);
+            playerTurn();
             return 1;
         }
         else{
@@ -239,7 +249,7 @@ function fireball(event){
             return 0;
         }
         createProjectile("fireball",player.X,player.Y,dx,dy,player.mat*2,true);
-        requestAnimationFrame(drawBattlefield);
+        playerTurn();
         return 1;
     }
     else{
@@ -257,7 +267,7 @@ function sacrificialStrike(event){
                 dealDamage(emy,player.atk*5.5,false);
             }
         })
-        requestAnimationFrame(drawBattlefield);
+        playerTurn();
         return 1;
     }
 }

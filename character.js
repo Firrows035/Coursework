@@ -1,6 +1,6 @@
-var character=[];
+var character=new Map();
 
-character.push({
+character.set("Lagrange",{
     id:"Lagrange",
     source:"Lagrange.jpg",
     mhp:150,
@@ -36,7 +36,7 @@ character.push({
         displayDescription(this);
     }
 });
-character.push({
+character.set("Tairitsu",{
     id:"Tairitsu",
     source:"Tairitsu.png",
     mhp:100,
@@ -73,7 +73,7 @@ character.push({
         displayDescription(this);
     }
 });
-character.push({
+character.set("Tairitsu-Tempest",{
     id:"Tairitsu-Tempest",
     source:"Tairitsu.png",
     mhp:300,
@@ -94,7 +94,7 @@ character.push({
         description:{
             id:"Tairitsu",
             icon:"Tairitsu.png",
-            text:`黑暗常伴的少女。`,
+            text:`她是迫近的风暴。`,
         }
     },
     onClick(){
@@ -105,7 +105,7 @@ character.push({
         displayDescription(this);
     }
 });
-character.push({
+character.set("Hikari",{
     id:"Hikari",
     source:"Hikari.png",
     mhp:200,
@@ -145,7 +145,7 @@ character.push({
 function setCharacter(charId){
     let chara;
     if(typeof charId=="object") chara=charId;
-    if(typeof charId=="string") chara=character.find(char=>char.id==charId);
+    if(typeof charId=="string") chara=character.get(charId);
     console.log(chara);
     player.source=chara.source;
     player.baseMhp=chara.mhp;

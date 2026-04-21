@@ -1,4 +1,15 @@
 //已弃用
+function playerAttack(){
+    for(let i=1;i<=enemyCount;i++){
+        if(enemy[i].isDefeat){
+            continue;
+        }
+        if(distanceEnemyToPlayer(i)<=player.atkR&&!isPathBlocked(enemy[i].X,enemy[i].Y,player.X,player.Y)){
+            dealDamage(i,player.atk,false);
+        }
+    }
+}
+//已弃用
 function enemyMove(count,direction){
     let xtemp=enemy[count].X;
     let ytemp=enemy[count].Y;

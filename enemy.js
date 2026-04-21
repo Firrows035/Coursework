@@ -1,6 +1,6 @@
 var enemy=[];
-var enemyType={};
-enemyType["Kanade"]={
+var enemyType=new Map();
+enemyType.set("Kanade",{
     id:"Kanade",
     source:"Enemy1.jpg",
     mhp:80,
@@ -25,8 +25,12 @@ enemyType["Kanade"]={
     action(){
         enemyActionUsual(this);
     }
-}
-function addEnemy(type){
+});
+function addEnemy(typeId){
+    let type;
+    if(typeof typeId=="object")type=typeId;
+    else if(typeof typeId=="string")type=enemyType.get(typeId);
+    else return 0;
     enemyCount++;
     enemyAlive++;
     enemy.push({
@@ -79,7 +83,7 @@ function addEnemy(type){
         },
         onClick(){
             if(player.attack(this)){
-                drawBattlefield();
+                playerTurn();
             }
         }   
     })
@@ -88,7 +92,7 @@ function addEnemy(type){
 
 function summonEnemy(Id,quantity){
     for(let i=1;i<=quantity;i++){
-        addEnemy(enemyType[Id]);
+        addEnemy(Id);
     }
     enemyInround+=quantity;
     enemy.forEach(emy=>{
