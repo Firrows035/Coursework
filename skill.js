@@ -249,11 +249,11 @@ function sacrificialStrike(event){
             return 0;
         }
         player.hp=max(1,player.hp-player.mhp*0.2);
-        for(let e=enemyCount-enemyInround+1;e<=enemyCount;e++){
-            if(enemy[e].isDefeat==0&&distanceEnemyToPlayer(e)<=6){
-                dealDamage(e,player.atk*5.5,false);
+        enemy.forEach(emy=>{
+            if(emy.isDefeat==0&&distanceBetweenEntity(emy,player)<=6){
+                dealDamage(emy,player.atk*5.5,false);
             }
-        }
+        })
         requestAnimationFrame(drawBattlefield);
         return 1;
     }

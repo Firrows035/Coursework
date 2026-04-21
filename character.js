@@ -35,7 +35,7 @@ character.push({
         drawRect(2,this.selector.color,this.selector.offsetX,this.selector.offsetY,this.selector.width,this.selector.height);
         displayDescription(this);
     }
-})
+});
 character.push({
     id:"Tairitsu",
     source:"Tairitsu.png",
@@ -72,7 +72,39 @@ character.push({
         drawRect(2,this.selector.color,this.selector.offsetX,this.selector.offsetY,this.selector.width,this.selector.height);
         displayDescription(this);
     }
-})
+});
+character.push({
+    id:"Tairitsu-Tempest",
+    source:"Tairitsu.png",
+    mhp:300,
+    mmp:300,
+    atk:50,
+    def:5,
+    mat:50,
+    mdf:5,
+    atkR:4,
+    isSelectable:false,
+    selector:{
+        type:"character",
+        color:"red",
+        offsetX:200,
+        offsetY:100,
+        width:0,
+        height:0,
+        description:{
+            id:"Tairitsu",
+            icon:"Tairitsu.png",
+            text:`黑暗常伴的少女。`,
+        }
+    },
+    onClick(){
+        setCharacter(this);
+    },
+    onMouseOver(){
+        drawRect(2,this.selector.color,this.selector.offsetX,this.selector.offsetY,this.selector.width,this.selector.height);
+        displayDescription(this);
+    }
+});
 character.push({
     id:"Hikari",
     source:"Hikari.png",
@@ -108,9 +140,13 @@ character.push({
         drawRect(2,this.selector.color,this.selector.offsetX,this.selector.offsetY,this.selector.width,this.selector.height);
         displayDescription(this);
     }
-})
+});
 
-function setCharacter(chara){
+function setCharacter(charId){
+    let chara;
+    if(typeof charId=="object") chara=charId;
+    if(typeof charId=="string") chara=character.find(char=>char.id==charId);
+    console.log(chara);
     player.source=chara.source;
     player.baseMhp=chara.mhp;
     player.baseMmp=chara.mmp;

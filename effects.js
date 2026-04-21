@@ -10,6 +10,9 @@ effectType.poison={
         target.hp=max(1,target.hp-target.mhp*0.05);
         return 1;
     },
+    turnMiddle(target){
+        return 0;
+    },
     turnEnd(target){
         return 0;
     },
@@ -38,7 +41,12 @@ effectType.immortal={
     gain(target){
         return 0;
     },
-    turnStart(target){
+    turnStart(target){  //不影响伤害结算
+        
+        return 0;
+    },
+    turnMiddle(target){
+        target.hp=max(target.hp,1);
         return 0;
     },
     turnEnd(target){
@@ -73,6 +81,14 @@ effectType.revival={
     turnStart(target){
         return 0;
     },
+    turnMiddle(target){
+        if(target.hp<=0){
+            target.hp=target.mhp*0.5;
+            giveEffect(target,"immortal",5,false);
+            return 1;
+        }
+        return 0;
+    },
     turnEnd(target){
         if(target.hp<=0){
             target.hp=target.mhp*0.5;
@@ -82,6 +98,7 @@ effectType.revival={
         return 0;
     },
     expire(target){
+        setCharacter("Tairitsu-Tempest");
         return 0;
     },
     maxDuration:10,
@@ -133,6 +150,7 @@ function giveEffect(entity,effectId,duration,isCrossRound){
             source:type.source,
             gain:type.gain,
             turnStart:type.turnStart,
+            turnMiddle:type.turnMiddle,
             turnEnd:type.turnEnd,
             expire:type.expire,
             duration:duration,

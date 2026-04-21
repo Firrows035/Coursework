@@ -56,16 +56,16 @@ function clearBattlefield(){
     context.clearRect(0,0,1050,650);
 }
 
-function drawEnemy1(count){
-    if(!enemy[count].isDefeat){
-        drawImgZoom(enemy[count].source,enemy[count].X*50+5,enemy[count].Y*50+5,40,40);
+function drawEnemy1(emy){
+    if(!emy.isDefeat){
+        drawImgZoom(emy.source,emy.X*50+5,emy.Y*50+5,40,40);
     }
 }
 
 function drawEnemy(){
-    for(let i=1;i<=enemyCount;i++){
-        drawEnemy1(i);
-    }
+    enemy.forEach(emy=>{
+        drawEnemy1(emy);
+    })
 }
 
 function drawPlayerStat(){
@@ -95,27 +95,27 @@ function drawRect(lineWidth,style,x,y,w,h){
     context.stroke();
     context.closePath();
 }
-function drawEnemyStat1(count){
-    if(!enemy[count].isDefeat){
-        if(enemy[count].movePattern=="attack"){
-            drawRect(2,"red",enemy[count].X*50+5,enemy[count].Y*50+5,40,40);
+function drawEnemyStat1(emy){
+    if(!emy.isDefeat){
+        if(emy.state=="attack"){
+            drawRect(2,"red",emy.X*50+5,emy.Y*50+5,40,40);
         }
-        else if(enemy[count].movePattern=="navigate"){
-            drawRect(2,"orange",enemy[count].X*50+5,enemy[count].Y*50+5,40,40);
+        else if(emy.state=="warning"){
+            drawRect(2,"orange",emy.X*50+5,emy.Y*50+5,40,40);
         }
         context.fillStyle="#000000";
-        context.fillRect(enemy[count].X*50,enemy[count].Y*50,50,5);
+        context.fillRect(emy.X*50,emy.Y*50,50,5);
         context.fillStyle="white";
-        context.fillRect(enemy[count].X*50+1,enemy[count].Y*50+1,48,3);
+        context.fillRect(emy.X*50+1,emy.Y*50+1,48,3);
         context.fillStyle="red";
-        context.fillRect(enemy[count].X*50+1,enemy[count].Y*50+1,48*enemy[count].hp/enemy[count].mhp,3);
+        context.fillRect(emy.X*50+1,emy.Y*50+1,48*emy.hp/emy.mhp,3);
     }
 }
 
 function drawEnemyStat(){
-    for(let i=1;i<=enemyCount;i++){
-        drawEnemyStat1(i);
-    }
+    enemy.forEach(emy=>{
+        drawEnemyStat1(emy);
+    })
 }
 
 
@@ -326,6 +326,7 @@ function drawChoiceSlot(){
 }
 function drawCharacterChoice(){
     character.forEach(slot=>{
+        if(slot.isSelectable)
         drawImgZoom(slot.source,slot.selector.offsetX,slot.selector.offsetY,slot.selector.width,slot.selector.height);
     })
 }

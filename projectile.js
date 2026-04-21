@@ -9,7 +9,7 @@ projectileType.fireball={
     speed:3,
     triggerR:1,
     isAOE:true,
-    damageR:1,
+    damageR:3,
     isMagic:true,
     isSelectable:false,
     isFriendly:true,
@@ -60,10 +60,12 @@ function projectileMove(){
         for(let i=0;i<proj.speed*2;i++){
             tempX+=0.5*proj.direction.X;
             tempY+=0.5*proj.direction.Y;
+            console.log(tempX,tempY);
             proj.X=floor(tempX);
             proj.Y=floor(tempY);
             if(isProjectileTriggered(proj)){
                 triggerProjectile(proj);
+                return;
             }
         }
         proj.X=tempX;
@@ -82,7 +84,7 @@ function isProjectileTriggered(proj){
     }else if(distanceBetweenEntity(player,proj)<proj.triggerR) sign=1;
     if(sign) return true;
     block.forEach(bloc=>{
-        if(distanceBetweenEntity(bloc,proj)<proj.triggerR&&bloc.isOnField&&!bloc.isProjectilePassable){
+        if(distanceBetweenEntity(bloc,proj)<1&&bloc.isOnField&&!bloc.isProjectilePassable){
             sign=1;
         }
     })

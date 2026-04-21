@@ -93,7 +93,7 @@ function keyPress(e){
         }
         playerMove(e.key);
     }
-    if(e.key>="1"&&e.key<="9"){
+    if(e.key>="1"&&e.key<="9"&&currentStage=="battle"){
         playSkill(+e.key);
     }
 }
