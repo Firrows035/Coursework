@@ -5,8 +5,8 @@ key.push({
     selector:{
         type:"key",
         color:"red",
-        offsetX:850,
-        offsetY:660,
+        offsetX:1280,
+        offsetY:760,
         width:95,
         height:95,
         description:"undefined"
@@ -24,8 +24,8 @@ key.push({
     selector:{
         type:"key",
         color:"red",
-        offsetX:850,
-        offsetY:760,
+        offsetX:1280,
+        offsetY:860,
         width:95,
         height:95,
         description:"undefined"
@@ -43,8 +43,8 @@ key.push({
     selector:{
         type:"key",
         color:"red",
-        offsetX:750,
-        offsetY:760,
+        offsetX:1180,
+        offsetY:860,
         width:95,
         height:95,
         description:"undefined"
@@ -62,8 +62,8 @@ key.push({
     selector:{
         type:"key",
         color:"red",
-        offsetX:950,
-        offsetY:760,
+        offsetX:1380,
+        offsetY:860,
         width:95,
         height:95,
         description:"undefined"

@@ -23,15 +23,15 @@ function Click(event){
     }
     if(currentStage=="battle"&&skillReady){
         if(isPosLegal(mouseX,mouseY)){
-            if(skill[skillReady].spell(event)){
-                skill[skillReady].cdt=skill[skillReady].cd+1;
-                player.mp-=skill[skillReady].cost;
+            if( skill.find(skil=>skil.number==skillReady).spell(event)){
+                 skill.find(skil=>skil.number==skillReady).cdt= skill.find(skil=>skil.number==skillReady).cd+1;
+                player.mp-= skill.find(skil=>skil.number==skillReady).cost;
             }
-            skill[skillReady].isSelected=0;
+            skill.find(skil=>skil.number==skillReady).isSelected=0;
             skillReady=0;
             drawSkillStat();
         }else{
-            skill[skillReady].isSelected=0;
+            skill.find(skil=>skil.number==skillReady).isSelected=0;
             skillReady=0;
             checkOnClick();
         }      
@@ -87,7 +87,7 @@ function keyPress(e){
     if(e.key=="w"||e.key=="a"||e.key=="s"||e.key=="d"||e.key==" "){
         
         if(skillReady){
-            skill[skillReady].isSelected=0;
+            skill.find(skil=>{skil.number==skillReady}).isSelected=0;
             skillReady=0;
             // drawSkillStat();
         }
