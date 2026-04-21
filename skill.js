@@ -128,7 +128,7 @@ function addSkill(typeName){
     let type=skillType.find((element)=>element.id==typeName);
     if(skillCount<9){
         skillCount++;
-        skill[skillCount]={
+        skill.push({
             id:type.id,
             number:skillCount,
             spell:type.spell,
@@ -143,8 +143,8 @@ function addSkill(typeName){
             selector:{
                 type:"skill",
                 color:"blue",
-                offsetX:100*skillCount-50,
-                offsetY:660,
+                offsetX:110*skillCount-60,
+                offsetY:760,
                 width:100,
                 height:100,
                 description:{
@@ -152,6 +152,9 @@ function addSkill(typeName){
                     icon:type.selector.description.icon,
                     text:type.selector.description.text,
                 },
+                update(i){
+                    this.offsetX=110*i+50;
+                }
             },
             onMouseOver(){
                 drawRect(2,this.selector.color,this.selector.offsetX+2,this.selector.offsetY+2,this.selector.width-4,this.selector.height-4);
@@ -160,7 +163,7 @@ function addSkill(typeName){
             onClick(){
                 playSkill(this);
             }
-        }
+        })
         return 1;
     }
     return 0;
@@ -168,7 +171,7 @@ function addSkill(typeName){
 
 function playSkill(skill1){
     let skil;
-    if(typeof skill1=="number"&&skill1>=1&&skill1<=skillCount) skil=skill[skill1];
+    if(typeof skill1=="number"&&skill1>=1&&skill1<=skillCount) skil=skill.find(skil=>skil.number==skill1);
     else if(typeof skill1=="object") skil=skill1;
     else return 0;
     if(actionCooldown){
@@ -186,7 +189,7 @@ function playSkill(skill1){
     }
     else{
         if(skillReady!=0){
-            skill[skillReady].isSelected=0;
+            skill.find(skil=>skil.number==skillReady).isSelected=0;
         }
         actionCooldown=1;
         setTimeout(()=>{actionCooldown=0;},100);
@@ -198,9 +201,9 @@ function playSkill(skill1){
     }
 } 
 function cdDown(t){
-    for(let i=1;i<=skillCount;i++){
-        skill[i].cdt=Math.max(skill[i].cdt-t,0);
-    }
+    skill.forEach(skil=>{
+        skil.cdt=max(0,skil.cdt-t);
+    })
 }
 //skills
 function flashmove(event){

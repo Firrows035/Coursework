@@ -17,33 +17,25 @@ function drawImgCut(source,sx,sy,swidth,sheight,x,y){
 function drawMesh(){
     context.strokeStyle="#bbbbbb";
     context.lineWidth=2;
-    for(let i=0;i<=13;i++){
-        context.beginPath();
+    context.beginPath();
+    for(let i=0;i<=15;i++){
         context.moveTo(0,i*50);
-        context.lineTo(1050,i*50);
+        context.lineTo(1500,i*50);
         context.stroke();
-        context.closePath();
     }
-    for(let i=0;i<=21;i++){
-        context.beginPath();
+    for(let i=0;i<=30;i++){
         context.moveTo(i*50,0);
-        context.lineTo(i*50,650);
+        context.lineTo(i*50,750);
         context.stroke();
-        context.closePath();
     }
-    context.beginPath();
-    context.moveTo(1050,330);
-    context.lineTo(1600,330);
+    context.moveTo(1500,260);
+    context.lineTo(2050,260);
     context.stroke();
-    context.closePath();
-    context.beginPath();
-    context.moveTo(1050,600);
-    context.lineTo(1600,600);
+    context.moveTo(1500,560);
+    context.lineTo(2050,560);
     context.stroke();
-    context.closePath();
-    context.beginPath();
-    context.moveTo(1050,650);
-    context.lineTo(1050,900);
+    context.moveTo(1500,750);
+    context.lineTo(1500,1000);
     context.stroke();
     context.closePath();
 }
@@ -53,7 +45,7 @@ function clearCanvas(){
 }
 
 function clearBattlefield(){
-    context.clearRect(0,0,1050,650);
+    context.clearRect(0,0,1500,750);
 }
 
 function drawEnemy1(emy){
@@ -69,23 +61,23 @@ function drawEnemy(){
 }
 
 function drawPlayerStat(){
-    context.clearRect(1052,0,548,150);
+    context.clearRect(1502,0,548,150);
     context.font="30px Arial";
     context.fillStyle="black";
-    context.fillText(`HP: ${floor(player.hp)}/${floor(player.mhp)}`,1410,80);
-    context.fillRect(1098,48,304,34);
-    context.fillText(`MP: ${floor(player.mp)}/${floor(player.mmp)}`,1410,150);
-    context.fillRect(1098,118,304,34);
+    context.fillText(`HP: ${floor(player.hp)}/${floor(player.mhp)}`,1860,80);
+    context.fillRect(1548,48,304,34);
+    context.fillText(`MP: ${floor(player.mp)}/${floor(player.mmp)}`,1860,150);
+    context.fillRect(1548,118,304,34);
 
     context.fillStyle="white";
-    context.fillRect(1100,50,300,30);
-    context.fillRect(1100,120,300,30);
+    context.fillRect(1550,50,300,30);
+    context.fillRect(1550,120,300,30);
 
     context.fillStyle="red";
-    context.fillRect(1100,50,player.hp/player.mhp*300,30);
+    context.fillRect(1550,50,player.hp/player.mhp*300,30);
 
     context.fillStyle="blue";
-    context.fillRect(1100,120,player.mp/player.mmp*300,30);
+    context.fillRect(1550,120,player.mp/player.mmp*300,30);
 }
 function drawRect(lineWidth,style,x,y,w,h){
     context.lineWidth=lineWidth;
@@ -129,31 +121,30 @@ function drawProjectile(){
 }
 
 function drawSkillStat(){
-    context.clearRect(50,660,700,100);
-    for(let i=0;i<skillCount;i++){
-        if(!skill[i+1].cdt){
-            drawImgZoom(skill[i+1].source,100*i+50,660,80,80);
+    context.clearRect(0,755,1155,110); //(0,750,1100,100)
+    for(let i=0;i<skill.length;i++){
+        skill[i].selector.update(i);
+        if(!skill[i].cdt){
+            drawImgZoom(skill[i].source,110*i+50,760,80,80);
         }
         else{
-            drawImgZoom(skill[i+1].sourceCD,100*i+50,660,80,80);
-
+            drawImgZoom(skill[i].sourceCD,110*i+50,760,80,80);
                 context.fillStyle="black";
                 context.font="60px Arial";
-                context.fillText(`${skill[i+1].cdt}`,100*i+25+50,720);
+                context.fillText(`${skill[i].cdt}`,110*i+25+50,820);
 
         }
-        
-        if(skill[i+1].cost>player.mp){
+        if(skill[i].cost>player.mp){
             context.fillStyle="red";
         }
         else{
             context.fillStyle="blue";
         }
         context.font="20px Arial";
-        context.fillText(`${skill[i+1].cost}`,100*i+80+50,760);
-        if(skill[i+1].isSelected){
-            drawSelectSkill(i+1);
-            skill[i+1].drawSelector();
+        context.fillText(`${skill[i].cost}`,110*i+80+50,860);
+        if(skill[i].isSelected){
+            drawSelectSkill(i);
+            skill[i].drawSelector();
         }        
     }
 }
@@ -162,7 +153,7 @@ function drawSelectSkill(num){
 
         context.beginPath();
         context.strokeStyle="red";
-        context.rect(100*num-100+50,660,100,100);
+        context.rect(110*num+50,760,100,100);
         context.stroke();
         context.closePath();
 
@@ -270,40 +261,32 @@ function displayDescription(target){
     if(target.isSelectable){
         switch(target.selector.type){
             case "troop":
-                drawText(target.selector.description.id,1080,365,"black","30px 黑体",490,35,true);
-                drawStatBar(1260,335,180,30,target.hp,target.mhp,"red","");
-                drawImgZoom(target.selector.description.icon,1080,370,100,100);
-                drawText(`ATK: ${floor(target.atk)}`,1200,415,"black","30px 黑体",500,40,false);
-                drawText(`DEF: ${floor(target.def)}`,1390,415,"black","30px 黑体",500,40,false);
-                drawText(`MAT: ${floor(target.mat)}`,1200,470,"black","30px 黑体",500,40,false);
-                drawText(`MDF: ${floor(target.mdf)}`,1390,470,"black","30px 黑体",500,40,false);
-                drawText(target.selector.description.text,1080,650,"black","30px 宋体",490,40,true);
+                drawText(target.selector.description.id,1530,295,"black","30px 黑体",490,35,true);
+                drawStatBar(1710,265,180,30,target.hp,target.mhp,"red","");
+                drawImgZoom(target.selector.description.icon,1530,300,100,100);
+                drawText(`ATK: ${floor(target.atk)}`,1650,340,"black","30px 黑体",500,40,false);
+                drawText(`DEF: ${floor(target.def)}`,1840,340,"black","30px 黑体",500,40,false);
+                drawText(`MAT: ${floor(target.mat)}`,1650,400,"black","30px 黑体",500,40,false);
+                drawText(`MDF: ${floor(target.mdf)}`,1840,400,"black","30px 黑体",500,40,false);
+                drawText(target.selector.description.text,1530,600,"black","30px 宋体",490,40,true);
                 break;
             case "skill":
-                drawText(target.selector.description.id,1200,390,"black","50px 微软雅黑",490,55,false);
-                drawImgZoom(target.selector.description.icon,1080,350,100,100);
-                drawText(target.selector.description.text,1080,650,"black","30px 宋体",490,40,true);
+            case "block":
+            case "effect":
+                drawText(target.selector.description.id,1650,320,"black","50px 微软雅黑",490,55,false);
+                drawImgZoom(target.selector.description.icon,1530,270,100,100);
+                drawText(target.selector.description.text,1530,600,"black","30px 宋体",490,40,true);
                 break;
             case "character":
-                drawText(target.selector.description.id,1080,365,"black","30px 黑体",490,35,false);
-                drawStatBar(1260,335,180,30,target.mhp,target.mhp,"red","");
-                drawStatBar(1260,370,180,30,target.mmp,target.mmp,"blue","");
-                drawImgZoom(target.selector.description.icon,1080,370,100,100);
-                drawText(`ATK: ${floor(target.atk)}`,1200,455,"black","30px 黑体",500,40,false);
-                drawText(`DEF: ${floor(target.def)}`,1390,455,"black","30px 黑体",500,40,false);
-                drawText(`MAT: ${floor(target.mat)}`,1200,510,"black","30px 黑体",500,40,false);
-                drawText(`MDF: ${floor(target.mdf)}`,1390,510,"black","30px 黑体",500,40,false);
-                drawText(target.selector.description.text,1080,650,"black","30px 宋体",490,40,true);
-                break;
-            case "block":
-                drawText(target.selector.description.id,1200,390,"black","50px 微软雅黑",490,55,false);
-                drawImgZoom(target.selector.description.icon,1080,350,100,100);
-                drawText(target.selector.description.text,1080,650,"black","30px 宋体",490,40,true);
-                break;
-            case "effect":
-                drawText(target.selector.description.id,1200,390,"black","50px 微软雅黑",490,55,false);
-                drawImgZoom(target.selector.description.icon,1080,350,100,100);
-                drawText(target.selector.description.text,1080,650,"black","30px 宋体",490,40,true);
+                drawText(target.selector.description.id,1530,295,"black","30px 黑体",490,35,true);
+                drawStatBar(1710,265,180,30,target.mhp,target.mhp,"red","");
+                drawImgZoom(target.selector.description.icon,1530,300,100,100);
+                drawStatBar(1710,300,180,30,target.mmp,target.mmp,"blue","");
+                drawText(`ATK: ${floor(target.atk)}`,1700,380,"black","30px 黑体",500,40,false);
+                drawText(`DEF: ${floor(target.def)}`,1890,380,"black","30px 黑体",500,40,false);
+                drawText(`MAT: ${floor(target.mat)}`,1700,440,"black","30px 黑体",500,40,false);
+                drawText(`MDF: ${floor(target.mdf)}`,1890,440,"black","30px 黑体",500,40,false);
+                drawText(target.selector.description.text,1530,600,"black","30px 宋体",490,40,true);
                 break;
             default:
                 break;
@@ -333,15 +316,14 @@ function drawCharacterChoice(){
 
 function drawPlayerEffects(){
     let order=0;
-    context.clearRect(1055,275,600,50);
+    context.clearRect(1505,155,545,110);
     player.effect.forEach(eff=>{
         if(eff.isSelectable){
-            eff.selector.offsetX=1060+50*order;
-            eff.selector.offsetY=280;
+            eff.selector.offsetX=1510+50*order;
+            eff.selector.offsetY=160;
             drawImgZoom(eff.selector.description.icon,eff.selector.offsetX,eff.selector.offsetY,eff.selector.width,eff.selector.height);
             drawRect(2,"grey",eff.selector.offsetX,eff.selector.offsetY,eff.selector.width,eff.selector.height)
             order++;
         }
     })
 }
-    
