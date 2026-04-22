@@ -40,6 +40,7 @@ function createProjectile(projId,sx,sy,dx,dy,damage,isFriendly){
             X:dx/Math.sqrt(dx**2+dy**2),
             Y:dy/Math.sqrt(dx**2+dy**2)
         },
+        trace:findRayTrace(sx,sy,sx+dx,sy+dy,false),
         speed:type.speed,
         triggerR:type.triggerR,
         isAOE:type.isAOE,
@@ -59,19 +60,18 @@ function createProjectile(projId,sx,sy,dx,dy,damage,isFriendly){
 function projectileMove(){
     for(let proj of projectile){
         let tempX=proj.X,tempY=proj.Y;
-        for(let i=0;i<proj.speed*10;i++){
-            tempX+=0.1*proj.direction.X;
-            tempY+=0.1*proj.direction.Y;
-            console.log(tempX,tempY);
-            proj.X=floor(tempX);
-            proj.Y=floor(tempY);
-            if(isProjectileTriggered(proj)){
+        for(let i=0;i<proj.speed;i++){
+            if(proj.trace.length==0){
                 triggerProjectile(proj);
                 break;
             }
+            [proj.X,proj.Y]=proj.trace[0];
+            proj.trace.splice(0,1);
+            if(isProjectileTriggered(proj))
+                triggerProjectile(proj);
         }
-        proj.X=tempX;
-        proj.Y=tempY;
+        if(isProjectileTriggered(proj))
+            triggerProjectile(proj)
     }
 }
 function isProjectileTriggered(proj){

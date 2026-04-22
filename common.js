@@ -15,7 +15,10 @@ var enemyDefeated=0;
 var enemyAlive=0;
 var enemyInround=0;
 
-
+var battelfield={
+    length:30,
+    height:15
+}
 
 
 
@@ -154,7 +157,7 @@ function distanceBetweenEntity(entity1,entity2){
     return abs(floor(entity1.X)-floor(entity2.X))+abs(floor(entity1.Y)-floor(entity2.Y));
 }
 function isPosLegal(x,y){
-    if(x<=29&&x>=0&&y<=14&&y>=0)return 1;
+    if(x<battelfield.length&&x>=0&&y<battelfield.height&&y>=0)return 1;
     else return 0;
 }
 function isPathBlocked(x1,y1,x2,y2){
@@ -278,4 +281,31 @@ function randPosUnblocked(){
     let x=random(0,29),y=random(0,14);
     if(!isPosBlocked(x,y)) return [x,y];
     else return randPosUnblocked();
+}
+
+function findRayTrace(x0,y0,x1,y1,isBlockConsidered){
+    if(x0==x1&&y0==y1) return [];
+    let trace=[];
+    let currentX=x0,currentY=y0;
+    let dx=x1-x0,dy=y1-y0;
+    let stepX=(dx>0)?1:((dx<0)?-1:0),stepY=(dy>0)?1:((dy<0)?-1:0); //前进方向
+    let tPx=(dx!=0)?abs(1/dx):1e5,tPy=(dx!=0)?abs(1/dy):1e5;   //前进一格所需时间
+    let tTx=(dx!=0)?abs(0.5/dx):1e5,tTy=(dx!=0)?abs(0.5/dy):1e5;    //到下一格所需时间
+    while(isPosLegal(currentX,currentY)){
+        trace.push([currentX,currentY]);
+        if(abs(tTx-tTy)<1e-8){
+            currentX+=stepX;
+            currentY+=stepY;
+            tTx+=tPx;
+            tTy+=tPy;
+        }else if(tTx<tTy){
+            currentX+=stepX;
+            tTx+=tPx;
+        }else{
+            currentY+=stepY;
+            tTy+=tPy;
+        }
+        if(isBlockConsidered&&isPosBlocked(currentX,currentY)) break;
+    }
+    return trace;
 }

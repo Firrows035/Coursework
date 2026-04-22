@@ -332,3 +332,8 @@ function drawPlayerEffects(){
         }
     })
 }
+function drawTrace(trace){
+    for(let [x,y] of trace){
+        drawImgZoom("tracker.png",x*50,y*50,50,50);
+    }
+}
