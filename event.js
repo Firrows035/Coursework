@@ -24,13 +24,7 @@ function Click(event){
     if(currentStage=="battle"&&skillReady){
         let skil=skill.get(skillReady);
         if(isPosLegal(mouseX,mouseY)){
-            if(skil.spell(event)){
-                skil.cdt=skil.cd+1;
-                player.mp-=skil.cost;
-            }
-            skil.isSelected=0;
-            skillReady=0;
-            drawSkillStat();
+            playerTurn("skill",event);
         }else{
             skil.isSelected=0;
             skillReady=0;
@@ -92,7 +86,7 @@ function keyPress(e){
             skillReady=0;
             // drawSkillStat();
         }
-        playerMove(e.key);
+        playerTurn("move",e.key);
     }
     if(e.key>="1"&&e.key<="9"&&currentStage=="battle"){
         prepareSkill(+e.key);

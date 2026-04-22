@@ -17,7 +17,7 @@ function beginRound(){
     round++;
     loadMap(random(0,map.length-1));
     summonEnemy("Kanade",min(20,2+round));
-    playerTurn();
+    playerTurn("halt");
 }
 function frontPage(){
     clearCanvas();
@@ -50,6 +50,8 @@ function intermissonPage(){
 }
 
 function playerTurn(act,target){
+    if(currentStage!="battle") return 0;
+    console.log(act);
     activateEffects(player,"player","TurnStart");
     activateEnemyEffects("player","TurnStart");
     player.action(act,target);
@@ -68,7 +70,8 @@ function playerTurn(act,target){
     activateEnemyEffects("player","TurnEnd");
     drawBattlefieldStatic();
     checkScene();
-    neutralTurn();
+    setTimeout(()=>neutralTurn(),20);
+    
 }
 function neutralTurn(){
     activateBlockEffectAll();
@@ -78,6 +81,7 @@ function neutralTurn(){
     for(let proj of projectile){
         if(isProjectileTriggered(proj))triggerProjectile(proj);
     }
+    clearTriggeredProjectile();
     activateEffects(player,"neutral","TurnMiddle");
     activateEnemyEffects("neutral","TurnMiddle");
     checkEnemyStat();
@@ -86,7 +90,7 @@ function neutralTurn(){
     activateEnemyEffects("neutral","TurnEnd");
     drawBattlefieldStatic();
     checkScene();
-    enemyTurn();
+    setTimeout(()=>enemyTurn(),20);
 }
 function enemyTurn(){
     activateEffects(player,"enemy","TurnStart");
@@ -99,6 +103,7 @@ function enemyTurn(){
     for(let proj of projectile){
         if(isProjectileTriggered(proj))triggerProjectile(proj);
     }
+    clearTriggeredProjectile();
     activateEffects(player,"enemy","TurnMiddle");
     activateEnemyEffects("enemy","TurnMiddle");
     checkEnemyStat();

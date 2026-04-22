@@ -121,12 +121,9 @@ function drawProjectile(){
 }
 
 function drawSkillStat(){
-    context.clearRect(50,660,700,100);
+    context.clearRect(0,755,1155,110); //(0,750,1100,100)
     let i=0;
     for(let [id,skil] of skill){
-
-        context.clearRect(0,755,1155,110); //(0,750,1100,100)
-
         skil.selector.update(i);
         if(!skil.cdt){
             drawImgZoom(skil.source,110*i+50,760,80,80);
@@ -138,7 +135,7 @@ function drawSkillStat(){
                 context.fillText(`${skil.cdt}`,110*i+25+50,820);
 
         }
-        if(skill[i].cost>player.mp){
+        if(skil.cost>player.mp){
             context.fillStyle="red";
         }
         else{
@@ -147,7 +144,7 @@ function drawSkillStat(){
         context.font="20px Arial";
         context.fillText(`${skil.cost}`,110*i+80+50,860);
         if(skil.isSelected){
-            drawSelectSkill(i+1);
+            drawSelectSkill(i);
             skil.drawSelector();
         }
         i++;
@@ -216,6 +213,10 @@ function sacriStrikeSelector(){
             
         }
     }
+}
+function traceSelector(caster){
+    let trace=findRayTrace(caster.X,caster.Y,mouseX,mouseY,true);
+    drawTrace(trace);
 }
 
 function drawBlocks(){
@@ -321,14 +322,19 @@ function drawCharacterChoice(){
 
 function drawPlayerEffects(){
     let order=0;
-    context.clearRect(1505,155,545,110);
+    context.clearRect(1505,155,545,100);
     player.effect.forEach(eff=>{
         if(eff.isSelectable){
             eff.selector.offsetX=1510+50*order;
-            eff.selector.offsetY=160;
+            eff.selector.offsetY=160+50*floor(order/10);
             drawImgZoom(eff.selector.description.icon,eff.selector.offsetX,eff.selector.offsetY,eff.selector.width,eff.selector.height);
             drawRect(2,"grey",eff.selector.offsetX,eff.selector.offsetY,eff.selector.width,eff.selector.height)
             order++;
         }
     })
+}
+function drawTrace(trace){
+    for(let [x,y] of trace){
+        drawImgZoom("tracker.png",x*50,y*50,50,50);
+    }
 }

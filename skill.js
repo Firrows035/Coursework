@@ -6,11 +6,11 @@ skillType.set("fireball",{
     id:"fireball",
     spell:fireball,
     cost:5,
-    cd:1,
+    cd:2,
     source:"fireball.png",
     sourceCD:"fireball-cd.png",
     targetSelector(){
-        return;
+        traceSelector(player);
     },
     isSelectable:true,
     selector:{
@@ -37,7 +37,7 @@ skillType.set("flashmove",{
     id:"flashmove",
     spell:flashmove,
     cost:5,
-    cd:2,
+    cd:3,
     source:"flash.png",
     sourceCD:"flash-cd.png",
     targetSelector(){
@@ -97,7 +97,7 @@ skillType.set("heal",{
     id:"heal",
     spell:heal,
     cost:10,
-    cd:5,
+    cd:6,
     source:"heal.png",
     sourceCD:"heal-cd.png",
     targetSelector(){
@@ -174,7 +174,6 @@ function prepareSkill(skillId){
        skill.get(skillReady).isSelected=0;
        skillReady=0;    
     }
-    
     let skil;
     if(typeof skillId=="number"&&skillId>=1&&skillId<=9){
         for(let [id,item] of skill){
@@ -228,7 +227,6 @@ function flashmove(event){
         player.X=x;
         player.Y=y;
         if(isPosAvaliableLE1(x,y)&&isPosLegal(x,y)){
-            playerTurn();
             return 1;
         }
         else{
@@ -249,7 +247,6 @@ function fireball(event){
             return 0;
         }
         createProjectile("fireball",player.X,player.Y,dx,dy,player.mat*2,true);
-        playerTurn();
         return 1;
     }
     else{
@@ -267,7 +264,6 @@ function sacrificialStrike(event){
                 dealDamage(emy,player.atk*5.5,false);
             }
         })
-        playerTurn();
         return 1;
     }
 }

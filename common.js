@@ -15,7 +15,10 @@ var enemyDefeated=0;
 var enemyAlive=0;
 var enemyInround=0;
 
-
+var battelfield={
+    length:30,
+    height:15
+}
 
 
 
@@ -147,47 +150,54 @@ function directionToPosition(p0,p1){
 function distanceBetweenPosition(x1,y1,x2,y2){
     return Math.abs(x1-x2)+Math.abs(y1-y2);
 }
+function mathDistanceBetweenPosition(x1,y1,x2,y2){
+    return Math.sqrt((x1-x2)**2+(y1-y2)**2);
+}
 function distanceEnemyToProjectile(Ecount,Pcount){
     return Math.sqrt((enemy[Ecount].X-projectile[Pcount].X)**2+(enemy[Ecount].Y-projectile[Pcount].Y)**2);
 }
 function distanceBetweenEntity(entity1,entity2){
-    return abs(entity1.X-entity2.X)+abs(entity1.Y-entity2.Y);
+    return abs(floor(entity1.X)-floor(entity2.X))+abs(floor(entity1.Y)-floor(entity2.Y));
 }
 function isPosLegal(x,y){
-    if(x<=29&&x>=0&&y<=14&&y>=0)return 1;
+    if(x<battelfield.length&&x>=0&&y<battelfield.height&&y>=0)return 1;
     else return 0;
 }
 function isPathBlocked(x1,y1,x2,y2){
     let sign=0;
     if(isPosLegal(x1,y1)&&isPosLegal(x2,y2)){
-        block.forEach(bloc=>{
-            if(sign) return;
+        for(let bloc of block){
+
             let bx1=bloc.X-0.5,bx2=bloc.X+0.5;
             let by1=bloc.Y-0.5,by2=bloc.Y+0.5;
-
             if(!bloc.isPassable&&(x1-bloc.X)*(x2-bloc.X)<=0&&(y1-bloc.Y)*(y2-bloc.Y)<=0){
                 let j1=lineRelation(x1,y1,x2,y2,bx1,by1,bx2,by2);
                 if(j1[0]=="overlap"){
-                    sign=1;
+                    return 1;
                 }
                 else if(j1[0]=="intersect"){
                     if(j1[1]){
-                        sign=2;
+                        return 2;
                     }
                 }
                 let j2=lineRelation(x1,y1,x2,y2,bx1,by2,bx2,by1);
                 if(j2[0]=="overlap"){
-                    sign=3;
+                    return 3;
                 }
                 else if(j2[0]=="intersect"){
                     if(j2[1]){
-                        sign=4;
+                        return 4;
                     }
                 }
             }            
-        })
+        }
     }
-    return sign;
+    return 0;
+}
+function distancePointToSegment(x,y,x1,y1,x2,y2){
+    if(x1==x2&&y1==y2) return Math.sqrt((x-x1)**2+(y-y1)**2);
+    else if((x-x1)*(x2-x1)+(y-y1)*(y2-y1)>=0(x-x1)*(x2-x1)+(y-y1)*(y2-y1)<=(x-x1)**2+(y-y1)**2) return min(Math.sqrt((x-x1)**2+(y-y1)**2),Math.sqrt((x-x2)**2+(y-y2)**2));
+    else return abs((y1-y2)*x-(x2-x1)*y+x1*y2-y1*x2)/Math.sqrt((x2-x1)**2+(y2-y1)**2);
 }
 function isPosBlocked(x,y){
     for(let i=0;i<block.length;i++){
@@ -274,4 +284,31 @@ function randPosUnblocked(){
     let x=random(0,29),y=random(0,14);
     if(!isPosBlocked(x,y)) return [x,y];
     else return randPosUnblocked();
+}
+
+function findRayTrace(x0,y0,x1,y1,isBlockConsidered){
+    if(x0==x1&&y0==y1) return [];
+    let trace=[];
+    let currentX=x0,currentY=y0;
+    let dx=x1-x0,dy=y1-y0;
+    let stepX=(dx>0)?1:((dx<0)?-1:0),stepY=(dy>0)?1:((dy<0)?-1:0); //前进方向
+    let tPx=(dx!=0)?abs(1/dx):1e5,tPy=(dx!=0)?abs(1/dy):1e5;   //前进一格所需时间
+    let tTx=(dx!=0)?abs(0.5/dx):1e5,tTy=(dx!=0)?abs(0.5/dy):1e5;    //到下一格所需时间
+    while(isPosLegal(currentX,currentY)){
+        trace.push([currentX,currentY]);
+        if(abs(tTx-tTy)<1e-8){
+            currentX+=stepX;
+            currentY+=stepY;
+            tTx+=tPx;
+            tTy+=tPy;
+        }else if(tTx<tTy){
+            currentX+=stepX;
+            tTx+=tPx;
+        }else{
+            currentY+=stepY;
+            tTy+=tPy;
+        }
+        if(isBlockConsidered&&isPosBlocked(currentX,currentY)) break;
+    }
+    return trace;
 }
