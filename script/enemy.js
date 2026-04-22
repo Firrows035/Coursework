@@ -1,31 +1,4 @@
 var enemy=[];
-var enemyType=new Map();
-enemyType.set("Kanade",{
-    id:"Kanade",
-    source:"Enemy1.jpg",
-    mhp:80,
-    atk:15,
-    def:0,
-    mat:15,
-    mdf:0,
-    atkR:1,
-    warnR:10,
-    atktype:1,
-    state:"default",
-    selector:{
-        description:{
-            id:"Kanade",
-            icon:"Enemy1.jpg",
-            text:`随处可见的小气走`
-        },
-    },
-    updateState(){
-        updateEnemyStateUsual(this);
-    },
-    action(){
-        enemyActionUsual(this);
-    }
-});
 function addEnemy(typeId){
     let type;
     if(typeof typeId=="object")type=typeId;
@@ -195,6 +168,13 @@ function updateEnemyStateUsual(emy){
 function enemyActionUsual(emy){
     let targetPos=emy.navigatePosition;
     let dir=searchPath(emy.X,emy.Y,targetPos[0],targetPos[1]);
+    // let atmpt=10;
+    // while(dir==-1&&atmpt>0){
+    //     emy.navigatePosition=randPosUnblocked();
+    //     targetPos=emy.navigatePosition;
+    //     dir=searchPath(emy.X,emy.Y,targetPos[0],targetPos[1]);
+    //     atmpt--;
+    // }
     switch(emy.state){
         case "default":
             break;
@@ -204,10 +184,13 @@ function enemyActionUsual(emy){
             }else{
                 emy.X+=dir[0];
                 emy.Y+=dir[1];
-            }
-            if(emy.haltTime>5){
-                emy.navigatePosition=randPosUnblocked();
                 emy.haltTime=0;
+            }
+            if(emy.haltTime>3){
+                emy.navigatePosition=randPosUnblocked();
+            }
+            if(emy.haltTime>10){
+                [emy.X,emy.Y]=randPosAvailable();
             }
             break;
         case "warning":
@@ -216,6 +199,7 @@ function enemyActionUsual(emy){
             }else{
                 emy.X+=dir[0];
                 emy.Y+=dir[1];
+                emy.haltTime=0;
             }
             break;
         case "attacking":
@@ -224,10 +208,27 @@ function enemyActionUsual(emy){
             }else{
                 emy.X+=dir[0];
                 emy.Y+=dir[1];
+                emy.haltTime=0;
             }
             if(distanceBetweenEntity(emy,player)<=emy.atkR&&!isPathBlocked(emy.X,emy.Y,player.X,player.Y)){
                 takeDamage(emy.atk,false);
+                emy.haltTime=0;
             }
             break;
+    }
+}
+function updateEnemyStateRanged(emy){
+
+}
+
+function enemyActionRanged(emy){
+    switch(emy.state){
+        case "default":
+            break;
+        case "casting":
+            if(!isPathBlocked(emy.X,emy.Y,player.X,player.Y)){
+                
+            }
+
     }
 }

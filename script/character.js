@@ -57,7 +57,7 @@ character.set("Tairitsu",{
         description:{
             id:"Tairitsu",
             icon:"Tairitsu.png",
-            text:`黑暗常伴的少女。`,
+            text:`向死而生的少女。`,
         }
     },
     onClick(){
@@ -75,7 +75,7 @@ character.set("Tairitsu",{
 });
 character.set("Tairitsu-Tempest",{
     id:"Tairitsu-Tempest",
-    source:"Tairitsu.png",
+    source:"TairitsuTempest.png",
     mhp:300,
     mmp:300,
     atk:50,
@@ -93,7 +93,7 @@ character.set("Tairitsu-Tempest",{
         height:0,
         description:{
             id:"Tairitsu",
-            icon:"Tairitsu.png",
+            icon:"TairitsuTempest.png",
             text:`她是迫近的风暴。`,
         }
     },
@@ -156,7 +156,7 @@ function setCharacter(charId){
     player.baseMdf=chara.mdf;
     player.baseAtkR=chara.atkR;
     player.selector.description.icon=chara.selector.description.icon;
-    player.selector.description.id=chara.id;
+    player.selector.description.id=chara.selector.description.id;
     player.selector.description.text=chara.selector.description.text;
     updatePlayerStat();
     checkPlayerStat();

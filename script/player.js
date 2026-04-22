@@ -121,25 +121,6 @@ function playerMove(direction){
     }
     return 1;
 }
-function playerMoveByClick(x,y){
-    if(currentStage!="battle"){
-        return;
-    }
-    if(actionCooldown){
-        return;
-    }
-    actionCooldown=1;
-    setTimeout(()=>{actionCooldown=0;},100);
-    playerAttack();
-    if(isPosAvailableL1(x,y)&&isPosLegal(x,y)){
-        player.X=x;
-        player.Y=y;
-    }
-    if(currentStage=="battle"){
-        playerTurn();
-    }
-}
-
 
 function playerHeal(hp){
     player.hp=Math.min(player.hp+hp,player.mhp);

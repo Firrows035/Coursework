@@ -1,0 +1,53 @@
+var enemyType=new Map();
+enemyType.set("Kanade",{
+    id:"Kanade",
+    source:"Enemy1.jpg",
+    mhp:80,
+    atk:15,
+    def:0,
+    mat:15,
+    mdf:0,
+    atkR:1,
+    warnR:10,
+    atktype:"melee",
+    state:"default",
+    selector:{
+        description:{
+            id:"Kanade",
+            icon:"Enemy1.jpg",
+            text:`随处可见的小气走`
+        },
+    },
+    updateState(){
+        updateEnemyStateUsual(this);
+    },
+    action(){
+        enemyActionUsual(this);
+    }
+});
+enemyType.set("Nene",{
+    id:"Nene",
+    source:"Nene.png",
+    mhp:60,
+    atk:10,
+    def:0,
+    mat:20,
+    mdf:20,
+    atkR:0,
+    warnR:12,
+    atktype:"ranged",
+    state:"default",
+    selector:{
+        description:{
+            id:"Nene",
+            icon:"Nene.png",
+            text:`你为什么是法师？`
+        },
+    },
+    updateState(){
+        updateEnemyStateUsual(this);
+    },
+    action(){
+        enemyActionUsual(this);
+    }
+});

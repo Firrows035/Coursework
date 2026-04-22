@@ -10,6 +10,25 @@ function playerAttack(){
     }
 }
 //已弃用
+function playerMoveByClick(x,y){
+    if(currentStage!="battle"){
+        return;
+    }
+    if(actionCooldown){
+        return;
+    }
+    actionCooldown=1;
+    setTimeout(()=>{actionCooldown=0;},100);
+    playerAttack();
+    if(isPosAvailableL1(x,y)&&isPosLegal(x,y)){
+        player.X=x;
+        player.Y=y;
+    }
+    if(currentStage=="battle"){
+        playerTurn();
+    }
+}
+//已弃用
 function enemyMove(count,direction){
     let xtemp=enemy[count].X;
     let ytemp=enemy[count].Y;
