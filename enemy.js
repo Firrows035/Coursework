@@ -82,8 +82,8 @@ function addEnemy(typeId){
             }    
         },
         onClick(){
-            if(player.attack(this)){
-                playerTurn();
+            if(distanceBetweenEntity(this,player)<=player.atkR&&!isPathBlocked(this.X,this.Y,player.X,player.Y)){
+                playerTurn("attack",this);
             }
         }   
     })

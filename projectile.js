@@ -13,6 +13,7 @@ projectileType.set("fireball",{
     isMagic:true,
     isSelectable:false,
     isFriendly:true,
+    isTriggered:false,
     selector:{
         type:"projectileType",
         color:"red",
@@ -49,6 +50,7 @@ function createProjectile(projId,sx,sy,dx,dy,damage,isFriendly){
         damage:damage,
         damageR:type.damageR,
         isSelectable:false,
+        isTriggered:false,
         selector:{
             type:"trace",
         },
@@ -56,23 +58,24 @@ function createProjectile(projId,sx,sy,dx,dy,damage,isFriendly){
     })
 }
 
-//需要修改
 function projectileMove(){
     for(let proj of projectile){
         let tempX=proj.X,tempY=proj.Y;
-        for(let i=0;i<proj.speed;i++){
+        while(mathDistanceBetweenPosition(tempX,tempY,proj.X,proj.Y)<proj.speed){
             if(proj.trace.length==0){
                 triggerProjectile(proj);
                 break;
             }
             [proj.X,proj.Y]=proj.trace[0];
             proj.trace.splice(0,1);
-            if(isProjectileTriggered(proj))
+            if(isProjectileTriggered(proj)){
                 triggerProjectile(proj);
+                break;
+            } 
         }
-        if(isProjectileTriggered(proj))
-            triggerProjectile(proj)
+        if(!proj.isTriggered)console.log("proj-"+proj.number+` ${tempX},${tempY} => ${proj.X},${proj.Y}`);
     }
+    clearTriggeredProjectile();
 }
 function isProjectileTriggered(proj){
     if(!isPosLegal(proj.X,proj.Y)) return true;
@@ -91,6 +94,7 @@ function isProjectileTriggered(proj){
     return 0;
 }
 function triggerProjectile(proj){
+    console.log(proj.number+" triggered");
     if(proj.isAOE&&proj.isFriendly){
         enemy.forEach(emy=>{
             if(distanceBetweenEntity(emy,proj)<=proj.damageR&&emy.isDefeat==0){
@@ -108,8 +112,8 @@ function triggerProjectile(proj){
         }
         if(target!={}) dealDamage(target,proj.damage,proj.isMagic);
     }
-    projectile.splice(projectile.findIndex(p=>p.number==proj.number),1);
+    proj.isTriggered=true;;
 }
-function clearProjectile(){
-    projectile=[];
+function clearTriggeredProjectile(){
+    projectile=projectile.filter((proj)=>!proj.isTriggered);
 }

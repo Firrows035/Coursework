@@ -150,6 +150,9 @@ function directionToPosition(p0,p1){
 function distanceBetweenPosition(x1,y1,x2,y2){
     return Math.abs(x1-x2)+Math.abs(y1-y2);
 }
+function mathDistanceBetweenPosition(x1,y1,x2,y2){
+    return Math.sqrt((x1-x2)**2+(y1-y2)**2);
+}
 function distanceEnemyToProjectile(Ecount,Pcount){
     return Math.sqrt((enemy[Ecount].X-projectile[Pcount].X)**2+(enemy[Ecount].Y-projectile[Pcount].Y)**2);
 }

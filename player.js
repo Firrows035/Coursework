@@ -38,12 +38,13 @@ var player={
     action(act,target){
         switch(act){
             case "move":
-            playerMove(target.direction);
-            break;
+                return playerMove(target);
             case "halt":
-                break;
+                return 1;
             case "skill":
-                playSkill();
+                return playerPlaySkill(target);
+            case "attack":
+                return this.attack(target);
         }
     },
     attack(target){
@@ -61,7 +62,7 @@ var player={
         displayDescription(this);
     },
     onClick(){
-        playerTurn();
+        playerTurn("halt");
     },
     dealDamageTo(target,damage,isMagic){
         if(isMagic){
@@ -71,13 +72,26 @@ var player={
         }
     }
 }
-
+function playerPlaySkill(target){
+    if(skillReady){
+        let skil=skill.get(skillReady);
+        if(skil.spell(target)){
+            player.mp-=skil.cost;
+            skil.cdt=skil.cd;
+            skil.isSelected=0;
+            skillReady=0;
+            return 1;
+        }
+        skillReady=0;
+    }
+    return 0;
+}
 function playerMove(direction){
     if(currentStage!="battle"){
-        return;
+        return 0;
     }
     if(actionCooldown){
-        return;
+        return 0;
     }
     actionCooldown=1;
     setTimeout(()=>{actionCooldown=0;},100);
@@ -99,15 +113,13 @@ function playerMove(direction){
         case " ":
             break;
         default:
-            return;
+            break;
     }
     if(!isPosAvaliableLE1(player.X,player.Y)){
         player.X=xtemp;
         player.Y=ytemp;
     }
-    if(currentStage=="battle"){
-        playerTurn();
-    }
+    return 1;
 }
 function playerMoveByClick(x,y){
     if(currentStage!="battle"){

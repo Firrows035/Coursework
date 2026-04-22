@@ -15,7 +15,7 @@ key.push({
         drawRect(2,this.selector.color,this.selector.offsetX+2,this.selector.offsetY+2,this.selector.width-4,this.selector.height-4);
     },
     onClick(){
-        playerMove("w");
+        playerTurn("move","w");
     }
 })
 key.push({
@@ -34,7 +34,7 @@ key.push({
         drawRect(2,this.selector.color,this.selector.offsetX+2,this.selector.offsetY+2,this.selector.width-4,this.selector.height-4);
     },
     onClick(){
-        playerMove("s");
+        playerTurn("move","s");
     }
 })
 key.push({
@@ -53,7 +53,7 @@ key.push({
         drawRect(2,this.selector.color,this.selector.offsetX+2,this.selector.offsetY+2,this.selector.width-4,this.selector.height-4);
     },
     onClick(){
-        playerMove("a");
+        playerTurn("move","a");
     }
 })
 key.push({
@@ -72,6 +72,6 @@ key.push({
         drawRect(2,this.selector.color,this.selector.offsetX+2,this.selector.offsetY+2,this.selector.width-4,this.selector.height-4);
     },
     onClick(){
-        playerMove("d");
+        playerTurn("move","d");
     }
 })

@@ -124,9 +124,6 @@ function drawSkillStat(){
     context.clearRect(0,755,1155,110); //(0,750,1100,100)
     let i=0;
     for(let [id,skil] of skill){
-
-        
-
         skil.selector.update(i);
         if(!skil.cdt){
             drawImgZoom(skil.source,110*i+50,760,80,80);
@@ -216,6 +213,10 @@ function sacriStrikeSelector(){
             
         }
     }
+}
+function traceSelector(caster){
+    let trace=findRayTrace(caster.X,caster.Y,mouseX,mouseY,true);
+    drawTrace(trace);
 }
 
 function drawBlocks(){
