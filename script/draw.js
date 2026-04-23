@@ -89,18 +89,23 @@ function drawRect(lineWidth,style,x,y,w,h){
 }
 function drawEnemyStat1(emy){
     if(!emy.isDefeat){
-        if(emy.state=="attacking"){
-            drawRect(2,"red",emy.X*50+5,emy.Y*50+5,40,40);
-        }
-        else if(emy.state=="warning"){
-            drawRect(2,"orange",emy.X*50+5,emy.Y*50+5,40,40);
-        }
         context.fillStyle="#000000";
         context.fillRect(emy.X*50,emy.Y*50,50,5);
         context.fillStyle="white";
         context.fillRect(emy.X*50+1,emy.Y*50+1,48,3);
         context.fillStyle="red";
         context.fillRect(emy.X*50+1,emy.Y*50+1,48*emy.hp/emy.mhp,3);
+        switch(emy.state){
+            case "warning":
+                drawRect(2,"orange",emy.X*50+5,emy.Y*50+5,40,40);
+                break;
+            case "attackReady":
+                drawRect(2,"red",emy.X*50+5,emy.Y*50+5,40,40);
+                drawRangeWithImg(emy.attackTarget[0],emy.attackTarget[1],emy.damageR,"warning2.png");
+                break;
+            default:
+                break;
+        }
     }
 }
 
@@ -203,6 +208,27 @@ function drawBlockSelector(x,y,color){
         context.stroke();
         context.closePath();
 }
+function drawRangeWithImg(x0,y0,range,source){
+    if(isPosLegal(x0,y0))drawImgZoom(source,x0*50,y0*50,50,50);
+        for(let i=-range;i<=range;i++){
+        for(let j=Math.abs(i)-range;j<=range-Math.abs(i);j++){
+            if(i||j){
+                if(isPosLegal(x0+i,y0+j))drawImgZoom(source,(x0+i)*50,(y0+j)*50,50,50);
+            }
+        }
+    }
+}
+function drawRangeWithColor(x0,y0,range,color){
+    if(isPosLegal(x0,y0))drawBlockSelector(x0,y0,color);
+        for(let i=-range;i<=range;i++){
+        for(let j=Math.abs(i)-range;j<=range-Math.abs(i);j++){
+            if(i||j){
+                if(isPosLegal(x0+i,y0+j))drawBlockSelector(x0+i,y0+j,color);
+            }
+        }
+    }
+}
+
 
 function sacriStrikeSelector(){
     for(let i=-6;i<=6;i++){

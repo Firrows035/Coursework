@@ -222,7 +222,7 @@ function lineRelation(x1,y1,x2,y2,x3,y3,x4,y4){
     }
 }
 function searchPath(x0,y0,xEnd,yEnd){
-    if(x0==xEnd&&y0==yEnd) return [x0,y0];
+    if(x0==xEnd&&y0==yEnd) return [0,0];
     let path=[[x0,y0,0]];
     let xtemp,ytemp;
     let pLength;
@@ -271,6 +271,7 @@ function searchPath(x0,y0,xEnd,yEnd){
         }
         if(found){
             let tag=path[path.length-1][2];
+            if(tag==0) return [path[path.length-1][0]-x0,path[path.length-1][1]-y0];
             while(path[tag][2]!=0){
                 tag=path[tag][2];
             }
@@ -286,7 +287,7 @@ function randPosUnblocked(){
     else return randPosUnblocked();
 }
 function randPosAvailable(){
-    let x=random(0,battelfield.width-1),y=random(0,battelfield.height-1);
+    let x=random(0,battlefield.width-1),y=random(0,battelfield.height-1);
     if(!isPosBlocked(x,y)&&isPosAvailableL1(x,y)) return [x,y];
     else return randPosAvailable();
 }

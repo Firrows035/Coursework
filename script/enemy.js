@@ -17,8 +17,10 @@ function addEnemy(typeId){
         mat:type.mat*(1+boost.enemy.mat/100),
         mdf:type.mdf+boost.enemy.mdf,
         dmgBoost:1+boost.enemy.dmg/100,
+        damageR:1,
         atkR:type.atkR+boost.enemy.atkR,
         warnR:type.warnR,
+        attackTarget:[0,0],
         atktype:type.atktype,
         X:0,
         Y:0,
@@ -44,6 +46,7 @@ function addEnemy(typeId){
         },
         updateState:type.updateState,
         action:type.action,
+        attack:type.attack,
         updateSelector(){
             this.selector.offsetX=this.X*50;
             this.selector.offsetY=this.Y*50;
@@ -91,7 +94,7 @@ function placeEnemy(emy,attempt){
     return 1;
 }
 
-//修改enemy的状态机。default：若索敌范围内不可见player，随机移动；attack：player在攻击范围内，跟随玩家并尝试攻击；navigate：1. 索敌范围内可见玩家，将玩家位置修改为寻路地点；2. 索敌范围内不可见玩家，但此前处于寻路状态，继续寻路至目标地点附近直到到达、发现玩家或过长时间（因为每回合check三次所以要翻三倍）未发现玩家。
+//修改enemy的状态机。default：若索敌范围内不可见player，随机移动；attack：player在攻击范围内，跟随玩家并尝试攻击；navigate：1. 索敌范围内可见玩家，将玩家位置修改为寻路地点；2. 索敌范围内不可见玩家，但此前处于寻路状态，继续寻路至目标地点附近直到到达、发现玩家或过长时间未发现玩家。
 function checkEnemyStat(){
     for(let i=0;i<enemy.length;i++){
         if(!enemy[i].isDefeat){
@@ -107,8 +110,8 @@ function checkEnemyStat(){
 function updateEnemyStateUsual(emy){
     switch(emy.state){
         case "default":
-            if(distanceBetweenEntity(emy,player)<=emy.atkR+1&&!isPathBlocked(emy.X,emy.Y,player.X,player.Y)){
-                emy.state="attacking";
+            if(distanceBetweenEntity(emy,player)<=emy.atkR&&!isPathBlocked(emy.X,emy.Y,player.X,player.Y)){
+                emy.state="attackReady";
                 emy.warnedTime=5;
             }else if(distanceBetweenEntity(emy,player)<=emy.warnR&&!isPathBlocked(emy.X,emy.Y,player.X,player.Y)){
                 emy.state="warning";
@@ -120,8 +123,8 @@ function updateEnemyStateUsual(emy){
             }
             break;
         case "wandering":
-            if(distanceBetweenEntity(emy,player)<=emy.atkR+1&&!isPathBlocked(emy.X,emy.Y,player.X,player.Y)){
-                emy.state="attacking";
+            if(distanceBetweenEntity(emy,player)<=emy.atkR&&!isPathBlocked(emy.X,emy.Y,player.X,player.Y)){
+                emy.state="attackReady";
                 emy.navigatePosition=[player.X,player.Y];
                 emy.warnedTime=5;
             }else if(distanceBetweenEntity(emy,player)<=emy.warnR&&!isPathBlocked(emy.X,emy.Y,player.X,player.Y)){
@@ -133,8 +136,8 @@ function updateEnemyStateUsual(emy){
             }
             break;
         case "warning":
-            if(distanceBetweenEntity(emy,player)<=emy.atkR+1&&!isPathBlocked(emy.X,emy.Y,player.X,player.Y)){
-                emy.state="attacking";
+            if(distanceBetweenEntity(emy,player)<=emy.atkR&&!isPathBlocked(emy.X,emy.Y,player.X,player.Y)){
+                emy.state="attackReady";
                 emy.navigatePosition=[player.X,player.Y];
                 emy.warnedTime=5;
             }else if(distanceBetweenEntity(emy,player)<=emy.warnR&&!isPathBlocked(emy.X,emy.Y,player.X,player.Y)){
@@ -151,14 +154,15 @@ function updateEnemyStateUsual(emy){
                 emy.navigatePosition=randPosUnblocked();
             }
             break;
-        case "attacking":
-            if(distanceBetweenEntity(emy,player)<=emy.atkR+1&&!isPathBlocked(emy.X,emy.Y,player.X,player.Y)){
-                emy.warnedTime=5;
-            }else if(distanceBetweenEntity(emy,player)<=emy.warnR&&!isPathBlocked(emy.X,emy.Y,player.X,player.Y)){
+        case "attackReady":
+            if(distanceBetweenPosition(emy.attackTarget[0],emy.attackTarget[1],player.X,player.Y)<=emy.damageR&&!isPathBlocked(emy.X,emy.Y,player.X,player.Y)){
+                emy.state="attacking";
+            }else{
                 emy.state="warning";
-                emy.warnedTime=10;
-            }
-            emy.navigatePosition=[player.X,player.Y];
+                emy.warnedTime=8;
+            } 
+            break;
+        case "halt":
             break;
         default:
             emy.state="default";
@@ -168,6 +172,7 @@ function updateEnemyStateUsual(emy){
 function enemyActionUsual(emy){
     let targetPos=emy.navigatePosition;
     let dir=searchPath(emy.X,emy.Y,targetPos[0],targetPos[1]);
+    console.log(`${emy.number} -> ${dir}`);
     // let atmpt=10;
     // while(dir==-1&&atmpt>0){
     //     emy.navigatePosition=randPosUnblocked();
@@ -177,6 +182,7 @@ function enemyActionUsual(emy){
     // }
     switch(emy.state){
         case "default":
+        case "halt":
             break;
         case "wandering":
             if(dir==-1||!isPosAvailableL1(emy.X+dir[0],emy.Y+dir[1])){
@@ -192,6 +198,10 @@ function enemyActionUsual(emy){
             if(emy.haltTime>10){
                 [emy.X,emy.Y]=randPosAvailable();
             }
+            if(distanceBetweenEntity(emy,player)<=emy.atkR&&!isPathBlocked(emy.X,emy.Y,player.X,player.Y)){
+                emy.state="attackReady";
+                emy.attackTarget=[player.X,player.Y];
+            }
             break;
         case "warning":
             if(dir==-1||!isPosAvailableL1(emy.X+dir[0],emy.Y+dir[1])){
@@ -201,19 +211,19 @@ function enemyActionUsual(emy){
                 emy.Y+=dir[1];
                 emy.haltTime=0;
             }
+            if(distanceBetweenEntity(emy,player)<=emy.atkR&&!isPathBlocked(emy.X,emy.Y,player.X,player.Y)){
+                emy.state="attackReady";
+                emy.attackTarget=[player.X,player.Y];
+            }
+            break;
+        case "attackReady":
+            emy.attackTarget=[player.X,player.Y];
+            emy.navigatePosition=[player.X,player.Y];
             break;
         case "attacking":
-            if(dir==-1||!isPosAvailableL1(emy.X+dir[0],emy.Y+dir[1])){
-                emy.haltTime++;
-            }else{
-                emy.X+=dir[0];
-                emy.Y+=dir[1];
-                emy.haltTime=0;
-            }
-            if(distanceBetweenEntity(emy,player)<=emy.atkR&&!isPathBlocked(emy.X,emy.Y,player.X,player.Y)){
-                takeDamage(emy.atk,false);
-                emy.haltTime=0;
-            }
+            emy.attack();
+            emy.haltTime=0;
+            emy.state="warning";
             break;
     }
 }

@@ -1,0 +1,45 @@
+var blockType={};
+blockType["wall"]={
+    id:"wall",
+    source:"wall.png",
+    isPassable:false,
+    isProjectilePassable:false,
+    stepOnEffect:"void",
+    effectDuration:0,
+    isSelectable:false,
+    selector:{
+        type:"block",
+        color:"red",
+        offsetX:0,
+        offsetY:0,
+        width:50,
+        height:50,
+        description:{
+            id:"wall",
+            icon:"wall.png",
+            text:"普通的墙"
+        },
+    },
+}
+blockType["poisonArea"]={
+    id:"poisonArea",
+    source:"poisonBlock.png",
+    isPassable:true,
+    isProjectilePassable:true,
+    stepOnEffect:"poison",
+    effectDuration:2,
+    isSelectable:false,
+    selector:{
+        type:"block",
+        color:"red",
+        offsetX:0,
+        offsetY:0,
+        width:50,
+        height:50,
+        description:{
+            id:"poisonArea",
+            icon:"poisonBlock.png",
+            text:"会使人中毒的区域。"
+        },
+    },
+}

@@ -18,6 +18,13 @@ enemyType.set("Kanade",{
             text:`随处可见的小气走`
         },
     },
+    attack(){
+        if(distanceBetweenPosition(this.attackTarget[0],this.attackTarget[1],player.X,player.Y)<=this.damageR&&!isPathBlocked(this.X,this.Y,player.X,player.Y)){
+            takeDamage(this.atk,false);
+            return 1;
+        }
+        return 0;
+    },
     updateState(){
         updateEnemyStateUsual(this);
     },
