@@ -15,7 +15,7 @@ var enemyDefeated=0;
 var enemyAlive=0;
 var enemyInround=0;
 
-var battelfield={
+var battlefield={
     length:30,
     height:15
 }
@@ -50,7 +50,6 @@ var boost={
 };
 var currentStage="initiate";
 
-var choice={};
 
 
 //due to the fukin' delay.. Now no delays but we need to restrict game speed
@@ -317,4 +316,12 @@ function findRayTrace(x0,y0,x1,y1,isBlockConsidered){
         if(isBlockConsidered&&isPosBlocked(currentX,currentY)) break;
     }
     return trace;
+}
+function isPosEnemyPlacable(x,y){
+    for(let bloc of block){
+        if(bloc.X==x&&bloc.Y==y&&bloc.isEnemyPlacable==0&&bloc.isOnField){
+            return 0;
+        }
+    }
+    return 1;
 }

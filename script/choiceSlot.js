@@ -1,6 +1,7 @@
 var choiceSlot=[];
 choiceSlot.push({
     id:1,
+    choiceId:-1,
     isSelectable:true,
     selector:{
         type:"choice",
@@ -19,12 +20,13 @@ choiceSlot.push({
         drawRect(2,this.selector.color,this.selector.offsetX+2,this.selector.offsetY+2,this.selector.width-4,this.selector.height-4);
     },
     onClick(){
-        choose(this.selector.description.id);
+        choose(this.choiceId);
         intermissonPage();
     }
 })
 choiceSlot.push({
     id:2,
+    choiceId:-1,
     isSelectable:true,
     selector:{
         type:"choice",
@@ -43,12 +45,13 @@ choiceSlot.push({
         drawRect(2,this.selector.color,this.selector.offsetX+2,this.selector.offsetY+2,this.selector.width-4,this.selector.height-4);
     },
     onClick(){
-        choose(this.selector.description.id);
+        choose(this.choiceId);
         intermissonPage();
     }
 })
 choiceSlot.push({
     id:3,
+    choiceId:-1,
     isSelectable:true,
     selector:{
         type:"choice",
@@ -67,7 +70,7 @@ choiceSlot.push({
         drawRect(2,this.selector.color,this.selector.offsetX+2,this.selector.offsetY+2,this.selector.width-4,this.selector.height-4);
     },
     onClick(){
-        choose(this.selector.description.id);
+        choose(this.choiceId);
         intermissonPage();
     }
 })

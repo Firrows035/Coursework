@@ -13,17 +13,17 @@ function addEnemy(typeId){
         atk:type.atk*(1+boost.enemy.atk/100),
         hp:type.mhp*(1+boost.enemy.mhp/100),
         mhp:type.mhp*(1+boost.enemy.mhp/100),
-        def:type.def+boost.enemy.def,
+        def:type.def*(1+boost.enemy.def/100),
         mat:type.mat*(1+boost.enemy.mat/100),
-        mdf:type.mdf+boost.enemy.mdf,
+        mdf:type.mdf*(1+boost.enemy.mdf/100),
         dmgBoost:1+boost.enemy.dmg/100,
         damageR:type.damageR,
         atkR:type.atkR+boost.enemy.atkR,
         warnR:type.warnR,
         attackTarget:[0,0],
         atktype:type.atktype,
-        X:0,
-        Y:0,
+        X:-1,
+        Y:-1,
         isDefeat:0,
         state:type.state,
         navigatePosition:[0,0],
@@ -67,20 +67,20 @@ function addEnemy(typeId){
 }
 
 function summonEnemy(Id,quantity){
-    for(let i=1;i<=quantity;i++){
+    for(let i=0;i<quantity;i++){
         addEnemy(Id);
     }
     enemyInround+=quantity;
-    enemy.forEach(emy=>{
-        if(!emy.isDefeat) placeEnemy(emy,10);
-    })
+    for(let emy of enemy){
+        if(emy.X==-1) placeEnemy(emy,10);
+    }
 }
 function placeEnemy(emy,attempt){
     let xtemp=Math.floor(Math.random()*1000)%21;
     let ytemp=Math.floor(Math.random()*1000)%12;
     emy.X=xtemp;
     emy.Y=ytemp;
-    if(!isPosAvaliableLE1(xtemp,ytemp)||distanceBetweenEntity(emy,player)<=5||!isPosEnemyPlacable(xtemp,ytemp)){
+    if(!isPosAvaliableLE1(xtemp,ytemp)||distanceBetweenEntity(emy,player)<=max(6,emy.atkR)||!isPosEnemyPlacable(xtemp,ytemp)){
         if(attempt>0){
             placeEnemy(emy,attempt-1);
         }
@@ -172,7 +172,6 @@ function updateEnemyStateUsual(emy){
 function enemyActionUsual(emy){
     let targetPos=emy.navigatePosition;
     let dir=searchPath(emy.X,emy.Y,targetPos[0],targetPos[1]);
-    console.log(`${emy.number} -> ${dir}`);
     // let atmpt=10;
     // while(dir==-1&&atmpt>0){
     //     emy.navigatePosition=randPosUnblocked();
@@ -334,5 +333,17 @@ function enemyActionRanged(emy){
             emy.haltTime=0;
             emy.state="warning";
             break;
+    }
+}
+function updateEnemyStat(){
+    for(let emy of enemy){
+        emy.mhp=emy.baseMhp*(1+boost.emy.mhp/100);
+        emy.mmp=emy.baseMmp*(1+boost.emy.mmp/100);
+        emy.def=emy.baseDef*(1+boost.emy.def/100);
+        emy.atk=emy.baseAtk*(1+boost.emy.atk/100);
+        emy.mat=emy.baseMat*(1+boost.emy.mat/100);
+        emy.mdf=emy.baseMdf*(1+boost.emy.mdf/100);
+        emy.dmgBoost=1+boost.emy.dmg/100;
+        emy.atkR=emy.baseAtkR+boost.emy.atkR;
     }
 }

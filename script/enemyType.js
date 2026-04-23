@@ -4,7 +4,7 @@ enemyType.set("Kanade",{
     source:"Enemy1.jpg",
     mhp:80,
     atk:15,
-    def:0,
+    def:5,
     mat:15,
     mdf:0,
     atkR:1,

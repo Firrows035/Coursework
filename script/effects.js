@@ -4,10 +4,11 @@ function giveEffect(entity,effectId,duration,isCrossRound){
     if(i!=-1){
         entity.effect[i].duration=min(type.maxDuration,entity.effect[i].duration+duration);
     }else{
-        entity.effect.push({
+        let e=entity.effect.push({
             id:type.id,
             source:type.source,
             gain:type.gain,
+            cache:[],
             playerTurnStart:type.playerTurnStart,
             playerTurnMiddle:type.playerTurnMiddle,
             playerTurnEnd:type.playerTurnEnd,
@@ -39,7 +40,7 @@ function giveEffect(entity,effectId,duration,isCrossRound){
                 displayDescription(this);
             }
         });
-        type.gain(entity);
+        entity.effect[e-1].gain(entity,entity.effect[e-1]);
     }
 
 }
@@ -51,37 +52,37 @@ function activateEffects(entity,turn,timing){
     for(let eff of entity.effect){
         switch(turn+timing){
             case "playerTurnStart":
-                if(eff.duration>0&&eff.playerTurnStart(entity)) eff.duration--;
+                if(eff.duration>0&&eff.playerTurnStart(entity,eff)) eff.duration--;
                 break;
             case "playerTurnMiddle":
-                if(eff.duration>0&&eff.playerTurnMiddle(entity)) eff.duration--;
+                if(eff.duration>0&&eff.playerTurnMiddle(entity,eff)) eff.duration--;
                 break;
             case "playerTurnEnd":
-                if(eff.duration>0&&eff.playerTurnEnd(entity)) eff.duration--;
+                if(eff.duration>0&&eff.playerTurnEnd(entity,eff)) eff.duration--;
                 break;
             case "neutralTurnStart":
-                if(eff.duration>0&&eff.neutralTurnStart(entity)) eff.duration--;
+                if(eff.duration>0&&eff.neutralTurnStart(entity,eff)) eff.duration--;
                 break;
             case "neutralTurnMiddle":
-                if(eff.duration>0&&eff.neutralTurnMiddle(entity)) eff.duration--;
+                if(eff.duration>0&&eff.neutralTurnMiddle(entity,eff)) eff.duration--;
                 break;
             case "neutralTurnEnd":
-                if(eff.duration>0&&eff.neutralTurnEnd(entity)) eff.duration--;
+                if(eff.duration>0&&eff.neutralTurnEnd(entity,eff)) eff.duration--;
                 break;
             case "enemyTurnStart":
-                if(eff.duration>0&&eff.enemyTurnStart(entity)) eff.duration--;
+                if(eff.duration>0&&eff.enemyTurnStart(entity,eff)) eff.duration--;
                 break;
             case "enemyTurnMiddle":
-                if(eff.duration>0&&eff.enemyTurnMiddle(entity)) eff.duration--;
+                if(eff.duration>0&&eff.enemyTurnMiddle(entity,eff)) eff.duration--;
                 break;
             case "enemyTurnEnd":
-                if(eff.duration>0&&eff.enemyTurnEnd(entity)) eff.duration--;
+                if(eff.duration>0&&eff.enemyTurnEnd(entity,eff)) eff.duration--;
                 break;
             default:
                 break;
         }        
         if(eff.duration==0){
-            eff.expire(entity);
+            eff.expire(entity,eff);
         }
     }
     entity.effect=entity.effect.filter((eff)=>eff.duration!=0);

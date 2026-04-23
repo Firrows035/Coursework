@@ -1,46 +1,17 @@
 var projectile=[];
-var projectileType=new Map();
+
 var projectileCount=0;
-projectileType.set("fireball",{
-    id:"fireball",
-    source:"fireball.png",
-    X:0,
-    Y:0,
-    speed:3,
-    triggerR:1,
-    isAOE:true,
-    damageR:3,
-    isMagic:true,
-    isSelectable:false,
-    isTriggered:false,
-    selector:{
-        type:"projectileType",
-        color:"red",
-        offsetX:0,
-        offsetY:0,
-        width:0,
-        height:0,
-        description:{
-            id:"fireball",
-            icon:"firebal.png",
-            text:"fireball"
-        }
-    }
-});
-function createProjectile(projId,sx,sy,dx,dy,damage,isFriendly){
+
+function createProjectile(projId,startX,startY,targetX,targetY,damage,isFriendly){
     projectileCount++;
     let type=projectileType.get(projId);
     projectile.push({
         id:type.id,
         number:projectileCount,
         source:type.source,
-        X:sx,
-        Y:sy,
-        direction:{
-            X:dx/Math.sqrt(dx**2+dy**2),
-            Y:dy/Math.sqrt(dx**2+dy**2)
-        },
-        trace:findRayTrace(sx,sy,sx+dx,sy+dy,false),
+        X:startX,
+        Y:startY,
+        trace:findRayTrace(startX,startY,targetX,targetY,false),
         speed:type.speed,
         triggerR:type.triggerR,
         isAOE:type.isAOE,
@@ -60,6 +31,12 @@ function createProjectile(projId,sx,sy,dx,dy,damage,isFriendly){
 function projectileMove(){
     for(let proj of projectile){
         let tempX=proj.X,tempY=proj.Y;
+        if(proj.speed==0){
+            if(isProjectileTriggered(proj)){
+                triggerProjectile(proj);
+            }
+            continue;
+        }
         while(mathDistanceBetweenPosition(tempX,tempY,proj.X,proj.Y)<proj.speed){
             if(proj.trace.length==0){
                 triggerProjectile(proj);
@@ -72,7 +49,6 @@ function projectileMove(){
                 break;
             } 
         }
-        if(!proj.isTriggered)console.log("proj-"+proj.number+` ${tempX},${tempY} => ${proj.X},${proj.Y}`);
     }
     clearTriggeredProjectile();
 }
@@ -93,7 +69,6 @@ function isProjectileTriggered(proj){
     return 0;
 }
 function triggerProjectile(proj){
-    console.log(proj.number+" triggered");
     if(proj.isAOE&&proj.isFriendly){
         enemy.forEach(emy=>{
             if(distanceBetweenEntity(emy,proj)<=proj.damageR&&emy.isDefeat==0){

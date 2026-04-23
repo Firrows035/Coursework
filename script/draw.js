@@ -104,7 +104,9 @@ function drawEnemyStat1(emy){
                 drawRangeWithImg(emy.attackTarget[0],emy.attackTarget[1],emy.damageR,"warning2.png");
                 break;
             case "castReady":
-                drawImgZoom("warning1.png",emy.X*50,enemy.Y*50,50,50);
+                drawRect(2,"red",emy.X*50+5,emy.Y*50+5,40,40);
+                drawImgZoom("warning1.png",emy.attackTarget[0]*50,emy.attackTarget[1]*50,50,50);
+                break;
             default:
                 break;
         }
@@ -120,11 +122,18 @@ function drawEnemyStat(){
 
 
 function drawProjectile(){
-    projectile.forEach(proj=>{
-        // context.rotate(projectile[i].direction);
+    for(let proj of projectile){
         drawImgZoom(proj.source,proj.X*50+10,proj.Y*50+10,30,30);
-        // context.rotate(-projectile[i].direction);
-    })
+        if(!proj.isFriendly){
+            for(let [x,y] of proj.trace){
+                if(distanceBetweenPosition(proj.X,proj.Y,x,y)<=proj.speed&&!isPathBlocked(proj.X,proj.Y,x,y)){
+                    drawImgZoom("warning2.png",x*50,y*50,50,50);
+                }else{
+                    break;
+                }
+            }
+        }
+    }
 }
 
 function drawSkillStat(){
@@ -274,17 +283,29 @@ function displayDescription(target){
                 drawText(target.selector.description.id,1530,295,"black","30px 黑体",490,35,true);
                 drawStatBar(1710,265,180,30,target.hp,target.mhp,"red","");
                 drawImgZoom(target.selector.description.icon,1530,300,100,100);
+                drawText(`Effects:`,1530,440,"black","30px Arial",500,40,false);
                 drawText(`ATK: ${floor(target.atk)}`,1650,340,"black","30px 黑体",500,40,false);
                 drawText(`DEF: ${floor(target.def)}`,1840,340,"black","30px 黑体",500,40,false);
                 drawText(`MAT: ${floor(target.mat)}`,1650,400,"black","30px 黑体",500,40,false);
                 drawText(`MDF: ${floor(target.mdf)}`,1840,400,"black","30px 黑体",500,40,false);
                 drawText(target.selector.description.text,1530,600,"black","30px 宋体",490,40,true);
+                let order=0;
+                for(let eff of target.effect){
+                    if(eff.isSelectable){
+                        eff.selector.offsetX=1530+50*order;
+                        eff.selector.offsetY=450+50*floor(order/10);
+                        drawImgZoom(eff.selector.description.icon,1530+50*order,450+50*floor(order/10),eff.selector.width,eff.selector.height);
+                        drawRect(2,"grey",1530+50*order,450+50*floor(order/10),eff.selector.width,eff.selector.height)
+                        order++;
+                    }
+                }
                 break;
             case "skill":
             case "block":
             case "effect":
                 drawText(target.selector.description.id,1650,320,"black","50px 微软雅黑",490,55,false);
                 drawImgZoom(target.selector.description.icon,1530,270,100,100);
+                drawText(`Count: ${target.duration}`,1530,420,"black","30px Arial",490,40,true);
                 drawText(target.selector.description.text,1530,600,"black","30px 宋体",490,40,true);
                 break;
             case "character":
@@ -314,6 +335,7 @@ function drawChoiceSlot(){
         context.fillStyle="white";
         context.fillRect(slot.selector.offsetX,slot.selector.offsetY,slot.selector.width,slot.selector.height);
         drawRect(2,"black",slot.selector.offsetX,slot.selector.offsetY,slot.selector.width,slot.selector.height);
+        drawText(slot.selector.description.id,slot.selector.offsetX+5,slot.selector.offsetY+50,"black","40px 微软雅黑",slot.selector.width-10,35,true);
         drawText(slot.selector.description.text,slot.selector.offsetX+5,slot.selector.offsetY+150,"black","30px 微软雅黑",slot.selector.width-10,35,true);
     })
 }
@@ -327,7 +349,7 @@ function drawCharacterChoice(){
 function drawPlayerEffects(){
     let order=0;
     context.clearRect(1505,155,545,100);
-    player.effect.forEach(eff=>{
+    for(let eff of player.effect){
         if(eff.isSelectable){
             eff.selector.offsetX=1510+50*order;
             eff.selector.offsetY=160+50*floor(order/10);
@@ -335,10 +357,13 @@ function drawPlayerEffects(){
             drawRect(2,"grey",eff.selector.offsetX,eff.selector.offsetY,eff.selector.width,eff.selector.height)
             order++;
         }
-    })
+    }
 }
 function drawTrace(trace){
     for(let [x,y] of trace){
         drawImgZoom("tracker.png",x*50,y*50,50,50);
     }
+}
+function drawInfo(){
+    drawText(`当前波次：${round}    击倒数： ${enemyDefeated}`,10,990,"black","30px 微软雅黑",1000,50,true);
 }
