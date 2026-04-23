@@ -45,6 +45,7 @@ var loadResource=new function(){
     loadImg("image/block/","poisonBlock.png");
     loadImg("image/block/","tracker.png");
     loadImg("image/block/","warning2.png");
+    loadImg("image/block/","warning1.png");
     loadImg("image/key/","arrowUp.png");
     loadImg("image/key/","arrowDown.png");
     loadImg("image/key/","arrowLeft.png");

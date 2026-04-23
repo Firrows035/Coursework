@@ -12,7 +12,6 @@ projectileType.set("fireball",{
     damageR:3,
     isMagic:true,
     isSelectable:false,
-    isFriendly:true,
     isTriggered:false,
     selector:{
         type:"projectileType",
@@ -46,7 +45,7 @@ function createProjectile(projId,sx,sy,dx,dy,damage,isFriendly){
         triggerR:type.triggerR,
         isAOE:type.isAOE,
         isMagic:type.isMagic,
-        isFriendly:type.isFriendly,
+        isFriendly:isFriendly,
         damage:damage,
         damageR:type.damageR,
         isSelectable:false,
@@ -111,6 +110,10 @@ function triggerProjectile(proj){
             }
         }
         if(target!={}) dealDamage(target,proj.damage,proj.isMagic);
+    }else{
+        if(distanceBetweenEntity(proj,player)<=proj.damageR){
+            takeDamage(proj.damage,proj.isMagic);
+        }
     }
     proj.isTriggered=true;;
 }

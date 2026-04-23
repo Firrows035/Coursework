@@ -103,6 +103,8 @@ function drawEnemyStat1(emy){
                 drawRect(2,"red",emy.X*50+5,emy.Y*50+5,40,40);
                 drawRangeWithImg(emy.attackTarget[0],emy.attackTarget[1],emy.damageR,"warning2.png");
                 break;
+            case "castReady":
+                drawImgZoom("warning1.png",emy.X*50,enemy.Y*50,50,50);
             default:
                 break;
         }
@@ -168,30 +170,6 @@ function drawSelectSkill(num){
 
 function drawPlayerAttackRange(){
     let r=player.atkR;
-
-    // context.beginPath();
-    // context.lineWidth=3;
-    // context.strokeStyle="green";
-    // let x=player.X-r;
-    // let y=player.Y;
-    // context.moveTo(x,y);
-    // for(let i=1;i<=r;i++){
-    //         y+=1;
-    //         context.lineTo(x,y);
-    //         x+=1;
-    //         context.lineTo(x,y);
-    // }
-    
-    // // if(isPosLegal(x,y)){
-    // //     x+=1;
-    // //     context.lineTo(x,y);
-    // // }
-    // // else{
-    // //     x+=1;
-    // //     context.moveTo(x,y);
-    // // }
-    // context.stroke();
-    // context.closePath();
     for(let i=-r;i<=r;i++){
 
             if(isPosLegal(player.X+i,player.Y+r-Math.abs(i)))drawBlockSelector(player.X+i,player.Y+r-Math.abs(i),"#11eeee");
