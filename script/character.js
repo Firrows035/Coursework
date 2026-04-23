@@ -6,9 +6,9 @@ character.set("Lagrange",{
     mhp:150,
     mmp:80,
     atk:20,
-    def:5,
+    def:10,
     mat:20,
-    mdf:5,
+    mdf:10,
     atkR:2,
     isSelectable:true,
     selector:{
@@ -39,8 +39,8 @@ character.set("Lagrange",{
 character.set("Tairitsu",{
     id:"Tairitsu",
     source:"Tairitsu.png",
-    mhp:100,
-    mmp:100,
+    mhp:80,
+    mmp:80,
     atk:27,
     def:5,
     mat:25,
@@ -76,12 +76,12 @@ character.set("Tairitsu",{
 character.set("Tairitsu-Tempest",{
     id:"Tairitsu-Tempest",
     source:"TairitsuTempest.png",
-    mhp:300,
-    mmp:300,
+    mhp:310,
+    mmp:160,
     atk:50,
-    def:5,
+    def:0,
     mat:50,
-    mdf:5,
+    mdf:0,
     atkR:4,
     isSelectable:false,
     selector:{
@@ -113,7 +113,7 @@ character.set("Hikari",{
     atk:10,
     def:0,
     mat:40,
-    mdf:0,
+    mdf:20,
     atkR:1,
     isSelectable:true,
     selector:{

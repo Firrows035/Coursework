@@ -4,11 +4,12 @@ enemyType.set("Kanade",{
     source:"Enemy1.jpg",
     mhp:80,
     atk:15,
-    def:0,
+    def:5,
     mat:15,
     mdf:0,
     atkR:1,
     warnR:10,
+    damageR:1,
     atktype:"melee",
     state:"default",
     selector:{
@@ -40,8 +41,9 @@ enemyType.set("Nene",{
     def:0,
     mat:20,
     mdf:20,
-    atkR:0,
+    atkR:8,
     warnR:12,
+    damageR:0,
     atktype:"ranged",
     state:"default",
     selector:{
@@ -51,10 +53,17 @@ enemyType.set("Nene",{
             text:`你为什么是法师？`
         },
     },
+    attack(){
+        if(!isPathBlocked(this.X,this.Y,this.attackTarget[0],this.attackTarget[1])){
+            createProjectile("fireball",this.X,this.Y,this.attackTarget[0],this.attackTarget[1],this.mat,false);
+            return 1;
+        }
+        return 0;
+    },
     updateState(){
-        updateEnemyStateUsual(this);
+        updateEnemyStateRanged(this);
     },
     action(){
-        enemyActionUsual(this);
+        enemyActionRanged(this);
     }
 });

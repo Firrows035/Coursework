@@ -246,7 +246,7 @@ function fireball(event){
         if(dx==0&&dy==0){
             return 0;
         }
-        createProjectile("fireball",player.X,player.Y,dx,dy,player.mat*2,true);
+        createProjectile("fireball",player.X,player.Y,x,y,player.mat*2,true);
         return 1;
     }
     else{

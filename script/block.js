@@ -40,16 +40,6 @@ function clearBlocks(){
     block=[];
 }
 
-function isPosEnemyPlacable(x,y){
-    let sign=1;
-    block.forEach(bloc=>{
-        if(bloc.X==x&&bloc.Y==y&&bloc.isEnemyPlacable==0&&bloc.isOnField){
-            sign=0;
-        }
-    })
-    return sign;
-}
-
 function activateBlockEffect(entity){
     block.forEach(bloc=>{
         if(bloc.X==entity.X&&bloc.Y==entity.Y&&bloc.isOnField){

@@ -15,8 +15,20 @@ function characterPage(){
 }
 function beginRound(){
     round++;
+    boost.enemy.atk+=min(5,round);
+    boost.enemy.mhp+=min(5,round);
+    if(round<=10){
+        recoverHP(Math.max((player.mhp-player.hp)*0.8,player.mhp*0.2));
+        recoverMP(Math.max((player.mmp-player.mp)*0.8,player.mmp*0.2));
+    }else{
+        recoverHP(Math.min((player.mhp-player.hp)*0.5,player.mhp*0.2));
+        recoverMP(Math.min((player.mmp-player.mp)*0.5,player.mmp*0.2));
+    }
     loadMap(random(0,map.length-1));
     summonEnemy("Kanade",min(20,2+round));
+    if(round>=5){
+        summonEnemy("Nene",random(1,floor(round/3)));
+    }
     playerTurn("halt");
 }
 function frontPage(){
@@ -42,7 +54,7 @@ function intermissonPage(){
     clearBattlefield();
     context.fillStyle="black";
     context.font="100px Arial";
-    context.fillText("Turn "+round+" Cleared!",200,200);
+    context.fillText("Round "+round+" Compelete!",200,200);
     context.font="50px Arial";
     context.fillText(`Enemy Defeated: ${enemyDefeated}`,200,300);
     context.fillText("Click to Continue",200,400);
@@ -122,6 +134,7 @@ function enemyTurn(){
 
 function drawBattlefieldStatic(){
     clearCanvas();
+    drawInfo();
     drawMesh();
     drawBlocks();
     drawKeys();

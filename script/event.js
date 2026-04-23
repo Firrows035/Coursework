@@ -32,10 +32,6 @@ function Click(event){
         }      
     }else if(currentStage=="intermission"&&choiceChosen){
         currentStage="battle";
-        boost.enemy.atk+=5;
-        boost.enemy.mhp+=5;
-        recoverHP(Math.max((player.mhp-player.hp)*0.8,player.mhp*0.2));
-        recoverMP(Math.max((player.mmp-player.mp)*0.5,player.mmp*0.2));
         beginRound();
     }else{
         checkOnClick();

@@ -1,0 +1,109 @@
+var choice=[];
+var choiceCount=0;
+choice.push({
+    name:`御血术`,
+    buff(){
+        boost.player.atk+=150;
+        player.baseMhp-=player.baseMhp*0.8;
+        boost.player.atkR+=3;
+        updatePlayerStat();
+    },
+    description:`物理攻击力+150%,基础hp-80%, 攻击距离+3`,
+    weight:1,
+    selectableTime:1
+},{
+    name:`伤害+`,
+    buff(){
+        boost.player.dmg+=5;
+        updatePlayerStat();
+    },
+    description:`造成伤害+10%`,
+    weight:1,
+    selectableTime:-1
+},{
+    name:`基础防御+`,
+    buff(){
+        player.baseDef+=5;
+        updatePlayerStat();
+    },
+    description:`基础防御力+5`,
+    weight:1,
+    selectableTime:4
+},{
+    name:`HP+`,
+    buff(){
+        boost.player.mhp+=10;
+        updatePlayerStat();
+    },
+    description:`hp上限+10%`,
+    weight:1,
+    selectableTime:-1
+},{
+    name:`MP+`,
+    buff(){
+        boost.player.mmp+=10;
+        updatePlayerStat();
+    },
+    description:`mp上限+10%`,
+    weight:1,
+    selectableTime:-1
+},{
+    name:`MAT+`,
+    buff(){
+        boost.player.mat+=10;
+        updatePlayerStat();
+    },
+    description:`法术攻击力+10%`,
+    weight:1,
+    selectableTime:-1
+},{
+    name:`attackRange+`,
+    buff(){
+        boost.player.atkR+=1;
+        updatePlayerStat();
+    },
+    description:`近战攻击距离+1`,
+    weight:4,
+    selectableTime:2
+},{
+    name:`压缩施法`,
+    buff(){
+        boost.player.mat+=200;
+        boost.player.mmp-=50;
+        updatePlayerStat();
+    },
+    description:`法术攻击力+200%,mp上限-50%`,
+    weight:5,
+    selectableTime:1
+},{
+    name:`ATK+`,
+    buff(){
+        boost.player.atk+=10;
+        updatePlayerStat();
+    },
+    description:`物理攻击力+10%`,
+    weight:1,
+    selectableTime:-1
+},{
+    name:`快速施法`,
+    buff(){
+        cooldownPerTurn+=1;
+        boost.player.mat-=10;
+        updatePlayerStat();
+    },
+    description:`技能冷却速度+100%，法术攻击力-10%`,
+    weight:5,
+    selectableTime:1
+},{
+    name:`竞争战法`,
+    buff(){
+        boost.player.atk+=40;
+        boost.player.mat+=40;
+        boost.enemy.atk+=30;
+        boost.enemy.mat+=30;
+        updatePlayerStat();
+    },
+    description:`物理攻击力+50%，法术攻击力+40%，敌人攻击力+30%`,
+    weight:4,
+    selectableTime:3
+})
