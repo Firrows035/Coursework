@@ -8,6 +8,11 @@ function Click(event){
     let Y=floor(event.offsetY*scaleY/50);
     mouseX=X;
     mouseY=Y;
+    if(currentStage=="pause"){
+        currentStage=lastStage;
+        onMouseMove(event);
+        return 1;
+    }
     if(currentStage=="startReady"){
         if(imageReady){
             currentStage="prologue";
@@ -38,7 +43,7 @@ function Click(event){
     }
 }
 function onMouseMove(event){
-    
+    if(currentStage=="pause") return;
     if(mouseMoveCd){
         return;
     }

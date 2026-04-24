@@ -49,6 +49,7 @@ var boost={
     }
 };
 var currentStage="initiate";
+var lastStage="";
 
 
 

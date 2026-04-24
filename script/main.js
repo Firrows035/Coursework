@@ -40,7 +40,13 @@ function frontPage(){
     context.fillText("Click to Start",200,450);
     currentStage="startReady";
 }
-
+function pause(){
+    if(lastStage!="pause")lastStage=currentStage;
+    currentStage="pause";
+    clearCanvas();
+    drawText("Game Paused",100,200,"black","100px Arial",1800,120,false);
+    drawText("click to continue",100,400,"black","50px Arial",1800,80,false);
+}
 function failurePage(){
     clearBattlefield();
     context.fillStyle="black";
