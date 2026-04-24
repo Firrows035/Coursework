@@ -1,6 +1,28 @@
 var cooldownPerTurn=1;
 
-function preset(){
+function initialize(){
+    currentStage="startReady";
+    skill=new Map();
+    enemy=[];
+    projectile=[];
+    setCharacter("Lagrange");
+    player.effect=[];
+    boost.player.atk=0;
+    boost.player.def=0;
+    boost.player.mat=0;
+    boost.player.mdf=0;
+    boost.player.mhp=0;
+    boost.player.mmp=0;
+    boost.player.dmg=0;
+    boost.player.atkR=0;
+    boost.enemy.atk=0;
+    boost.enemy.def=0;
+    boost.enemy.mat=0;
+    boost.enemy.mdf=0;
+    boost.enemy.mhp=0;
+    boost.enemy.mmp=0;
+    boost.enemy.dmg=0;
+    boost.enemy.atkR=0;
     addSkill("fireball");
     addSkill("flashmove");
     addSkill("sacriStrike");
@@ -12,6 +34,7 @@ function characterPage(){
     drawMesh();
     drawText("选择角色",50,80,"black","60px 微软雅黑",1000,90,true);
     drawCharacterChoice();
+    drawButton();
 }
 function beginRound(){
     round++;
@@ -39,8 +62,16 @@ function frontPage(){
     context.font="50px Arial";
     context.fillText("Click to Start",200,450);
     currentStage="startReady";
+    drawButton();
 }
-
+function pausePage(event){
+    if(currentStage!="pause")lastStage=currentStage;
+    currentStage="pause";
+    clearCanvas();
+    drawText("Game Paused",100,200,"black","100px Arial",1800,120,false);
+    drawText("click to continue",100,400,"black","50px Arial",1800,80,false);
+    drawButton();
+}
 function failurePage(){
     clearBattlefield();
     context.fillStyle="black";
@@ -48,9 +79,11 @@ function failurePage(){
     context.fillText("You died!",300,200);
     context.font="50px Arial";
     context.fillText(`Enemy Defeated: ${enemyDefeated}`,300,300);
+    drawButton();
 }
 
 function intermissonPage(){
+    drawBattlefieldStatic();
     clearBattlefield();
     context.fillStyle="black";
     context.font="100px Arial";
@@ -59,6 +92,7 @@ function intermissonPage(){
     context.fillText(`Enemy Defeated: ${enemyDefeated}`,200,300);
     context.fillText("Click to Continue",200,400);
     if(!choiceChosen) drawChoiceSlot();
+    drawButton();
 }
 
 function playerTurn(act,target){
@@ -82,8 +116,7 @@ function playerTurn(act,target){
     activateEnemyEffects("player","TurnEnd");
     drawBattlefieldStatic();
     checkScene();
-    setTimeout(()=>neutralTurn(),20);
-    
+    setTimeout(()=>neutralTurn(),20);   
 }
 function neutralTurn(){
     activateBlockEffectAll();
@@ -146,6 +179,7 @@ function drawBattlefieldStatic(){
     drawPlayerStat();
     drawEnemyStat();
     drawPlayerEffects();
+    drawButton();
 }
 
 
