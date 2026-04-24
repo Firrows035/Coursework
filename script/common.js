@@ -159,7 +159,7 @@ function distanceBetweenEntity(entity1,entity2){
     return abs(floor(entity1.X)-floor(entity2.X))+abs(floor(entity1.Y)-floor(entity2.Y));
 }
 function isPosLegal(x,y){
-    if(x<battelfield.length&&x>=0&&y<battelfield.height&&y>=0)return 1;
+    if(x<battlefield.length&&x>=0&&y<battlefield.height&&y>=0)return 1;
     else return 0;
 }
 function isPathBlocked(x1,y1,x2,y2){
@@ -286,7 +286,7 @@ function randPosUnblocked(){
     else return randPosUnblocked();
 }
 function randPosAvailable(){
-    let x=random(0,battlefield.width-1),y=random(0,battelfield.height-1);
+    let x=random(0,battlefield.width-1),y=random(0,battlefield.height-1);
     if(!isPosBlocked(x,y)&&isPosAvailableL1(x,y)) return [x,y];
     else return randPosAvailable();
 }
