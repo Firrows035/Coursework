@@ -10,6 +10,7 @@ button.push({
         }
     },
     selector:{
+        type:"button",
         offsetX:800,
         offsetY:700,
         width:200,
@@ -20,20 +21,117 @@ button.push({
             icon:"None",
             text:"Start"
         },
-        onMouseMove(){
-             drawRect(2,this.selector.color,this.selector.offsetX+2,this.selector.offsetY+2,this.selector.width-4,this.selector.height-4);
-        },
-        onClick(){
-            if(currentStage=="startReady"){
-                if(imageReady){
-                    currentStage="prologue";
-                    characterPage();  
-                    return 1;      
-                }else{
-                    console.log(`Loading resources. Please wait...`);
-                    return 0;
-                }
+    },
+    onMouseOver(){
+        drawRect(2,this.selector.color,this.selector.offsetX+2,this.selector.offsetY+2,this.selector.width-4,this.selector.height-4);
+    },
+    onClick(){
+        if(currentStage=="startReady"){
+            if(imageReady){
+                currentStage="prologue";
+                characterPage();  
+                return 1;      
+            }else{
+                console.log(`Loading resources. Please wait...`);
+                return 0;
             }
         }
+    }
+})
+button.push({
+    id:"restart",
+    attendance:["failure"],
+    isDisplayed(){
+        if(this.attendance.find((atd)=>atd==currentStage)!=undefined){
+            return 1;
+        }else{
+            return 0;
+        }
+    },
+    selector:{
+        type:"button",
+        offsetX:800,
+        offsetY:700,
+        width:300,
+        height:60,
+        color:"blue",
+        description:{
+            id:"restart",
+            icon:"None",
+            text:"Re-Start"
+        },
+    },
+    onMouseOver(){
+        drawRect(2,this.selector.color,this.selector.offsetX+2,this.selector.offsetY+2,this.selector.width-4,this.selector.height-4);
+    },
+    onClick(){
+        if(currentStage=="failure"){
+            initialize();
+        }
+    }
+})
+button.push({
+    id:"continue",
+    attendance:["pause"],
+    isDisplayed(){
+        if(this.attendance.find((atd)=>atd==currentStage)!=undefined){
+            return 1;
+        }else{
+            return 0;
+        }
+    },
+    selector:{
+        type:"button",
+        offsetX:800,
+        offsetY:700,
+        width:300,
+        height:60,
+        color:"blue",
+        description:{
+            id:"continue",
+            icon:"None",
+            text:"continue"
+        },
+    },
+    onMouseOver(){
+        drawRect(2,this.selector.color,this.selector.offsetX+2,this.selector.offsetY+2,this.selector.width-4,this.selector.height-4);
+    },
+    onClick(){
+        if(currentStage=="pause"){
+            currentStage=lastStage;
+            onMouseMove();
+        }
+    }
+})
+button.push({
+    id:"pause",
+    attendance:["battle","intermission"],
+    isDisplayed(){
+        if(this.attendance.find((atd)=>atd==currentStage)!=undefined){
+            return 1;
+        }else{
+            return 0;
+        }
+    },
+    selector:{
+        type:"button",
+        offsetX:850,
+        offsetY:900,
+        width:250,
+        height:60,
+        color:"red",
+        description:{
+            id:"pause",
+            icon:"None",
+            text:"pause"
+        },
+    },
+    onMouseOver(){
+        drawRect(2,this.selector.color,this.selector.offsetX+2,this.selector.offsetY+2,this.selector.width-4,this.selector.height-4);
+    },
+    onClick(){
+        lastStage=currentStage;
+        currentStage="pause";
+        onMouseMove();
     }
 })

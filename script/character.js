@@ -150,6 +150,8 @@ function setCharacter(charId){
     player.source=chara.source;
     player.baseMhp=chara.mhp;
     player.baseMmp=chara.mmp;
+    player.hp=chara.mhp;
+    player.mp=chara.mmp;
     player.baseDef=chara.def;
     player.baseAtk=chara.atk;
     player.baseMat=chara.mat;

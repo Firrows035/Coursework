@@ -30,6 +30,7 @@ var playerBio=``;
 var boost={
     enemy:{
         atk:0,
+        mat:0,
         def:0,
         mat:0,
         mdf:0,
@@ -287,7 +288,7 @@ function randPosUnblocked(){
     else return randPosUnblocked();
 }
 function randPosAvailable(){
-    let x=random(0,battlefield.width-1),y=random(0,battlefield.height-1);
+    let x=random(0,battlefield.length-1),y=random(0,battlefield.height-1);
     if(!isPosBlocked(x,y)&&isPosAvailableL1(x,y)) return [x,y];
     else return randPosAvailable();
 }

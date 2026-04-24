@@ -84,15 +84,15 @@
                 console.log(floor(e.offsetX*scaleX/50)+','+floor(e.offsetY*scaleY/50));
             })
             info.appendChild(document.createTextNode(seed));
-            preset();
+            initialize();
             frontPage();
         }
     </script>
-    <body style="padding: 0px; margin: 0px; margin-top:  2px;">
+    <body style="padding: 0px; margin: 0px; margin-top: 2px;">
         <h1>A simple turn-based game</h1>
 
         <div id="Container">
-            <canvas id="mainCanvas" width="2050px" height="1000px" style="display: block; margin: 0px; padding: 0px; outline:none; border: 3px solid palegreen;" tabindex="999" onclick="Click(event)" onmousemove="onMouseMove(event)" onkeypress="keyPress(event)" onmouseleave="pause()">
+            <canvas id="mainCanvas" width="2050px" height="1000px" style="display: block; margin: 0px; padding: 0px; outline:none; border: 3px solid palegreen;" tabindex="999" onclick="Click(event)" onmousemove="onMouseMove(event)" onkeypress="keyPress(event)">
                 
             </canvas>
         </div>

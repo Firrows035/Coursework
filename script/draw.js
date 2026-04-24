@@ -265,6 +265,37 @@ function drawText(text,x,y,color,font,maxWidth,lineHeight,isChinese){
     }
     context.fillText(line,x,y);
 }
+function drawTextCenter(text,x,y,color,font,maxWidth,lineHeight,isChinese){
+    let word;
+    let seperator;
+    let line="";
+    context.fillStyle=color;
+    context.font=font;
+    let measureLine=context.measureText(line);
+    let lineWidth=measureLine.width;
+    if(isChinese){
+        word=text.split("");
+        seperator="";
+    }else{
+        word=text.split(" ");
+        seperator=" ";
+    }
+    for(let i=0;i<word.length;i++){
+        let tempLine=line+word[i]+seperator;
+        let measureTemp=context.measureText(tempLine);
+        let tempWidth=measureTemp.width;
+        if(tempWidth>maxWidth&&i>0){
+            context.fillText(line,x+(maxWidth-lineWidth)/2,y);
+            line=word[i]+seperator;
+            y+=lineHeight;
+        }else{
+            line=tempLine;
+        }
+        measureLine=context.measureText(line);
+        lineWidth=measureLine.width;
+    }
+    context.fillText(line,x+(maxWidth-lineWidth)/2,y);
+}
 //快速绘制计量条
 function drawStatBar(x,y,length,height,point,maxPoint,color,id){
     context.fillStyle="black";
@@ -335,8 +366,8 @@ function drawChoiceSlot(){
         context.fillStyle="white";
         context.fillRect(slot.selector.offsetX,slot.selector.offsetY,slot.selector.width,slot.selector.height);
         drawRect(2,"black",slot.selector.offsetX,slot.selector.offsetY,slot.selector.width,slot.selector.height);
-        drawText(slot.selector.description.id,slot.selector.offsetX+5,slot.selector.offsetY+50,"black","40px 微软雅黑",slot.selector.width-10,35,true);
-        drawText(slot.selector.description.text,slot.selector.offsetX+5,slot.selector.offsetY+150,"black","30px 微软雅黑",slot.selector.width-10,35,true);
+        drawTextCenter(slot.selector.description.id,slot.selector.offsetX+5,slot.selector.offsetY+50,"black","40px 微软雅黑",slot.selector.width-10,35,true);
+        drawTextCenter(slot.selector.description.text,slot.selector.offsetX+5,slot.selector.offsetY+150,"black","30px 微软雅黑",slot.selector.width-10,35,true);
     })
 }
 function drawCharacterChoice(){
@@ -366,4 +397,14 @@ function drawTrace(trace){
 }
 function drawInfo(){
     drawText(`当前波次：${round}    击倒数： ${enemyDefeated}`,10,990,"black","30px 微软雅黑",1000,50,true);
+}
+function drawButton(){
+    for(let btn of button){
+        if(btn.isDisplayed()){
+            context.fillStyle="white";
+            context.fillRect(btn.selector.offsetX,btn.selector.offsetY,btn.selector.width,btn.selector.height);
+            drawRect(2,"black",btn.selector.offsetX,btn.selector.offsetY,btn.selector.width,btn.selector.height);
+            drawTextCenter(btn.selector.description.text,btn.selector.offsetX+4,btn.selector.offsetY+btn.selector.height-8,"black",`${btn.selector.height-8}px 微软雅黑`,btn.selector.width-8,btn.selector.height,true);
+        }
+    }
 }
