@@ -43,7 +43,7 @@ character.set("Tairitsu",{
     mmp:80,
     atk:27,
     def:5,
-    mat:25,
+    mat:20,
     mdf:5,
     atkR:2,
     isSelectable:true,
