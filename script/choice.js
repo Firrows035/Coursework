@@ -37,6 +37,6 @@ function choose(c){
     if(choice[c].selectableTime>0){
         choice[c].selectableTime--;
     }
-    choice.filter((chc)=>chc.selectableTime!=0);
+    choice=choice.filter((chc)=>chc.selectableTime!=0);
     choiceChosen=1;
 }

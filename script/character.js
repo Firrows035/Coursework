@@ -43,7 +43,7 @@ character.set("Tairitsu",{
     mmp:80,
     atk:27,
     def:5,
-    mat:25,
+    mat:20,
     mdf:5,
     atkR:2,
     isSelectable:true,
@@ -150,6 +150,8 @@ function setCharacter(charId){
     player.source=chara.source;
     player.baseMhp=chara.mhp;
     player.baseMmp=chara.mmp;
+    player.hp=chara.mhp;
+    player.mp=chara.mmp;
     player.baseDef=chara.def;
     player.baseAtk=chara.atk;
     player.baseMat=chara.mat;

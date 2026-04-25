@@ -1,22 +1,15 @@
 function Click(event){
-    rect=canvas.getBoundingClientRect();
-    scaleX=canvas.width/rect.width;
-    scaleY=canvas.height/rect.height;
-    mouseOffsetX=event.offsetX*scaleX;
-    mouseOffsetY=event.offsetY*scaleY;
-    let X=floor(event.offsetX*scaleX/50);
-    let Y=floor(event.offsetY*scaleY/50);
-    mouseX=X;
-    mouseY=Y;
-    if(currentStage=="startReady"){
-        if(imageReady){
-            currentStage="prologue";
-            characterPage();  
-            return 1;      
-        }else{
-            console.log(`Loading resources. Please wait...`);
-            return 0;
-        }
+    let X,Y;
+    if(event!=undefined){
+        rect=canvas.getBoundingClientRect();
+        scaleX=canvas.width/rect.width;
+        scaleY=canvas.height/rect.height;
+        mouseOffsetX=event.offsetX*scaleX;
+        mouseOffsetY=event.offsetY*scaleY;
+        X=floor(event.offsetX*scaleX/50);
+        Y=floor(event.offsetY*scaleY/50);
+        mouseX=X;
+        mouseY=Y;
     }
     switch(currentStage){
         case "pause":
@@ -61,7 +54,6 @@ function Click(event){
     }
 }
 function onMouseMove(event){
-    
     if(mouseMoveCd){
         return;
     }
@@ -69,34 +61,46 @@ function onMouseMove(event){
     setTimeout(()=>{
         mouseMoveCd=0;
     },20);
-    // console.log(event);
-    rect=canvas.getBoundingClientRect();
-    scaleX=canvas.width/rect.width;
-    scaleY=canvas.height/rect.height;
-    mouseOffsetX=event.offsetX*scaleX;
-    mouseOffsetY=event.offsetY*scaleY;
-    let mx=floor(event.offsetX*scaleX/50);
-    let my=floor(event.offsetY*scaleY/50);
-    mouseX=mx;
-    mouseY=my;
-    if(currentStage=="prologue"){
-        characterPage();
+    let X,Y;
+    if(event!=undefined){
+        rect=canvas.getBoundingClientRect();
+        scaleX=canvas.width/rect.width;
+        scaleY=canvas.height/rect.height;
+        mouseOffsetX=event.offsetX*scaleX;
+        mouseOffsetY=event.offsetY*scaleY;
+        X=floor(event.offsetX*scaleX/50);
+        Y=floor(event.offsetY*scaleY/50);
+        mouseX=X;
+        mouseY=Y;
     }
-    if(currentStage=="battle"){
-        drawBattlefieldStatic();
-
-        if(isPosLegal(mx,my)){
-            drawBlockSelector(mx,my,"red");
-        }
+    switch(currentStage){
+        case "pause":
+            pausePage();
+            break;
+        case "startReady":
+            frontPage();
+            break;
+        case "prologue":
+            characterPage();
+            break;
+        case "battle":
+            drawBattlefieldStatic();
+            if(isPosLegal(X,Y)){
+                drawBlockSelector(X,Y,"red");
+            }
+            break;
+        case "intermission":
+            intermissonPage();
+            break;
+        case "failure":
+            failurePage();
+            break;
+        default:
+            break;
     }
-    if(currentStage=="intermission"){
-        intermissonPage();
-    }
-    checkSelector();
-    
+    checkOnMouseOver();
 }
 function keyPress(e){
-        console.log(e.key);
         e.preventDefault();
     if(e.key=="w"||e.key=="a"||e.key=="s"||e.key=="d"||e.key==" "){
         
@@ -111,7 +115,13 @@ function keyPress(e){
         prepareSkill(+e.key);
     }
 }
-function checkSelector(){
+function checkOnMouseOver(){
+    for(let btn of button){
+        if(isTargetOnMouseOver(btn)&&btn.isDisplayed()){
+            btn.onMouseOver();
+            return;
+        }
+    }
     for(let emy of enemy){
         emy.updateSelector();
         if(isTargetOnMouseOver(emy)&&currentStage=="battle"&&!emy.isDefeat){
@@ -163,6 +173,12 @@ function checkSelector(){
     }
 }
 function checkOnClick(){
+    for(let btn of button){
+        if(isTargetOnMouseOver(btn)&&btn.isDisplayed()){
+            btn.onClick();
+            return;
+        }
+    }
     for(let emy of enemy){
         if(isTargetOnMouseOver(emy)&&currentStage=="battle"){
             emy.onClick();

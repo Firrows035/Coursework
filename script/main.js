@@ -32,6 +32,7 @@ function characterPage(){
     drawMesh();
     drawText("选择角色",50,80,"black","60px 微软雅黑",1000,90,true);
     drawCharacterChoice();
+    drawButton();
 }
 function beginRound(){
     round++;
@@ -62,7 +63,6 @@ function pausePage(event){
     drawTextCenter("Game Paused",0,200,"black","100px Arial",2050,120,false);
     drawButton();
 }
-
 function failurePage(){
     clearCanvas();
     drawTextCenter("You Died!",0,300,"black","100px Arial",2050,110,false);
@@ -71,10 +71,12 @@ function failurePage(){
 }
 
 function intermissonPage(){
+    drawBattlefieldStatic();
     clearBattlefield();
     drawTextCenter(`Round ${round} Complete!`,0,200,"black","100px Arial",1500,110,false);
     drawTextCenter(`Enemy Defeated: ${enemyDefeated}`,0,300,"black","60px Arial",1500,70,false);
     if(!choiceChosen) drawChoiceSlot();
+    drawButton();
 }
 
 function playerTurn(act,target){
@@ -98,8 +100,7 @@ function playerTurn(act,target){
     activateEnemyEffects("player","TurnEnd");
     drawBattlefieldStatic();
     checkScene();
-    setTimeout(()=>neutralTurn(),20);
-    
+    setTimeout(()=>neutralTurn(),20);   
 }
 function neutralTurn(){
     activateBlockEffectAll();
@@ -162,6 +163,7 @@ function drawBattlefieldStatic(){
     drawPlayerStat();
     drawEnemyStat();
     drawPlayerEffects();
+    drawButton();
 }
 
 

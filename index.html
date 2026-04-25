@@ -71,6 +71,7 @@
     <script src="script/choiceSlot.js"></script>
     <script src="script/choiceList.js"></script>
     <script src="script/character.js"></script>
+    <script src="script/button.js"></script>
     <script>
         window.onload=function(){
             info=document.getElementById("extra");
@@ -82,18 +83,13 @@
             canvas.addEventListener("click",e=>{
                 console.log(floor(e.offsetX*scaleX/50)+','+floor(e.offsetY*scaleY/50));
             })
-<<<<<<< Updated upstream
-            info.appendChild(document.createTextNode(seed));
-            preset();
-=======
             audio=document.querySelector("audio");
             audio.volume=0.1;
             initialize();
->>>>>>> Stashed changes
             frontPage();
         }
     </script>
-    <body style="padding: 0px; margin: 0px; margin-top:  2px;">
+    <body style="padding: 0px; margin: 0px; margin-top: 2px;">
         <h1>A simple turn-based game</h1>
 
         <div id="Container">
