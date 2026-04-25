@@ -11,7 +11,7 @@ button.push({
     },
     selector:{
         type:"button",
-        offsetX:800,
+        offsetX:925,
         offsetY:700,
         width:200,
         height:60,
@@ -29,6 +29,7 @@ button.push({
         if(currentStage=="startReady"){
             if(imageReady){
                 currentStage="prologue";
+                audio.play();
                 characterPage();  
                 return 1;      
             }else{
@@ -50,7 +51,7 @@ button.push({
     },
     selector:{
         type:"button",
-        offsetX:800,
+        offsetX:875,
         offsetY:700,
         width:300,
         height:60,
@@ -82,7 +83,7 @@ button.push({
     },
     selector:{
         type:"button",
-        offsetX:800,
+        offsetX:875,
         offsetY:700,
         width:300,
         height:60,
@@ -99,6 +100,7 @@ button.push({
     onClick(){
         if(currentStage=="pause"){
             currentStage=lastStage;
+            audio.play();
             onMouseMove();
         }
     }
@@ -132,6 +134,72 @@ button.push({
     onClick(){
         lastStage=currentStage;
         currentStage="pause";
+        audio.pause();
         onMouseMove();
+    }
+})
+button.push({
+    id:"restart",
+    attendance:["failure"],
+    isDisplayed(){
+        if(this.attendance.find((atd)=>atd==currentStage)!=undefined){
+            return 1;
+        }else{
+            return 0;
+        }
+    },
+    selector:{
+        type:"button",
+        offsetX:875,
+        offsetY:700,
+        width:300,
+        height:60,
+        color:"blue",
+        description:{
+            id:"restart",
+            icon:"None",
+            text:"Re-Start"
+        },
+    },
+    onMouseOver(){
+        drawRect(2,this.selector.color,this.selector.offsetX+2,this.selector.offsetY+2,this.selector.width-4,this.selector.height-4);
+    },
+    onClick(){
+        if(currentStage=="failure"){
+            initialize();
+        }
+    }
+})
+button.push({
+    id:"nextStage",
+    attendance:["intermission"],
+    isDisplayed(){
+        if(this.attendance.find((atd)=>atd==currentStage)!=undefined&&choiceChosen){
+            return 1;
+        }else{
+            return 0;
+        }
+    },
+    selector:{
+        type:"button",
+        offsetX:550,
+        offsetY:500,
+        width:400,
+        height:80,
+        color:"blue",
+        description:{
+            id:"nextStage",
+            icon:"None",
+            text:"next stage"
+        },
+    },
+    onMouseOver(){
+        drawRect(2,this.selector.color,this.selector.offsetX+2,this.selector.offsetY+2,this.selector.width-4,this.selector.height-4);
+    },
+    onClick(){
+        if(currentStage=="intermission"&&choiceChosen){
+            currentStage="battle";
+            beginRound();
+        }
     }
 })

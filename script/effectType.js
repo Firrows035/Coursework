@@ -51,6 +51,65 @@ effectType.set("poison",{
         description:{
             id:"poison",
             icon:"poison.png",
+            text:"你中毒了！每回合失去5%的生命。对敌人伤害极低。"
+        }
+    }
+});
+effectType.set("weakened",{
+    id:"weakened",
+    source:"poison.png",
+    cache:[],
+    gain(target,self){
+        self.cache.push(target.atk,target.mat);
+        target.atk-=target.atk*0.8;
+        target.mat-=target.mat*0.8;
+        return 0;
+    },
+    playerTurnStart(target,self){
+
+        return 0;
+    },
+    playerTurnMiddle(target,self){
+        return 0;
+    },
+    playerTurnEnd(target,self){
+        return 0;
+    },
+    neutralTurnStart(target,self){
+        return 0;
+    },
+    neutralTurnMiddle(target,self){
+        return 0;
+    },
+    neutralTurnEnd(target,self){
+        return 0;
+    },
+    enemyTurnStart(target,self){
+        return 0;
+    },
+    enemyTurnMiddle(target,self){
+        return 0;
+    },
+    enemyTurnEnd(target,self){
+        return 1;
+    },
+    expire(target,self){
+        target.atk+=self.cache[0]*0.8;
+        target.mat+=self.cache[1]*0.8;
+        return 0;
+    },
+    maxDuration:30,
+    isSelectable:true,
+    selector:{
+        type:"effectType",
+        color:"red",
+        offsetX:0,
+        offsetY:0,
+        width:0,
+        height:0,
+        description:{
+            id:"poison",
+            icon:"poison.png",
             text:"poisonous"
         }
     }

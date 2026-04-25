@@ -41,13 +41,8 @@ function Click(event){
             }
             break;
         case "intermission":
-            if(choiceChosen){
-                currentStage="battle";
-                beginRound();
-            }else{
-                intermissonPage();
-                checkOnClick(event);
-            }
+            intermissonPage();
+            checkOnClick(event);
             break;
         case "failure":
             failurePage();

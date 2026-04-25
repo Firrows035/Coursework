@@ -5,7 +5,6 @@ function initialize(){
     skill=new Map();
     enemy=[];
     projectile=[];
-    setCharacter("Lagrange");
     player.effect=[];
     boost.player.atk=0;
     boost.player.def=0;
@@ -27,7 +26,6 @@ function initialize(){
     addSkill("flashmove");
     addSkill("sacriStrike");
     addSkill("heal");
-    loadMap(0);
 }
 function characterPage(){
     clearCanvas();
@@ -56,41 +54,27 @@ function beginRound(){
 }
 function frontPage(){
     clearCanvas();
-    context.fillStyle="black";
-    context.font="100px Arial";
-    context.fillText("Simple Turn Fight",200,300); 
-    context.font="50px Arial";
-    context.fillText("Click to Start",200,450);
+    drawTextCenter("Simple Turn Fight",0,300,"black","100px Arial",2050,120,false);
     currentStage="startReady";
     drawButton();
 }
 function pausePage(event){
-    if(currentStage!="pause")lastStage=currentStage;
-    currentStage="pause";
     clearCanvas();
-    drawText("Game Paused",100,200,"black","100px Arial",1800,120,false);
-    drawText("click to continue",100,400,"black","50px Arial",1800,80,false);
+    drawTextCenter("Game Paused",0,200,"black","100px Arial",2050,120,false);
     drawButton();
 }
 function failurePage(){
-    clearBattlefield();
-    context.fillStyle="black";
-    context.font="100px Arial";
-    context.fillText("You died!",300,200);
-    context.font="50px Arial";
-    context.fillText(`Enemy Defeated: ${enemyDefeated}`,300,300);
+    clearCanvas();
+    drawTextCenter("You Died!",0,300,"black","100px Arial",2050,110,false);
+    drawTextCenter(`Round ${round} / Enemy Defeated: ${enemyDefeated}`,0,450,"black","60px Arial",2050,110,false);
     drawButton();
 }
 
 function intermissonPage(){
     drawBattlefieldStatic();
     clearBattlefield();
-    context.fillStyle="black";
-    context.font="100px Arial";
-    context.fillText("Round "+round+" Compelete!",200,200);
-    context.font="50px Arial";
-    context.fillText(`Enemy Defeated: ${enemyDefeated}`,200,300);
-    context.fillText("Click to Continue",200,400);
+    drawTextCenter(`Round ${round} Complete!`,0,200,"black","100px Arial",1500,110,false);
+    drawTextCenter(`Enemy Defeated: ${enemyDefeated}`,0,300,"black","60px Arial",1500,70,false);
     if(!choiceChosen) drawChoiceSlot();
     drawButton();
 }
