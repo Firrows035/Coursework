@@ -54,7 +54,7 @@ function beginRound(){
 }
 function frontPage(){
     clearCanvas();
-    drawTextCenter("Simple Turn Fight",0,300,"black","100px Arial",2050,120,false);
+    drawTextCenter("简单的地牢探险",0,300,"black","100px 微软雅黑",2050,120,true);
     currentStage="startReady";
     drawButton();
 }

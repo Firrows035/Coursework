@@ -25,3 +25,29 @@ projectileType.set("fireball",{
         }
     }
 });
+projectileType.set("fireballE",{
+    id:"fireballE",
+    source:"fireball.png",
+    X:0,
+    Y:0,
+    speed:3,
+    triggerR:1,
+    isAOE:true,
+    damageR:0,
+    isMagic:true,
+    isSelectable:false,
+    isTriggered:false,
+    selector:{
+        type:"projectileType",
+        color:"red",
+        offsetX:0,
+        offsetY:0,
+        width:0,
+        height:0,
+        description:{
+            id:"fireballE",
+            icon:"firebal.png",
+            text:"fireballE"
+        }
+    }
+});
