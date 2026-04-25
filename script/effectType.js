@@ -51,7 +51,7 @@ effectType.set("poison",{
         description:{
             id:"poison",
             icon:"poison.png",
-            text:"poisonous"
+            text:"你中毒了！每回合失去5%的生命。对敌人伤害极低。"
         }
     }
 });

@@ -112,7 +112,7 @@ character.set("Hikari",{
     mmp:100,
     atk:10,
     def:0,
-    mat:40,
+    mat:41,
     mdf:20,
     atkR:1,
     isSelectable:true,

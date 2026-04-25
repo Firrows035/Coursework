@@ -18,23 +18,46 @@ function Click(event){
             return 0;
         }
     }
-    if(currentStage=="prologue"){
-        checkOnClick();
-    }
-    if(currentStage=="battle"&&skillReady){
-        let skil=skill.get(skillReady);
-        if(isPosLegal(mouseX,mouseY)){
-            playerTurn("skill",event);
-        }else{
-            skil.isSelected=0;
-            skillReady=0;
-            checkOnClick();
-        }      
-    }else if(currentStage=="intermission"&&choiceChosen){
-        currentStage="battle";
-        beginRound();
-    }else{
-        checkOnClick();
+    switch(currentStage){
+        case "pause":
+            pausePage();
+            checkOnClick(event);
+            break;
+        case "startReady":
+            frontPage();
+            checkOnClick(event);
+            break;
+        case "prologue":
+            characterPage();
+            checkOnClick(event);
+            break;
+        case "battle":
+            if(skillReady){
+                let skil=skill.get(skillReady);
+                if(isPosLegal(mouseX,mouseY)){
+                    playerTurn("skill",event);
+                }else{
+                    skil.isSelected=0;
+                    skillReady=0;
+                    drawBattlefieldStatic();
+                    checkOnClick(event);
+                }
+            }else{
+                drawBattlefieldStatic();
+                checkOnClick(event);
+            }
+            break;
+        case "intermission":
+            intermissonPage();
+            checkOnClick(event);
+            break;
+        case "failure":
+            failurePage();
+            checkOnClick(event);
+            break;
+        default:
+            checkOnClick(event);
+            break;
     }
 }
 function onMouseMove(event){

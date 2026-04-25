@@ -82,8 +82,14 @@
             canvas.addEventListener("click",e=>{
                 console.log(floor(e.offsetX*scaleX/50)+','+floor(e.offsetY*scaleY/50));
             })
+<<<<<<< Updated upstream
             info.appendChild(document.createTextNode(seed));
             preset();
+=======
+            audio=document.querySelector("audio");
+            audio.volume=0.1;
+            initialize();
+>>>>>>> Stashed changes
             frontPage();
         }
     </script>
@@ -96,10 +102,16 @@
             </canvas>
         </div>
         
-        <div id="extra"></div>
-        <p>建议使用键盘和鼠标游玩（触屏会影响部分游戏体验）</p>
+        <div id="extra">
+            
+            <p>建议使用键盘和鼠标游玩（触屏会影响部分游戏体验）</p>
+        </div>
+        
         <div>
-
+            调整bgm进度及音量：<br>
+            <audio id="bgm" controls loop preload="auto">
+                <source src="00.mp3" type="audio/mpeg">
+            </audio>
         </div>
     </body>
     

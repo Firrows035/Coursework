@@ -147,8 +147,9 @@ function checkPlayerStat(){
     player.mp=min(player.mp,player.mmp);
     if(player.hp<=0){
         currentStage="failure";
-        clearProjectile();
-        setTimeout(()=>{requestAnimationFrame(failurePage)},50);
+        projectile=[];
+        audio.pause();
+        requestAnimationFrame(failurePage);
     }
 }
 function updatePlayerStat(){

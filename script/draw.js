@@ -179,12 +179,13 @@ function drawSelectSkill(num){
 
 function drawPlayerAttackRange(){
     let r=player.atkR;
+    if(isPosLegal(player.X,player.Y))drawBlockSelector(player.X,player.Y,"#11eeee");
     for(let i=-r;i<=r;i++){
-
-            if(isPosLegal(player.X+i,player.Y+r-Math.abs(i)))drawBlockSelector(player.X+i,player.Y+r-Math.abs(i),"#11eeee");
-            if(isPosLegal(player.X+i,player.Y-r+Math.abs(i)))drawBlockSelector(player.X+i,player.Y-r+Math.abs(i),"#11eeee");
-
-        
+        for(let j=Math.abs(i)-r;j<=r-Math.abs(i);j++){
+            if(i||j){
+                if(isPosLegal(player.X+i,player.Y+j)&&!isPathBlocked(player.X,player.Y,player.X+i,player.Y+j))drawBlockSelector(player.X+i,player.Y+j,"#11eeee");
+            }
+        }
     }
 }
 function drawBlockSelector(x,y,color){
@@ -301,7 +302,16 @@ function displayDescription(target){
                 }
                 break;
             case "skill":
+                drawText(target.selector.description.id,1650,320,"black","50px 微软雅黑",490,55,false);
+                drawImgZoom(target.selector.description.icon,1530,270,100,100);
+                drawText(`Cost: ${target.cost} MP`,1530,420,"black","30px Arial",490,40,true);
+                drawText(target.selector.description.text,1530,600,"black","30px 宋体",490,40,true);
+                break;  
             case "block":
+                drawText(target.selector.description.id,1650,320,"black","50px 微软雅黑",490,55,false);
+                drawImgZoom(target.selector.description.icon,1530,270,100,100);
+                drawText(target.selector.description.text,1530,600,"black","30px 宋体",490,40,true);
+                break;    
             case "effect":
                 drawText(target.selector.description.id,1650,320,"black","50px 微软雅黑",490,55,false);
                 drawImgZoom(target.selector.description.icon,1530,270,100,100);
@@ -366,4 +376,14 @@ function drawTrace(trace){
 }
 function drawInfo(){
     drawText(`当前波次：${round}    击倒数： ${enemyDefeated}`,10,990,"black","30px 微软雅黑",1000,50,true);
+}
+function drawButton(){
+    for(let btn of button){
+        if(btn.isDisplayed()){
+            context.fillStyle="white";
+            context.fillRect(btn.selector.offsetX,btn.selector.offsetY,btn.selector.width,btn.selector.height);
+            drawRect(2,"black",btn.selector.offsetX,btn.selector.offsetY,btn.selector.width,btn.selector.height);
+            drawTextCenter(btn.selector.description.text,btn.selector.offsetX+4,btn.selector.offsetY+btn.selector.height-btn.selector.height*0.2,"black",`${btn.selector.height*0.8}px 微软雅黑`,btn.selector.width-8,btn.selector.height,true);
+        }
+    }
 }

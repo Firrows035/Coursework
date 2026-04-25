@@ -20,7 +20,7 @@ var battlefield={
     height:15
 }
 
-
+var audio;
 
 var round=0;
 
