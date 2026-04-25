@@ -131,6 +131,18 @@ function enemyMoveNavigated(count){
 }
 
 //已弃用
+function addChoice(name,buff,description,weight,selectableTime){
+    choiceCount++;
+    choice[choiceCount]={
+        name:name,
+        buff:buff,
+        description:description,
+        weight:weight,
+        selectableTime:selectableTime,
+    }
+    return choice[choiceCount];
+}
+//已弃用
 function enemyAction(){
     for(let i=1;i<=enemyCount;i++){
         if(enemy[i].isDefeat){

@@ -83,6 +83,7 @@ function playerPlaySkill(target){
             skillReady=0;
             return 1;
         }
+        skil.isSelected=0;
         skillReady=0;
     }
     return 0;
