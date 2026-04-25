@@ -55,7 +55,7 @@ enemyType.set("Nene",{
     },
     attack(){
         if(!isPathBlocked(this.X,this.Y,this.attackTarget[0],this.attackTarget[1])){
-            createProjectile("fireball",this.X,this.Y,this.attackTarget[0],this.attackTarget[1],this.mat,false);
+            createProjectile("fireballE",this.X,this.Y,this.attackTarget[0],this.attackTarget[1],this.mat,false);
             return 1;
         }
         return 0;
