@@ -13,9 +13,7 @@ function loadImg(path,source){
             imageOnload++;
         }
     }
-    
     return imageSet[source];
-
 }
 var loadResource=new function(){
 

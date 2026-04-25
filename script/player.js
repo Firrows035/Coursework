@@ -83,6 +83,7 @@ function playerPlaySkill(target){
             skillReady=0;
             return 1;
         }
+        skil.isSelected=0;
         skillReady=0;
     }
     return 0;
@@ -159,6 +160,8 @@ function updatePlayerStat(){
     player.atk=player.baseAtk*(1+boost.player.atk/100);
     player.mat=player.baseMat*(1+boost.player.mat/100);
     player.mdf=player.baseMdf*(1+boost.player.mdf/100);
+    player.hp=min(player.hp,player.mhp);
+    player.mp=min(player.mp,player.mmp);
     player.dmgBoost=1+boost.player.dmg/100;
     player.atkR=player.baseAtkR+boost.player.atkR;
 }
@@ -170,6 +173,8 @@ function updateEnemyStat(){
         emy.atk=emy.baseAtk*(1+boost.emy.atk/100);
         emy.mat=emy.baseMat*(1+boost.emy.mat/100);
         emy.mdf=emy.baseMdf*(1+boost.emy.mdf/100);
+        emy.hp=min(emy.hp,emy.mhp);
+        emy.mp=min(emy.mp,emy.mmp);
         emy.dmgBoost=1+boost.emy.dmg/100;
         emy.atkR=emy.baseAtkR+boost.emy.atkR;
     }

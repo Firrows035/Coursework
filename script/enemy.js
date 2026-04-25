@@ -94,7 +94,6 @@ function placeEnemy(emy,attempt){
     return 1;
 }
 
-//修改enemy的状态机。default：若索敌范围内不可见player，随机移动；attack：player在攻击范围内，跟随玩家并尝试攻击；navigate：1. 索敌范围内可见玩家，将玩家位置修改为寻路地点；2. 索敌范围内不可见玩家，但此前处于寻路状态，继续寻路至目标地点附近直到到达、发现玩家或过长时间未发现玩家。
 function checkEnemyStat(){
     for(let i=0;i<enemy.length;i++){
         if(!enemy[i].isDefeat){

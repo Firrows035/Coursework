@@ -27,6 +27,16 @@ function initialize(){
     addSkill("sacriStrike");
     addSkill("heal");
 }
+function checkScene(){
+    if(currentStage=="battle"&&enemy.length==0){
+        currentStage="intermission";
+        setChoice();
+        projectile=[];
+        setTimeout(()=>{requestAnimationFrame(intermissonPage)},50);
+    }
+}
+
+
 function characterPage(){
     clearCanvas();
     drawMesh();
@@ -143,12 +153,6 @@ function enemyTurn(){
     checkScene();
 }
 
-
-    
-    
-   
-
-
 function drawBattlefieldStatic(){
     clearCanvas();
     drawInfo();
@@ -165,5 +169,3 @@ function drawBattlefieldStatic(){
     drawPlayerEffects();
     drawButton();
 }
-
-

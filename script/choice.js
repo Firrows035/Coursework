@@ -1,18 +1,4 @@
 //might be replaced in later version
-
-//已弃用
-function addChoice(name,buff,description,weight,selectableTime){
-    choiceCount++;
-    choice[choiceCount]={
-        name:name,
-        buff:buff,
-        description:description,
-        weight:weight,
-        selectableTime:selectableTime,
-    }
-    return choice[choiceCount];
-}
-
 function randChoice(){
     let c=random(0,choice.length-1);
     if(random(1,choice[c].weight)>1||choice[c].selectableTime==0) return randChoice();

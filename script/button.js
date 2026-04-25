@@ -17,7 +17,7 @@ button.push({
         height:60,
         color:"blue",
         description:{
-            id:"Sstart",
+            id:"start",
             icon:"None",
             text:"Start"
         },
