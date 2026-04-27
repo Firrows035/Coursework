@@ -46,8 +46,10 @@ function characterPage(){
 }
 function beginRound(){
     round++;
-    boost.enemy.atk+=min(5,round);
-    boost.enemy.mhp+=min(5,round);
+    if(round>1){
+        boost.enemy.atk+=max(5,round);
+        boost.enemy.mhp+=max(5,round);
+    }
     if(round<=10){
         recoverHP(Math.max((player.mhp-player.hp)*0.8,player.mhp*0.2));
         recoverMP(Math.max((player.mmp-player.mp)*0.8,player.mmp*0.2));

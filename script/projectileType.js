@@ -1,53 +1,56 @@
 var projectileType=new Map();
-projectileType.set("fireball",{
-    id:"fireball",
-    source:"fireball.png",
-    X:0,
-    Y:0,
-    speed:3,
-    triggerR:1,
-    isAOE:true,
-    damageR:3,
-    isMagic:true,
-    isSelectable:false,
-    isTriggered:false,
-    selector:{
-        type:"projectileType",
-        color:"red",
-        offsetX:0,
-        offsetY:0,
-        width:0,
-        height:0,
-        description:{
-            id:"fireball",
-            icon:"firebal.png",
-            text:"fireball"
+var fireballP=new function(){
+    projectileType.set("fireball",{
+        id:"fireball",
+        source:"fireball.png",
+        X:0,
+        Y:0,
+        speed:3,
+        triggerR:1,
+        isAOE:true,
+        damageR:3,
+        isMagic:true,
+        isSelectable:false,
+        isTriggered:false,
+        selector:{
+            type:"projectileType",
+            color:"red",
+            offsetX:0,
+            offsetY:0,
+            width:0,
+            height:0,
+            description:{
+                id:"fireball",
+                icon:"firebal.png",
+                text:"fireball"
+            }
         }
-    }
-});
-projectileType.set("fireballE",{
-    id:"fireballE",
-    source:"fireball.png",
-    X:0,
-    Y:0,
-    speed:3,
-    triggerR:1,
-    isAOE:true,
-    damageR:0,
-    isMagic:true,
-    isSelectable:false,
-    isTriggered:false,
-    selector:{
-        type:"projectileType",
-        color:"red",
-        offsetX:0,
-        offsetY:0,
-        width:0,
-        height:0,
-        description:{
-            id:"fireballE",
-            icon:"firebal.png",
-            text:"fireballE"
+    });    
+    projectileType.set("fireballE",{
+        id:"fireballE",
+        source:"fireball.png",
+        X:0,
+        Y:0,
+        speed:3,
+        triggerR:1,
+        isAOE:true,
+        damageR:0,
+        isMagic:true,
+        isSelectable:false,
+        isTriggered:false,
+        selector:{
+            type:"projectileType",
+            color:"red",
+            offsetX:0,
+            offsetY:0,
+            width:0,
+            height:0,
+            description:{
+                id:"fireballE",
+                icon:"firebal.png",
+                text:"fireballE"
+            }
         }
-    }
-});
+    });
+}
+

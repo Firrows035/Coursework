@@ -1,69 +1,73 @@
 var enemyType=new Map();
-enemyType.set("Kanade",{
-    id:"Kanade",
-    source:"Enemy1.jpg",
-    mhp:80,
-    atk:15,
-    def:5,
-    mat:15,
-    mdf:0,
-    atkR:1,
-    warnR:10,
-    damageR:1,
-    atktype:"melee",
-    state:"default",
-    selector:{
-        description:{
-            id:"Kanade",
-            icon:"Enemy1.jpg",
-            text:`随处可见的小气走`
+var kanade=new function(){
+    enemyType.set("Kanade",{
+        id:"Kanade",
+        source:"Enemy1.jpg",
+        mhp:80,
+        atk:15,
+        def:5,
+        mat:15,
+        mdf:0,
+        atkR:1,
+        warnR:10,
+        damageR:1,
+        atktype:"melee",
+        state:"default",
+        selector:{
+            description:{
+                id:"Kanade",
+                icon:"Enemy1.jpg",
+                text:`随处可见的小气走`
+            },
         },
-    },
-    attack(){
-        if(distanceBetweenPosition(this.attackTarget[0],this.attackTarget[1],player.X,player.Y)<=this.damageR&&!isPathBlocked(this.X,this.Y,player.X,player.Y)){
-            takeDamage(this.atk,false);
-            return 1;
-        }
-        return 0;
-    },
-    updateState(){
-        updateEnemyStateUsual(this);
-    },
-    action(){
-        enemyActionUsual(this);
-    }
-});
-enemyType.set("Nene",{
-    id:"Nene",
-    source:"Nene.png",
-    mhp:60,
-    atk:10,
-    def:0,
-    mat:20,
-    mdf:20,
-    atkR:8,
-    warnR:12,
-    damageR:0,
-    atktype:"ranged",
-    state:"default",
-    selector:{
-        description:{
-            id:"Nene",
-            icon:"Nene.png",
-            text:`你为什么是法师？`
+        attack(){
+            if(distanceBetweenPosition(this.attackTarget[0],this.attackTarget[1],player.X,player.Y)<=this.damageR&&!isPathBlocked(this.X,this.Y,player.X,player.Y)){
+                takeDamage(this.atk,false);
+                return 1;
+            }
+            return 0;
         },
-    },
-    attack(){
-        if(!isPathBlocked(this.X,this.Y,this.attackTarget[0],this.attackTarget[1])){
-            createProjectile("fireballE",this.X,this.Y,this.attackTarget[0],this.attackTarget[1],this.mat,false);
-            return 1;
+        updateState(){
+            updateEnemyStateUsual(this);
+        },
+        action(){
+            enemyActionUsual(this);
         }
-        return 0;
-    },
-    updateState(){
-        updateEnemyStateRanged(this);
-    },
-    action(){
-        enemyActionRanged(this);
-    }
-});
+    });    
+}
+var nene=new function(){
+    enemyType.set("Nene",{
+        id:"Nene",
+        source:"Nene.png",
+        mhp:60,
+        atk:10,
+        def:0,
+        mat:20,
+        mdf:20,
+        atkR:8,
+        warnR:12,
+        damageR:0,
+        atktype:"ranged",
+        state:"default",
+        selector:{
+            description:{
+                id:"Nene",
+                icon:"Nene.png",
+                text:`你为什么是法师？`
+            },
+        },
+        attack(){
+            if(!isPathBlocked(this.X,this.Y,this.attackTarget[0],this.attackTarget[1])){
+                createProjectile("fireballE",this.X,this.Y,this.attackTarget[0],this.attackTarget[1],this.mat,false);
+                return 1;
+            }
+            return 0;
+        },
+        updateState(){
+            updateEnemyStateRanged(this);
+        },
+        action(){
+            enemyActionRanged(this);
+        }
+    });    
+}

@@ -148,8 +148,7 @@ function drawSkillStat(){
             drawImgZoom(skil.sourceCD,110*i+50,760,80,80);
                 context.fillStyle="black";
                 context.font="60px Arial";
-                context.fillText(`${skil.cdt}`,110*i+25+50,820);
-
+                drawTextCenter(`${skil.cdt}`,110*i+50,820,"black","60px Arial",100,80,false);
         }
         if(skil.cost>player.mp){
             context.fillStyle="red";

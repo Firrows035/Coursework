@@ -76,11 +76,11 @@ character.set("Tairitsu",{
 character.set("Tairitsu-Tempest",{
     id:"Tairitsu-Tempest",
     source:"TairitsuTempest.png",
-    mhp:310,
-    mmp:160,
-    atk:50,
+    mhp:210,
+    mmp:100,
+    atk:40,
     def:0,
-    mat:50,
+    mat:40,
     mdf:0,
     atkR:4,
     isSelectable:false,
@@ -98,6 +98,10 @@ character.set("Tairitsu-Tempest",{
         }
     },
     onClick(){
+        this.atk=40*Math.exp(-0.08*round)+70*(1-Math.exp(-0.08*round));
+        this.mat=40*Math.exp(-0.08*round)+70*(1-Math.exp(-0.08*round));
+        this.mhp=210*Math.exp(-0.08*round)+310*(1-Math.exp(-0.08*round));
+        this.mmp=100*Math.exp(-0.08*round)+160*(1-Math.exp(-0.08*round));
         setCharacter(this);
     },
     onMouseOver(){
